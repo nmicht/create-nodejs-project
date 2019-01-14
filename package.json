@@ -1,0 +1,36 @@
+{
+  "name": "create-node-project",
+  "version": "0.1.0",
+  "description": "An npm initializer to scaffold a node project and include basic tools like lint, testing, etc.",
+  "main": "src/index.js",
+  "keywords": [
+    "npm",
+    "init",
+    "initializer",
+    "jest",
+    "node"
+  ],
+  "author": "Michelle Torres <hola@michelletorres.mx> (https://michelletorres.mx)",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "start": "node ./src/index.js"
+  },
+  "devDependencies": {
+    "eslint": "^5.5.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.11.1",
+    "jest": "^23.6.0"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nmicht/create-node-project.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nmicht/create-node-project/issues"
+  },
+  "homepage": "https://github.com/nmicht/create-node-project#readme"
+}
