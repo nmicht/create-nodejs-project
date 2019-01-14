@@ -24,7 +24,10 @@
     "eslint-plugin-react": "^7.11.1",
     "jest": "^23.6.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "lodash": "^4.17.11",
+    "path": "^0.12.7"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nmicht/create-node-project.git"
