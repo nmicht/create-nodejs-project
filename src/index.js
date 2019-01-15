@@ -6,6 +6,7 @@ const fs = require('fs');
 const Project = require('./project');
 const utils = require('./utils');
 const gitHandler = require('./gitHandler');
+const githubHandler = require('./githubHandler');
 
 async function myPackage() {
   // First arg = path
@@ -46,10 +47,18 @@ async function myPackage() {
   }
 
   // Initialize git
-  await gitHandler.gitInit(destPath);
+  await gitHandler.init(destPath);
 
   // Create github repository
-
+  const result = await githubHandler.create(project.name, project.isPrivate);
+  if (result !== false) {
+    console.log('Github repository created');
+    project.hasGithub = true;
+    project.git.httpUrl = result.html_url;
+    project.git.name = result.name;
+    project.git.sshUrl = result.ssh_url;
+    gitHandler.addRemote(destPath, project.git.sshUrl);
+  }
 
   // Copy template files
   utils.copyDirRecursive('template', destPath);
@@ -99,6 +108,12 @@ async function myPackage() {
 
   installDependencies.stdout.pipe(process.stdout);
 
+  // Commit and push
+  await gitHandler.commit(destPath);
+
+  if (project.hasGithub) {
+    gitHandler.push(destPath);
+  }
 }
 
 myPackage();
