@@ -1,24 +1,46 @@
 const { exec } = require('child_process');
+const gitUtils = require('./gitUtils')
 
 class Project {
-
-  constructor(args = {}) {
-    this.name = args.name || '';
-    this.description = args.description || '';
-    this.version = args.version || '0.1.0';
-    this.url = args.url || args.gitUrl;
-    this.keywords = args.keywords || [];
-    this.license = args.license || 'MIT';
+  constructor({
+    name = '',
+    description = '',
+    version = '0.1.0',
+    url = '',
+    keywords = [],
+    license = 'MIT',
+    author = {
+      name: '',
+      email: '',
+      url: '',
+    },
+    git = {
+      name: '',
+      url: '',
+    },
+    isPrivate = false,
+  }) {
+    this.name = name;
+    this.description = description;
+    this.version = version;
+    this.url = url;
+    this.keywords = keywords;
+    this.license = license;
     this.author = {
-      name: args.authorName || this.gitUserName,
-      email: args.authorEmail || this.gitUserEmail,
-      url: args.authorUrl || '',
+      name: author.name,
+      email: author.email,
+      url: author.url,
     };
     this.git = {
-      name: args.name || '',
-      url: args.gitUrl || '',
+      name: git.name,
+      url: git.url,
     };
-    this.private = args.private || false;
+    this.private = isPrivate;
+  }
+
+  async initGitConfig() {
+    await this.setAuthorName();
+    await this.setAuthorEmail();
   }
 
   get dictionary() {
@@ -35,33 +57,15 @@ class Project {
       PROJECT_GIT_URL: `git+${this.git.url}`,
       PROJECT_GIT_BUGS: `${this.git.url}/issues`,
       PROJECT_PRIVATE: this.private,
-    }
+    };
   }
 
-  get gitUserName() {
-    let name = '';
-    exec('git config user.name', (error, stdout, stderr) => {
-      if (error) {
-        console.error('Is not possible to get the git information for the user name');
-        return;
-      }
-      name = stdout; // FIXME async thing fails here
-    });
-
-    return name;
+  async setAuthorName() {
+    this.author.name = this.author.name || await gitUtils.gitUserValue('name');
   }
 
-  get gitUserEmail() {
-    let email = '';
-    exec('git config user.email', (error, stdout, stderr) => {
-      if (error) {
-        console.error('Is not possible to get the git information for the user email');
-        return;
-      }
-      email = stdout; // FIXME async thing fails here
-    });
-
-    return email;
+  async setAuthorEmail() {
+    this.author.email = this.author.email || await gitUtils.gitUserValue('email');
   }
 }
 
