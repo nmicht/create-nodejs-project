@@ -20,7 +20,25 @@ async function init(path) {
   }
 }
 
+async function commit(path, msg = 'Initial commit') {
+  try {
+    await utils.execp(`cd ${path} && git add . && git commit -m'${msg}'`);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function addRemote(path, url, remote = 'origin') {
+  try {
+    await utils.execp(`cd ${path} && git remote add ${remote} ${url}`);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 module.exports = {
   userValue,
   init,
+  commit,
+  addRemote,
 };
