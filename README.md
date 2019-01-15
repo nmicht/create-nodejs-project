@@ -27,7 +27,35 @@ npm init node-project [params]
 
 `npm init node-project path/to/project`
 
-Will create a new folder for the project and use the forlder name as the project name.
+Will create a new folder for the project and and use the folder name as the project name
+
+## Github Auth
+
+If you are planning to allow this script to create your github repositories, is required to generate a Github Token.
+
+1. Visit https://github.com/settings/tokens.
+2. Click Generate new token.
+```
+ Token Description: (your computer name)
+ Scopes:
+     [X] repo
+         [X] repo:status
+         [X] repo_deployment
+         [X] public_repo
+         [X] repo:invite
+```
+3. Click Generate token.
+4. Copy the generated string to a safe place, such as a password safe.
+5. Open Terminal and add the github token. Note: The file may be empty, you can use `auth-example.json` to copy and paste.
+```
+#  nano ~/auth.json
+
+{
+  "github-oauth": {
+    "github.com": "YOUR_TOKEN"
+  }
+}
+```
 
 
 
