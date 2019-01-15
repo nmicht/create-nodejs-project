@@ -1,6 +1,6 @@
 const utils = require('../utils');
 
-async function gitUserValue(prop) {
+async function userValue(prop) {
   let data = '';
 
   try {
@@ -12,7 +12,15 @@ async function gitUserValue(prop) {
   return data.trim();
 }
 
+async function init(path) {
+  try {
+    await utils.execp(`cd ${path} && git init`);
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 module.exports = {
-  gitUserValue,
+  userValue,
+  init,
 };

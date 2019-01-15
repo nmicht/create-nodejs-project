@@ -1,6 +1,6 @@
+const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
-const { exec } = require('child_process');
 
 function propertyByPlaceholder(placeholder) {
   let words = placeholder.split('_');

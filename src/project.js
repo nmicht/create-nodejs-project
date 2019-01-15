@@ -1,5 +1,5 @@
 const { exec } = require('child_process');
-const gitUtils = require('./gitUtils')
+const gitHandler = require('./gitHandler')
 
 class Project {
   constructor({
@@ -61,11 +61,11 @@ class Project {
   }
 
   async setAuthorName() {
-    this.author.name = this.author.name || await gitUtils.gitUserValue('name');
+    this.author.name = this.author.name || await gitHandler.gitUserValue('name');
   }
 
   async setAuthorEmail() {
-    this.author.email = this.author.email || await gitUtils.gitUserValue('email');
+    this.author.email = this.author.email || await gitHandler.gitUserValue('email');
   }
 }
 

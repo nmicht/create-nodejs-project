@@ -4,7 +4,8 @@ const lodash = require('lodash');
 const fs = require('fs');
 
 const Project = require('./project');
-const utils = require('./utils')
+const utils = require('./utils');
+const gitHandler = require('./gitHandler');
 
 async function myPackage() {
   // First arg = path
@@ -45,12 +46,7 @@ async function myPackage() {
   }
 
   // Initialize git
-  exec(`cd ${destPath} && git init`, (error) => {
-    if (error) {
-      // console.error(`Is not possible to initialize git.`);
-      throw error;
-    }
-  });
+  await gitHandler.gitInit(destPath);
 
   // Create github repository
 
@@ -92,6 +88,7 @@ async function myPackage() {
 
   // Install devDependencies
   // TODO Make dependencies dynamic
+  // TODO make the stdout visible for npm process
   console.log('Installing dev dependencies...');
   const installDependencies = exec(`cd ${destPath} && npm install eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react jest`, (error) => {
     if (error) {
