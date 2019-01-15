@@ -36,9 +36,18 @@ async function addRemote(path, url, remote = 'origin') {
   }
 }
 
+async function push(destPath, remote = 'origin', branch = 'master') {
+  try {
+    await utils.execp(`cd ${destPath} && git push ${remote} ${branch}`);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 module.exports = {
   userValue,
   init,
   commit,
   addRemote,
+  push,
 };
