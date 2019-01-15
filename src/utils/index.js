@@ -48,7 +48,7 @@ function execp(cmd) {
   return new Promise((resolve, reject) => {
     exec(cmd, (error, stdout) => {
       if (error) {
-        console.error('Is not possible to get the git information for the user name');
+        console.error(`There was an error with the command: ${cmd}`);
         reject(error);
       }
       resolve(stdout);
