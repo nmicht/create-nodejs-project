@@ -14,9 +14,11 @@ class Project {
       email: '',
       url: '',
     },
+    hasGithub = false,
     git = {
       name: '',
-      url: '',
+      httpUrl: '',
+      sshUrl: '',
     },
     isPrivate = false,
   }) {
@@ -31,11 +33,13 @@ class Project {
       email: author.email,
       url: author.url,
     };
+    this.hasGithub = hasGithub;
     this.git = {
       name: git.name,
-      url: git.url,
+      httpUrl: git.httpUrl,
+      sshUrl: git.sshUrl,
     };
-    this.private = isPrivate;
+    this.isPrivate = isPrivate;
   }
 
   async initGitConfig() {
@@ -54,18 +58,18 @@ class Project {
       PROJECT_AUTHOR_NAME: this.author.name,
       PROJECT_AUTHOR_EMAIL: this.author.email,
       PROJECT_AUTHOR_URL: this.author.url,
-      PROJECT_GIT_URL: `git+${this.git.url}`,
-      PROJECT_GIT_BUGS: `${this.git.url}/issues`,
-      PROJECT_PRIVATE: this.private,
+      PROJECT_GIT_URL: `git+${this.git.httpUrl}`,
+      PROJECT_GIT_BUGS: `${this.git.httpUrl}/issues`,
+      PROJECT_PRIVATE: this.isPrivate,
     };
   }
 
   async setAuthorName() {
-    this.author.name = this.author.name || await gitHandler.gitUserValue('name');
+    this.author.name = this.author.name || await gitHandler.userValue('name');
   }
 
   async setAuthorEmail() {
-    this.author.email = this.author.email || await gitHandler.gitUserValue('email');
+    this.author.email = this.author.email || await gitHandler.userValue('email');
   }
 }
 
