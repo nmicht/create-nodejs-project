@@ -9,6 +9,7 @@ function propertyByPlaceholder(placeholder) {
   return words.map(word => word.toLowerCase()).join('.');
 }
 
+// FIXME this is causing issues because async is needed
 function replaceByDictionary(original, dictionary) {
   for(key in dictionary){
     original = original.replace(key, dictionary[key]);
