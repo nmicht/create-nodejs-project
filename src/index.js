@@ -40,7 +40,7 @@ exec(`cd ${destPath} && git init`, (error) => {
 // Copy template files
 utils.copyDirRecursive('template', destPath);
 
-// Create package.json
+// Update package.json with project data
 let originalFile = fs.readFileSync('./template/package.json', 'utf8', (err, data) => {
   if (err) throw err;
   return data;
@@ -51,7 +51,7 @@ fs.writeFile(`${destPath}/package.json`, generatedFile, (err) => {
   console.log('File updated: package.json');
 });
 
-// Create readme
+// Update readme with project data
 originalFile = fs.readFileSync('./template/README.md', 'utf8', (err, data) => {
   if (err) throw err;
   return data;
@@ -64,8 +64,12 @@ fs.writeFile(`${destPath}/README.md`, generatedFile, (err) => {
 
 // Install devDependencies
 // TODO Make dependencies dynamic
-exec(`cd ${destPath} && npm install eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react jest`, (error) => {
+console.log('Installing dev dependencies...');
+let installDependencies = exec(`cd ${destPath} && npm install eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react jest`, (error) => {
   if (error) {
     console.error('There was an error with the devDependencies');
+    throw error;
   }
 });
+
+installDependencies.stdout.pipe(process.stdout);
