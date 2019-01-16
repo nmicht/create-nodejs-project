@@ -17,6 +17,15 @@ function replaceByDictionary(original, dictionary) {
 }
 
 /**
+ * Create a normalized name based on the path
+ * @param  {String} filepath The path
+ * @return {String}          A name normalized without blank spaces all lowercase
+ */
+function normalizeName(filepath) {
+  return path.basename(filepath).toLowerCase().replace(' ', '-');
+}
+
+/**
  * Copy a folder recursively
  * @param  {String} [currentPath='./']   The folder path to copy
  * @param  {String} [destPath='../new'] The destination path
@@ -67,9 +76,9 @@ function execp(cmd) {
 
 /**
  * Promisified spawn
- * @param  {[type]} command  command name
- * @param  {[type]} args     command arguments
- * @param  {[type]} cwd      working directory to run the commad
+ * @param  {String} command  command name
+ * @param  {string} args     command arguments
+ * @param  {String} cwd      working directory to run the commad
  */
 async function spawnp(command, args, cwd) {
   const proc = spawn(command, args, {
@@ -96,4 +105,5 @@ module.exports = {
   copyDirRecursive,
   execp,
   spawnp,
+  normalizeName,
 };
