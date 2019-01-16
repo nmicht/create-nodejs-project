@@ -53,15 +53,13 @@ async function create(name, isPrivate = false) {
   }
 
   let json = result.substring(0, result.lastIndexOf('\n'));
-  const statusCode = result.substring(result.lastIndexOf('\n'));
+  const statusCode = Number(result.substring(result.lastIndexOf('\n')));
 
   try {
     json = JSON.parse(json);
   } catch (error) {
     return false;
   }
-
-  console.log(json);
 
   if (statusCode !== 201) {
     console.error('Repository not created: ', json.errors[0].message);
