@@ -5,10 +5,13 @@
   "main": "src/index.js",
   "keywords": [
     "npm",
-    "init",
-    "initializer",
-    "jest",
-    "node"
+    "npm-init",
+    "npm-initializer",
+    "nodejs",
+    "prompt",
+    "command-line",
+    "cli",
+    "javascript-library"
   ],
   "author": "Michelle Torres <hola@michelletorres.mx> (https://michelletorres.mx)",
   "license": "MIT",
@@ -29,7 +32,7 @@
     "jest": "^23.6.0"
   },
   "dependencies": {
-    "lodash": "^4.17.11"
+    "inquirer": "^6.2.1"
   },
   "repository": {
     "type": "git",
