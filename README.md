@@ -29,11 +29,11 @@ Will create a new folder for the project and and use the folder name as the proj
 
 ## About this package
 
-So, this started as a dry thing.
-I'm not super expert with nodejs, but everytime that I start a new project, I hate to go to other project copy files like eslintrc, editorconfig, install the same dependencies, create folder structure, etc.
-So, the idea is to have a create package to use it in the formar
-`npm init node-project my-new-project`
-and with this have a new folder my-new-project with everything ready to work.
+So, this started as a dry thing.  
+I'm not super expert with NodeJS, but every time that I start a new project, I hate to go to other project, copy files like eslintrc, editorconfig, install the same dependencies, create folder structure, etc.  
+So, the idea is to have a create package to use it in the form of:  
+`npm init node-project my-new-project`  
+and with this have a new folder my-new-project with everything ready to work.  
 
 I know there are a lot of similar packages out there, but the idea is to learn more about nodejs api, handling files, packages, etc.
 
@@ -81,8 +81,9 @@ If you are planning to allow this script to create your github repositories, is 
 3. Click Generate token.
 4. Copy the generated string to a safe place, such as a password safe.
 5. Open Terminal and add the github token. Note: The file may be empty, you can use `auth-example.json` to copy and paste.
+
 ```
-#  nano ~/auth.json
+# nano ~/auth.json
 
 {
   "github-oauth": {
