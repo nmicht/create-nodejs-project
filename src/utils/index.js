@@ -1,6 +1,20 @@
-const { exec } = require('child_process');
+const { exec, spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+
+/**
+ * Replace a string using a given dictionary
+ * @param  {String} original   The string to be replaced
+ * @param  {Object} dictionary A key-value dictionary
+ * @return {String}            The string with the replacements
+ */
+function replaceByDictionary(original, dictionary) {
+  for(key in dictionary){
+    original = original.replace(key, dictionary[key]);
+  }
+
+  return original;
+}
 
 /**
  * Copy a folder recursively
@@ -8,7 +22,7 @@ const path = require('path');
  * @param  {String} [destPath='../new'] The destination path
  */
 function copyDirRecursive(currentPath = './', destPath = '../new') {
-  const dest = path.resolve(destPath);
+  let dest = path.resolve(destPath);
 
   // Create the dest folder
   if (!fs.existsSync(dest)) {
@@ -40,7 +54,6 @@ function copyDirRecursive(currentPath = './', destPath = '../new') {
  * @return {Promise}     Promise object represents the exec of command
  */
 function execp(cmd) {
-  // TODO look for a way to get the stdio piped directly but also get the final stdio to use it on resolve
   return new Promise((resolve, reject) => {
     exec(cmd, (error, stdout) => {
       if (error) {
@@ -52,8 +65,35 @@ function execp(cmd) {
   });
 }
 
+/**
+ * Promisified spawn
+ * @param  {[type]} command  command name
+ * @param  {[type]} args     command arguments
+ * @param  {[type]} cwd      working directory to run the commad
+ */
+async function spawnp(command, args, cwd) {
+  const proc = spawn(command, args, {
+    stdio: 'inherit',
+
+    // TODO: use https://github.com/chjj/pty.js to provide a psuedo-TTY for capturing real-time npm output
+    cwd,
+  });
+
+  await new Promise((resolve, reject) => {
+    proc.on('error', reject);
+    proc.on('exit', (exitCode) => {
+      if (exitCode !== 0) {
+        reject(new Error(`"npm install" exited with status code ${exitCode}`));
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
 module.exports = {
   replaceByDictionary,
   copyDirRecursive,
   execp,
+  spawnp,
 };

@@ -22,7 +22,7 @@ async function myPackage() {
   try {
     fs.mkdirSync(destPath);
   } catch (error) {
-    console.error(`The folder project was not created. See details on the log`);
+    console.error('The folder project was not created. See details on the log');
     throw error;
   }
 
@@ -90,15 +90,15 @@ async function myPackage() {
   });
 
   // Install devDependencies
+  // TODO: update "engines" field in package.json
   // TODO Make dependencies dynamic
   // TODO make the stdout visible for npm process
   console.log('Installing dev dependencies...');
-  const installDependencies = execp(`cd ${destPath} && npm install eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react jest`, (error) => {
-    if (error) {
-      console.error('There was an error with the devDependencies');
-      throw error;
-    }
-  });
+  await utils.spawnp(
+    'npm',
+    'install eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react jest'.split(' '),
+    destPath,
+  );
 
   // Commit and push
   await gitHandler.commit(destPath);
