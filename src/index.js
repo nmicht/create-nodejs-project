@@ -1,15 +1,16 @@
 const path = require('path');
-const lodash = require('lodash');
 const fs = require('fs');
 
 const Project = require('./project');
 const utils = require('./utils');
 const gitHandler = require('./gitHandler');
 const githubHandler = require('./githubHandler');
+const questionnaire = require('./questionnaire');
 
 async function myPackage() {
   // First arg = path
   const destPath = path.resolve(process.argv[2]);
+  const projectFolder = utils.normalizeName(destPath);
 
   // TODO Include here a way to get "options" for the other args
 
@@ -26,11 +27,11 @@ async function myPackage() {
     throw error;
   }
 
+  // Questionnaire for the options
+  let answers = await questionnarie.run(projectFolder);
+
   // Create project object
-  const project = new Project({
-    // TODO remove lodash dependency
-    name: lodash.last(destPath.split(path.sep)).toLowerCase(),
-  });
+  const project = new Project(answers);
 
   // Setup git configuration values for the project object
   try {
@@ -46,11 +47,11 @@ async function myPackage() {
   const resp = await githubHandler.create(project.name, project.isPrivate);
   if (resp !== false) {
     console.log('Github repository created');
-    project.hasGithub = true;
     project.git.httpUrl = resp.html_url;
     project.git.name = resp.name;
     project.git.sshUrl = resp.ssh_url;
     gitHandler.addRemote(destPath, project.git.sshUrl);
+    project.hasRemote = true;
   }
 
   // Copy template files
@@ -96,14 +97,14 @@ async function myPackage() {
   console.log('Installing dev dependencies...');
   await utils.spawnp(
     'npm',
-    'install eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react jest'.split(' '),
+    'install eslint eslint-plugin-node eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react'.split(' '),
     destPath,
   );
 
   // Commit and push
   await gitHandler.commit(destPath);
 
-  if (project.hasGithub) {
+  if (project.hasRemote) {
     gitHandler.push(destPath);
   }
 }

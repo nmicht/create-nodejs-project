@@ -25,6 +25,7 @@ class Project {
    * @param {String}  [git.httpUrl='']  The git http url
    * @param {String}  [git.sshUrl='']   The git ssh url
    * @param {Boolean} [isPrivate=false] If the project is private or public
+   * @param {String}  [path='']         The path for the project folder
    */
   constructor({
     name = '',
@@ -38,13 +39,15 @@ class Project {
       email: '',
       url: '',
     },
-    hasGithub = false,
+    hasRemote = false,
     git = {
       name: '',
       httpUrl: '',
       sshUrl: '',
     },
+    issueTracker = '',
     isPrivate = false,
+    path = '',
   }) {
     this.name = name;
     this.description = description;
@@ -57,13 +60,15 @@ class Project {
       email: author.email,
       url: author.url,
     };
-    this.hasGithub = hasGithub;
+    this.hasRemote = hasRemote;
     this.git = {
       name: git.name,
       httpUrl: git.httpUrl,
       sshUrl: git.sshUrl,
     };
+    this.issueTracker = issueTracker;
     this.isPrivate = isPrivate;
+    this.path = path;
   }
 
   /**
@@ -90,10 +95,10 @@ class Project {
       PROJECT_KEYWORDS: this.keywords,
       PROJECT_LICENSE: this.license,
       PROJECT_AUTHOR_NAME: this.author.name,
-      PROJECT_AUTHOR_EMAIL: this.author.email,
-      PROJECT_AUTHOR_URL: this.author.url,
+      PROJECT_AUTHOR_EMAIL: `<${this.author.email}>`,
+      PROJECT_AUTHOR_URL: `(${this.author.url})`,
       PROJECT_GIT_URL: `git+${this.git.httpUrl}`,
-      PROJECT_GIT_BUGS: `${this.git.httpUrl}/issues`,
+      PROJECT_ISSUETRACKER: `${this.issueTracker}`,
       PROJECT_PRIVATE: this.isPrivate,
     };
   }
