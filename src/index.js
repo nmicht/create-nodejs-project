@@ -28,7 +28,7 @@ async function myPackage() {
   }
 
   // Questionnaire for the options
-  let answers = await questionnarie.run(projectFolder);
+  const answers = await questionnaire.run(projectFolder);
 
   // Create project object
   const project = new Project(answers);

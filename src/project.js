@@ -10,7 +10,7 @@ class Project {
   /**
    * The Project constructor
    * @param {String}  [name='']         The name of the project
-   * @param {String}  [description='']  The description of the project used on github, readme and package.json
+   * @param {String}  [description='']  The description of the project
    * @param {String}  [version='0.1.0'] The version for the project
    * @param {String}  [url='']          The public url of the project
    * @param {Array}   [keywords=[]]     An array separated by comma with the keywords of the project
@@ -92,7 +92,7 @@ class Project {
       PROJECT_DESCRIPTION: this.description,
       PROJECT_VERSION: this.version,
       PROJECT_URL: this.url,
-      PROJECT_KEYWORDS: this.keywords,
+      PROJECT_KEYWORDS: this.keywords, // TODO fix the issue with keywords
       PROJECT_LICENSE: this.license,
       PROJECT_AUTHOR_NAME: this.author.name,
       PROJECT_AUTHOR_EMAIL: `<${this.author.email}>`,

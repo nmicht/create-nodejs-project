@@ -1,13 +1,13 @@
 const questions = require('./questions');
 
 async function run(name) {
-  let resp = await questions.getProjectDetails(name);
+  const resp = await questions.getProjectDetails(name);
 
-  if(!resp.useGithub) {
+  if (!resp.useGithub) {
     Object.assign(resp, await questions.getGitRemoteDetails());
   }
 
-  if(resp.useTesting) {
+  if (resp.useTesting) {
     Object.assign(resp, await questions.getTestingDetails());
   }
 
@@ -16,4 +16,4 @@ async function run(name) {
 
 module.exports = {
   run,
-}
+};
