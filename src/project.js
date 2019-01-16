@@ -1,7 +1,34 @@
 const { exec } = require('child_process');
 const gitHandler = require('./gitHandler')
 
+/**
+ * [Project description]
+ *
+ * @class Project
+ * @constructor
+ */
 class Project {
+  /**
+   * [constructor description]
+   * @method constructor
+   * @param {String}  [name='']         [description]
+   * @param {String}  [description='']  [description]
+   * @param {String}  [version='0.1.0'] [description]
+   * @param {String}  [url='']          [description]
+   * @param {Array}   [keywords=[]]     [description]
+   * @param {String}  [license='MIT']   [description]
+   * @param {Object}  [author={                           name: ''] [description]
+   * @param {[type]}  email             [description]
+   * @param {[type]}  url               [description]
+   * @param {[type]}  }                 [description]
+   * @param {Boolean} [hasGithub=false] [description]
+   * @param {Object}  [git={                              name: ''] [description]
+   * @param {[type]}  httpUrl           [description]
+   * @param {[type]}  sshUrl            [description]
+   * @param {[type]}  }                 [description]
+   * @param {Boolean} [isPrivate=false] [description]
+   * @param {[type]}  }                 [description]
+   */
   constructor({
     name = '',
     description = '',
@@ -42,11 +69,21 @@ class Project {
     this.isPrivate = isPrivate;
   }
 
+  /**
+   * [initGitConfig description]
+   * @method initGitConfig
+   * @return {Promise} [description]
+   */
   async initGitConfig() {
     await this.setAuthorName();
     await this.setAuthorEmail();
   }
 
+  /**
+   * [dictionary description]
+   * @method get dictionary
+   * @return {[type]} [description]
+   */
   get dictionary() {
     return {
       PROJECT_NAME: this.name,
@@ -64,10 +101,20 @@ class Project {
     };
   }
 
+  /**
+   * [setAuthorName description]
+   * @method setAuthorName
+   * @return {Promise} [description]
+   */
   async setAuthorName() {
     this.author.name = this.author.name || await gitHandler.userValue('name');
   }
 
+  /**
+   * [setAuthorEmail description]
+   * @method setAuthorEmail
+   * @return {Promise} [description]
+   */
   async setAuthorEmail() {
     this.author.email = this.author.email || await gitHandler.userValue('email');
   }
