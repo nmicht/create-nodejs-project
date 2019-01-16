@@ -1,33 +1,30 @@
-const { exec } = require('child_process');
 const gitHandler = require('./gitHandler')
 
 /**
- * [Project description]
+ * Project handle all the information for the new node project
  *
  * @class Project
  * @constructor
  */
 class Project {
   /**
-   * [constructor description]
-   * @method constructor
-   * @param {String}  [name='']         [description]
-   * @param {String}  [description='']  [description]
-   * @param {String}  [version='0.1.0'] [description]
-   * @param {String}  [url='']          [description]
-   * @param {Array}   [keywords=[]]     [description]
-   * @param {String}  [license='MIT']   [description]
-   * @param {Object}  [author={                           name: ''] [description]
-   * @param {[type]}  email             [description]
-   * @param {[type]}  url               [description]
-   * @param {[type]}  }                 [description]
-   * @param {Boolean} [hasGithub=false] [description]
-   * @param {Object}  [git={                              name: ''] [description]
-   * @param {[type]}  httpUrl           [description]
-   * @param {[type]}  sshUrl            [description]
-   * @param {[type]}  }                 [description]
-   * @param {Boolean} [isPrivate=false] [description]
-   * @param {[type]}  }                 [description]
+   * The Project constructor
+   * @param {String}  [name='']         The name of the project
+   * @param {String}  [description='']  The description of the project used on github, readme and package.json
+   * @param {String}  [version='0.1.0'] The version for the project
+   * @param {String}  [url='']          The public url of the project
+   * @param {Array}   [keywords=[]]     An array separated by comma with the keywords of the project
+   * @param {String}  [license='MIT']   The license for the project
+   * @param {Object}  [author]
+   * @param {String}  [author.name='']  The name of the author
+   * @param {String}  [author.email=''] The email of the author
+   * @param {[type]}  [author.url='']   The url of the author
+   * @param {Boolean} [hasGithub=false] If the project has a git url
+   * @param {Object}  [git]
+   * @param {String}  [git.name='']     The git project name
+   * @param {String}  [git.httpUrl='']  The git http url
+   * @param {String}  [git.sshUrl='']   The git ssh url
+   * @param {Boolean} [isPrivate=false] If the project is private or public
    */
   constructor({
     name = '',
@@ -70,9 +67,9 @@ class Project {
   }
 
   /**
-   * [initGitConfig description]
+   * Initializes the project git values
    * @method initGitConfig
-   * @return {Promise} [description]
+   * @return {Promise}
    */
   async initGitConfig() {
     await this.setAuthorName();
@@ -80,9 +77,9 @@ class Project {
   }
 
   /**
-   * [dictionary description]
+   * Returns a dictionary to be used for templating
    * @method get dictionary
-   * @return {[type]} [description]
+   * @return {Object} A dictionary with project values
    */
   get dictionary() {
     return {
@@ -102,18 +99,18 @@ class Project {
   }
 
   /**
-   * [setAuthorName description]
+   * Set the project's author name using git information
    * @method setAuthorName
-   * @return {Promise} [description]
+   * @return {Promise}
    */
   async setAuthorName() {
     this.author.name = this.author.name || await gitHandler.userValue('name');
   }
 
   /**
-   * [setAuthorEmail description]
+   * Set the project's author email using git information
    * @method setAuthorEmail
-   * @return {Promise} [description]
+   * @return {Promise}
    */
   async setAuthorEmail() {
     this.author.email = this.author.email || await gitHandler.userValue('email');

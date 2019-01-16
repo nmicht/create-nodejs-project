@@ -2,36 +2,25 @@ const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-function propertyByPlaceholder(placeholder) {
-  let words = placeholder.split('_');
-  if(words[0] === 'PROJECT') {
-    words.shift();
-  }
-  return words.map(word => word.toLowerCase()).join('.');
-}
+/**
+ * Copy a folder recursively
+ * @param  {String} [currentPath='./']   The folder path to copy
+ * @param  {String} [destPath='../new'] The destination path
+ */
+function copyDirRecursive(currentPath = './', destPath = '../new') {
+  const dest = path.resolve(destPath);
 
-function replaceByDictionary(original, dictionary) {
-  for(key in dictionary){
-    original = original.replace(key, dictionary[key]);
-  }
-
-  return original;
-}
-
-function copyDirRecursive(start = './', end = '../new') {
-  let target = path.resolve(end);
-
-  // Create the target folder
-  if (!fs.existsSync(target)) {
-    fs.mkdirSync(target);
-    console.log(`Folder created: ${target}`);
+  // Create the dest folder
+  if (!fs.existsSync(dest)) {
+    fs.mkdirSync(dest);
+    console.log(`Folder created: ${dest}`);
   }
 
   // Read files in folder
-  let files = fs.readdirSync(start);
+  let files = fs.readdirSync(currentPath);
   for(file of files) {
-    src = path.resolve(path.join(start, file));
-    dest = path.resolve(path.join(end, file));
+    src = path.resolve(path.join(currentPath, file));
+    dest = path.resolve(path.join(destPath, file));
 
     if (fs.lstatSync(src).isDirectory()) {
       // Recursive copy for folders
@@ -44,7 +33,14 @@ function copyDirRecursive(start = './', end = '../new') {
   }
 }
 
+/**
+ * Promisified exec
+ * @see https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback
+ * @param  {String} cmd  The commando to be executed
+ * @return {Promise}     Promise object represents the exec of command
+ */
 function execp(cmd) {
+  // TODO look for a way to get the stdio piped directly but also get the final stdio to use it on resolve
   return new Promise((resolve, reject) => {
     exec(cmd, (error, stdout) => {
       if (error) {
@@ -57,7 +53,6 @@ function execp(cmd) {
 }
 
 module.exports = {
-  propertyByPlaceholder,
   replaceByDictionary,
   copyDirRecursive,
   execp,
