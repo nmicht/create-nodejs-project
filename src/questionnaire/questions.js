@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
-const path = require('path');
-const os = require('os');
+
+const settings = require('../settings');
 
 async function getProjectDetails(name) {
   return inquirer.prompt([
@@ -34,7 +34,7 @@ async function getProjectDetails(name) {
       type: 'list',
       name: 'license',
       message: 'Please select a license',
-      choices: ['ISC', 'AGPL-3.0-only', 'AGPL-3.0-or-later', 'Apache-2.0', 'GPL-3.0-only', 'GPL-3.0-or-later', 'LGPL-3.0-only', 'LGPL-3.0-or-later', 'MIT'],
+      choices: settings.licenses,
       default: 'MIT',
     },
 
@@ -107,7 +107,7 @@ async function getTestingDetails() {
       type: 'checkbox',
       name: 'testPackages',
       message: 'Which test packages do you want to include?',
-      choices: ['jest', 'mocha', 'chai', 'sinon', 'nock'],
+      choices: settings.testingPkgs,
     },
   ]);
 }
@@ -118,7 +118,7 @@ async function getAuthFile() {
       type: 'input',
       name: 'authPath',
       message: 'What is the path for the auth.json file?',
-      default: path.join(os.homedir(), 'auth.json'),
+      default: settings.authPath,
     },
   ]);
 }

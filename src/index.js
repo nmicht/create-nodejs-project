@@ -3,6 +3,7 @@ const fs = require('fs');
 
 const Project = require('./project');
 const utils = require('./utils');
+const settings = require('./settings');
 const gitHandler = require('./gitHandler');
 const githubHandler = require('./githubHandler');
 const questionnaire = require('./questionnaire');
@@ -102,10 +103,11 @@ async function myPackage() {
 
   // Install devDependencies
   console.log('Installing dev dependencies...');
+  const args = ['install', '-D'].concat(settings.lintPkgs, answers.testPackages);
   await utils.spawnp(
     'npm',
     // TODO Make dependencies dynamic
-    'install eslint eslint-plugin-node eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react'.split(' '),
+    args,
     destPath,
   );
 
