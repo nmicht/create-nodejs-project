@@ -15,24 +15,22 @@ An [npm initializer][npm/init] to scaffold a node project and include basic tool
 
 ## Usage
 
-```bash
-npm init node-project [params]
-```
+`npm init node-project path/to/project [params]`
 
 ## Params
 
-- Project path
+### Project path
 
 `npm init node-project path/to/project [params]`
 
-Will create a new folder for the project and and use the folder name as the project name
+Will create a new folder for the project in the specified path.
 
 ## About this package
 
 So, this started as a dry thing.  
 I'm not super expert with NodeJS, but every time that I start a new project, I hate to go to other project, copy files like eslintrc, editorconfig, install the same dependencies, create folder structure, etc.  
 So, the idea is to have a create package to use it in the form of:  
-`npm init node-project my-new-project`  
+`npm init node-project a-demo-project`  
 and with this have a new folder my-new-project with everything ready to work.  
 
 I know there are a lot of similar packages out there, but the idea is to learn more about nodejs api, handling files, packages, etc.
@@ -53,17 +51,18 @@ What I have in my TODO list:
 4. Add unit testing
 5. ~~Improve the calls for shell (right now is with exec, but I need to use spawn in order to have the stdout inherit, but that mess with the sync method and the responses)~~
 6. ~~Add documentation for classes, modules and methods~~
-7. Add options to create the project with params (right now everything is "hardcoded" for the project configuration like name, private, keywords, description, etc)
-8. ~~Add questionnaire for the creation in case the command do not receive params~~
+7. Add options to create the project with params instead of questionnaire
+8. ~~Add questionnaire for the creation~~
 9. Publish the npm package
 10. Add a good error handler
 11. Color for the console messages
 12. Modify template structure (the one that is generated in the new project) to include unit test
-13. Include license files and the user should be able to select from a list of options
+13. Include license files to the template copy/update process
 14. A logger ? (just for learning)
 15. ~~CWD for git commands~~
 16. Best place for the auth.json
 17. Ability to handle auth for different github accounts
+18. Option to questionnaire with all the default values
 
 ## Github Auth
 
@@ -79,6 +78,7 @@ If you are planning to allow this script to create your github repositories, is 
          [X] repo_deployment
          [X] public_repo
          [X] repo:invite
+     [X] delete_repo
 ```
 3. Click Generate token.
 4. Copy the generated string to a safe place, such as a password safe.
