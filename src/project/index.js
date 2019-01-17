@@ -19,13 +19,16 @@ class Project {
    * @param {String}  [author.name='']  The name of the author
    * @param {String}  [author.email=''] The email of the author
    * @param {[type]}  [author.url='']   The url of the author
-   * @param {Boolean} [hasGithub=false] If the project has a git url
+   * @param {Boolean} [useGithub=false] If the project will use the github integration
+   * @param {Boolean} [hasRemote=false] If the project has a git url
    * @param {Object}  [git]
    * @param {String}  [git.name='']     The git project name
    * @param {String}  [git.httpUrl='']  The git http url
    * @param {String}  [git.sshUrl='']   The git ssh url
+   * @param {String}  [issueTracker=''] The url for issue tracker
    * @param {Boolean} [isPrivate=false] If the project is private or public
    * @param {String}  [path='']         The path for the project folder
+   * @param {String}  [year='']         The year to be used on the license
    */
   constructor({
     name = '',
