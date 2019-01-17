@@ -4,13 +4,14 @@ const os = require('os');
 
 /**
  * Get the Github token from the auth file
- * @param  {String} [authPath=''] The path for the auth.json file
+ * @param  {String} [path=''] The path for the auth.json file
  * @return {String} The github token
  * @throws If the file is not present or can be read as json
  */
-async function getToken(authPath = '') {
+async function getToken(jsonPath = '') {
   let auth = {};
-  if (!authPath) {
+  let authPath = jsonPath;
+  if (!path) {
     authPath = path.join(os.homedir(), 'auth.json');
   }
   const authFile = path.resolve(authPath);
