@@ -1,6 +1,6 @@
 {
-  "name": "create-node-project",
-  "version": "0.1.0",
+  "name": "create-nodejs-project",
+  "version": "0.1.1",
   "description": "An npm initializer to scaffold a node project and include basic tools like lint, testing, etc.",
   "main": "src/index.js",
   "bin": "src/index.js",
@@ -39,10 +39,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nmicht/create-node-project.git"
+    "url": "git+https://github.com/nmicht/create-nodejs-project.git"
   },
   "bugs": {
-    "url": "https://github.com/nmicht/create-node-project/issues"
+    "url": "https://github.com/nmicht/create-nodejs-project/issues"
   },
-  "homepage": "https://github.com/nmicht/create-node-project#readme"
+  "homepage": "https://github.com/nmicht/create-nodejs-project#readme"
 }
