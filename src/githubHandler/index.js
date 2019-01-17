@@ -79,22 +79,25 @@ async function deleteRepo(name, user) {
     return false;
   }
 
-  let json = result.substring(0, result.lastIndexOf('\n'));
   const statusCode = Number(result.substring(result.lastIndexOf('\n')));
 
-  try {
-    json = JSON.parse(json);
-  } catch (error) {
-    return false;
-  }
-
   if (statusCode !== 204) {
+    let json = result.substring(0, result.lastIndexOf('\n'));
+    try {
+      json = JSON.parse(json);
+    } catch (error) {
+      return false;
+    }
     console.error('Repository not deleted: ', json.message);
     return false;
   }
 
   console.log(`Repository ${name} deleted`);
-  return json;
+
+  return {
+    message: 'Repository deleted',
+    statusCode,
+  };
 }
 
 module.exports = {
