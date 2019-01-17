@@ -51,7 +51,12 @@ async function myPackage() {
 
   // Create github repository and include properties to the project object
   if (project.useGithub) {
-    const resp = await githubHandler.create(project.name, project.isPrivate);
+    const resp = await githubHandler.create(
+      project.name,
+      project.isPrivate,
+      project.description,
+      project.url
+    );
     if (resp !== false) {
       project.git.httpUrl = resp.html_url;
       project.git.name = resp.name;
@@ -106,7 +111,6 @@ async function myPackage() {
   const args = ['install', '-D'].concat(settings.lintPkgs, answers.testPackages);
   await utils.spawnp(
     'npm',
-    // TODO Make dependencies dynamic
     args,
     destPath,
   );

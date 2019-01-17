@@ -3,14 +3,16 @@ const auth = require('../auth');
 
 /**
  * Create a github repository
- * @param  {String}  name   The name for the github project
+ * @param  {String}  name               The name for the github project
  * @param  {Boolean} [isPrivate=false]  Defines is the project will be created as private
  * or public on github
+ * @param  {String} [description='']    The description for the github project
+ * @param  {String} [ul='']             The url for the github project
  * @return {json|Boolean}   In case of success will return the json from the
  * github api response, otherwise, return false.
  * @throws If the token is not present
  */
-async function create(name, isPrivate = false) {
+async function create(name, isPrivate = false, description = '', url = '') {
   let token = '';
   let result;
 
@@ -22,8 +24,7 @@ async function create(name, isPrivate = false) {
 
   console.log('Creating github repository...\n');
   // TODO consider use http instead curl?
-  // TODO Include description, website and keywords
-  const cmd = `curl -w "%{http_code}" -H "Authorization: token ${token}" -d '{"name": "${name}", "private": ${isPrivate}}' https://api.github.com/user/repos`;
+  const cmd = `curl -w "%{http_code}" -H "Authorization: token ${token}" -d '{"name": "${name}", "private": ${isPrivate}, "description": "${description}", "homepage": "${url}"}' https://api.github.com/user/repos`;
 
   try {
     result = await utils.execp(cmd);
@@ -99,6 +100,8 @@ async function deleteRepo(name, user) {
     statusCode,
   };
 }
+
+// TODO include a method to handle the topics (will require to get the github user)
 
 module.exports = {
   create,
