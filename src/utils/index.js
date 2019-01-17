@@ -68,6 +68,9 @@ function deleteDirRecursive(folderPath) {
       }
     });
     fs.rmdirSync(dirPath);
+    console.log(`Dir ${dirPath} deleted`);
+  } else {
+    console.error(`Dir not deleted: ${dirPath} not found`);
   }
 }
 

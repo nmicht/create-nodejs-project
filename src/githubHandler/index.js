@@ -46,6 +46,7 @@ async function create(name, isPrivate = false) {
     return false;
   }
 
+  console.log(`Repository ${json.git.name} created`);
   return json;
 }
 
@@ -92,6 +93,7 @@ async function deleteRepo(name, user) {
     return false;
   }
 
+  console.log(`Repository ${name} deleted`);
   return json;
 }
 

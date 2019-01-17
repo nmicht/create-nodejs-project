@@ -51,7 +51,6 @@ async function myPackage() {
   // Create github repository and include properties to the project object
   const resp = await githubHandler.create(project.name, project.isPrivate);
   if (resp !== false) {
-    console.log('Github repository created');
     project.git.httpUrl = resp.html_url;
     project.git.name = resp.name;
     project.git.sshUrl = resp.ssh_url;
