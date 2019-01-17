@@ -54,14 +54,14 @@ What I have in my TODO list:
 5. ~~Improve the calls for shell (right now is with exec, but I need to use spawn in order to have the stdout inherit, but that mess with the sync method and the responses)~~
 6. ~~Add documentation for classes, modules and methods~~
 7. Add options to create the project with params (right now everything is "hardcoded" for the project configuration like name, private, keywords, description, etc)
-8. Add questionnaire for the creation in case the command do not receive params
+8. ~~Add questionnaire for the creation in case the command do not receive params~~
 9. Publish the npm package
 10. Add a good error handler
 11. Color for the console messages
 12. Modify template structure (the one that is generated in the new project) to include unit test
 13. Include license files and the user should be able to select from a list of options
 14. A logger ? (just for learning)
-15. CWD for git commands
+15. ~~CWD for git commands~~
 16. Best place for the auth.json
 17. Ability to handle auth for different github accounts
 

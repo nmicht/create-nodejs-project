@@ -30,6 +30,11 @@ async function myPackage() {
   // Questionnaire for the options
   const answers = await questionnaire.run(projectFolder);
 
+  // Add extra values to the answers
+  Object.assign(answers, {
+    path: destPath,
+  });
+
   // Create project object
   const project = new Project(answers);
 
@@ -50,12 +55,16 @@ async function myPackage() {
     project.git.httpUrl = resp.html_url;
     project.git.name = resp.name;
     project.git.sshUrl = resp.ssh_url;
+    project.issueTracker = `${project.git.httpUrl}/issues`;
     gitHandler.addRemote(destPath, project.git.sshUrl);
     project.hasRemote = true;
   }
 
   // Copy template files
   utils.copyDirRecursive('template', destPath);
+
+  // TODO Copy license and update with project data
+
 
   // Update readme with project data
   let originalReadmeFile;
@@ -82,7 +91,7 @@ async function myPackage() {
   }
 
   const generatedPackageFile = utils.replaceByDictionary(originalPackageFile, project.dictionary);
-  // Change this to sync because dependencies depends on it
+  // TODO Change this to sync because dependencies depends on it
   fs.writeFile(`${destPath}/package.json`, generatedPackageFile, 'utf8', (err) => {
     if (err) {
       throw err;
@@ -91,12 +100,10 @@ async function myPackage() {
   });
 
   // Install devDependencies
-  // TODO: update "engines" field in package.json
-  // TODO Make dependencies dynamic
-  // TODO make the stdout visible for npm process
   console.log('Installing dev dependencies...');
   await utils.spawnp(
     'npm',
+    // TODO Make dependencies dynamic
     'install eslint eslint-plugin-node eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react'.split(' '),
     destPath,
   );
