@@ -56,6 +56,21 @@ function copyDirRecursive(currentPath = './', destPath = '../new') {
   }
 }
 
+function deleteDirRecursive(folderPath) {
+  const dirPath = path.resolve(folderPath);
+  if (fs.existsSync(dirPath)) {
+    fs.readdirSync(dirPath).forEach((file) => {
+      const curPath = path.resolve(path.join(dirPath, file));
+      if (fs.lstatSync(curPath).isDirectory()) { // recurse
+        deleteDirRecursive(curPath);
+      } else { // delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(dirPath);
+  }
+}
+
 /**
  * Promisified exec
  * @see https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback
@@ -92,7 +107,7 @@ async function spawnp(command, args, cwd) {
     proc.on('error', reject);
     proc.on('exit', (exitCode) => {
       if (exitCode !== 0) {
-        reject(new Error(`"npm install" exited with status code ${exitCode}`));
+        reject(new Error(`The command "${command} ${args.join(' ')}" exited with status code ${exitCode}`));
       } else {
         resolve();
       }
@@ -103,6 +118,7 @@ async function spawnp(command, args, cwd) {
 module.exports = {
   replaceByDictionary,
   copyDirRecursive,
+  deleteDirRecursive,
   execp,
   spawnp,
   normalizeName,
