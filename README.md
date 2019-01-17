@@ -48,7 +48,7 @@ So far, what this package will do (already does) is:
 
 What I have in my TODO list:
 1. Fix the structure of modules, classes and etc
-2. Avoid as much dependencies as possible
+2. ~~Avoid as much dependencies as possible~~
 3. ~~Understand about the difference for eslint airbnb and eslint plugin node~~
 4. Add unit testing
 5. ~~Improve the calls for shell (right now is with exec, but I need to use spawn in order to have the stdout inherit, but that mess with the sync method and the responses)~~
@@ -63,6 +63,7 @@ What I have in my TODO list:
 14. A logger ? (just for learning)
 15. CWD for git commands
 16. Best place for the auth.json
+17. Ability to handle auth for different github accounts
 
 ## Github Auth
 
