@@ -32,6 +32,7 @@ function normalizeName(filepath) {
  */
 function copyDirRecursive(currentPath = './', destPath = '../new') {
   let dest = path.resolve(destPath);
+  let current = path.resolve(currentPath);
 
   // Create the dest folder
   if (!fs.existsSync(dest)) {
@@ -40,9 +41,9 @@ function copyDirRecursive(currentPath = './', destPath = '../new') {
   }
 
   // Read files in folder
-  let files = fs.readdirSync(currentPath);
+  let files = fs.readdirSync(current);
   for(file of files) {
-    src = path.resolve(path.join(currentPath, file));
+    src = path.resolve(path.join(current, file));
     dest = path.resolve(path.join(destPath, file));
 
     if (fs.lstatSync(src).isDirectory()) {

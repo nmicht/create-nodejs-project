@@ -14,6 +14,7 @@ async function myPackage() {
   // First arg = path
   const destPath = path.resolve(process.argv[2]);
   const projectFolder = utils.normalizeName(destPath);
+  const templatePath = path.join(__dirname, '..', 'template');
 
   // TODO Include here a way to get "options" for the other args
 
@@ -70,7 +71,7 @@ async function myPackage() {
   }
 
   // Copy template files
-  utils.copyDirRecursive('template', destPath);
+  utils.copyDirRecursive(templatePath, destPath);
 
   // TODO Copy license and update with project data
 
@@ -78,7 +79,7 @@ async function myPackage() {
   // Update readme with project data
   let originalReadmeFile;
   try {
-    originalReadmeFile = fs.readFileSync('./template/README.md', 'utf8');
+    originalReadmeFile = fs.readFileSync(path.join(templatePath, 'README.md'), 'utf8');
   } catch (error) {
     throw error;
   }
@@ -94,7 +95,7 @@ async function myPackage() {
   // Update package.json with project data
   let originalPackageFile;
   try {
-    originalPackageFile = fs.readFileSync('./template/package.json', 'utf8');
+    originalPackageFile = fs.readFileSync(path.join(templatePath, 'package.json'), 'utf8');
   } catch (error) {
     throw error;
   }
