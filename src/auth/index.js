@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const os = require('os');
+
+const settings = require('../settings');
 
 /**
  * Get the Github token from the auth file
@@ -12,7 +13,7 @@ async function getToken(jsonPath = '') {
   let auth = {};
   let authPath = jsonPath;
   if (!jsonPath) {
-    authPath = path.join(os.homedir(), 'auth.json');
+    authPath = settings.authPath;
   }
   const authFile = path.resolve(authPath);
 
