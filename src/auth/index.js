@@ -11,7 +11,7 @@ const os = require('os');
 async function getToken(jsonPath = '') {
   let auth = {};
   let authPath = jsonPath;
-  if (!path) {
+  if (!jsonPath) {
     authPath = path.join(os.homedir(), 'auth.json');
   }
   const authFile = path.resolve(authPath);
