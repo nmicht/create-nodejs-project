@@ -1,0 +1,33 @@
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
+
+/**
+ * Get the Github token from the auth file
+ * @param  {String} [authPath=''] The path for the auth.json file
+ * @return {String} The github token
+ * @throws If the file is not present or can be read as json
+ */
+async function getToken(authPath = '') {
+  let auth = {};
+  if (!authPath) {
+    authPath = path.join(os.homedir(), 'auth.json');
+  }
+  const authFile = path.resolve(authPath);
+
+  try {
+    auth = JSON.parse(fs.readFileSync(authFile, 'utf8'));
+  } catch (error) {
+    throw error;
+  }
+
+  if (!auth.github.token) {
+    throw new Error('Token missing');
+  }
+
+  return auth.github.token;
+}
+
+module.exports = {
+  getToken,
+};
