@@ -1,0 +1,24 @@
+{
+  "name": "PROJECT_NAME",
+  "version": "PROJECT_VERSION",
+  "description": "PROJECT_DESCRIPTION",
+  "main": "src/index.js",
+  "keywords": [PROJECT_KEYWORDS],
+  "author": "PROJECT_AUTHOR_NAME <PROJECT_AUTHOR_EMAIL> (PROJECT_AUTHOR_URL)",
+  "license": "PROJECT_LICENSE",
+  "private": PROJECT_PRIVATE,
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "scripts": {
+    "start": "node ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "PROJECT_GIT_URL"
+  },
+  "bugs": {
+    "url": "PROJECT_ISSUETRACKER"
+  },
+  "homepage": "PROJECT_URL"
+}

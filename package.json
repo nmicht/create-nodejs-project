@@ -3,28 +3,40 @@
   "version": "0.1.0",
   "description": "An npm initializer to scaffold a node project and include basic tools like lint, testing, etc.",
   "main": "src/index.js",
+  "bin": "src/index.js",
   "keywords": [
     "npm",
-    "init",
-    "initializer",
-    "jest",
-    "node"
+    "npm-init",
+    "npm-initializer",
+    "nodejs",
+    "prompt",
+    "command-line",
+    "cli",
+    "javascript-library"
   ],
   "author": "Michelle Torres <hola@michelletorres.mx> (https://michelletorres.mx)",
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start": "node ./src/index.js"
+    "start": "node src/index.js",
+    "cleanup": "node test/cleanup.js a-demo-project",
+    "test": "node src/index.js ../a-demo-project"
+  },
+  "engines": {
+    "node": ">=10.0.0"
   },
   "devDependencies": {
-    "eslint": "^5.5.0",
+    "eslint": "^5.12.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jsx-a11y": "^6.1.1",
-    "eslint-plugin-react": "^7.11.1",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-react": "^7.12.3",
     "jest": "^23.6.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "inquirer": "^6.2.1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nmicht/create-node-project.git"
