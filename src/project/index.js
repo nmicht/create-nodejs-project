@@ -1,4 +1,4 @@
-const gitHandler = require('./gitHandler');
+const gitHandler = require('../gitHandler');
 
 /**
  * Project handle all the information for the new node project
