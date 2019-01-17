@@ -1,4 +1,6 @@
 const inquirer = require('inquirer');
+const path = require('path');
+const os = require('os');
 
 async function getProjectDetails(name) {
   return inquirer.prompt([
@@ -110,6 +112,30 @@ async function getTestingDetails() {
   ]);
 }
 
+async function getAuthFile() {
+  return inquirer.prompt([
+    {
+      type: 'input',
+      name: 'authPath',
+      message: 'What is the path for the auth.json file?',
+      default: path.join(os.homedir(), 'auth.json'),
+    },
+  ]);
+}
+
+async function getAuthToken(token) {
+  return inquirer.prompt([
+    {
+      type: 'input',
+      name: 'token',
+      message: 'What is your GitHub token?',
+      default: token,
+    },
+  ]);
+}
+
 exports.getProjectDetails = getProjectDetails;
 exports.getGitRemoteDetails = getGitRemoteDetails;
 exports.getTestingDetails = getTestingDetails;
+exports.getAuthFile = getAuthFile;
+exports.getAuthToken = getAuthToken;
