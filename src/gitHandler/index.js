@@ -26,7 +26,7 @@ async function init(path = '.') {
   let resp = '';
 
   try {
-    resp = await utils.execp(`cd ${path} && git init`);
+    resp = await utils.execp('git init', path);
   } catch (error) {
     console.error(error);
   }
@@ -44,7 +44,7 @@ async function commit(path = '.', msg = 'Initial commit') {
   let resp = '';
 
   try {
-    resp = await utils.execp(`cd ${path} && git add . && git commit -m'${msg}'`);
+    resp = await utils.execp(`git add . && git commit -m'${msg}'`, path);
   } catch (error) {
     console.error(error);
   }
@@ -63,7 +63,7 @@ async function addRemote(path = '.', url, remote = 'origin') {
   let resp = '';
 
   try {
-    resp = await utils.execp(`cd ${path} && git remote add ${remote} ${url}`);
+    resp = await utils.execp(`git remote add ${remote} ${url}`, path);
   } catch (error) {
     console.error(error);
   }
@@ -82,7 +82,7 @@ async function push(path = '.', remote = 'origin', branch = 'master') {
   let resp = '';
 
   try {
-    resp = await utils.execp(`cd ${path} && git push ${remote} ${branch}`);
+    resp = await utils.execp(`git push ${remote} ${branch}`, path);
   } catch (error) {
     console.error(error);
   }
