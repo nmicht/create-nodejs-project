@@ -46,7 +46,7 @@ async function create(name, isPrivate = false) {
     return false;
   }
 
-  console.log(`Repository ${json.git.name} created`);
+  console.log(`Repository ${json.name} created`);
   return json;
 }
 

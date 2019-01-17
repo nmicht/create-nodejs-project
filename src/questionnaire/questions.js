@@ -87,7 +87,7 @@ async function getGitRemoteDetails() {
   return inquirer.prompt([
     {
       type: 'input',
-      name: 'git.url',
+      name: 'git.sshUrl',
       message: 'What git remote will you be using?',
       default: '', // TODO include here the default github url
     },

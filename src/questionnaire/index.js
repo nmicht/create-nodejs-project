@@ -9,6 +9,7 @@ async function run(name) {
 
   if (!resp.useGithub) {
     Object.assign(resp, await questions.getGitRemoteDetails());
+    resp.hasRemote = resp.git.url ? true : false;
   } else {
     Object.assign(resp, await questions.getAuthFile());
     const token = await auth.getToken(resp.authPath);
