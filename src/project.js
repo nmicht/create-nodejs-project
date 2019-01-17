@@ -39,6 +39,7 @@ class Project {
       email: '',
       url: '',
     },
+    useGithub = false,
     hasRemote = false,
     git = {
       name: '',
@@ -61,6 +62,7 @@ class Project {
       email: author.email,
       url: author.url,
     };
+    this.useGithub = useGithub;
     this.hasRemote = hasRemote;
     this.git = {
       name: git.name,

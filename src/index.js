@@ -49,14 +49,16 @@ async function myPackage() {
   await gitHandler.init(destPath);
 
   // Create github repository and include properties to the project object
-  const resp = await githubHandler.create(project.name, project.isPrivate);
-  if (resp !== false) {
-    project.git.httpUrl = resp.html_url;
-    project.git.name = resp.name;
-    project.git.sshUrl = resp.ssh_url;
-    project.issueTracker = `${project.git.httpUrl}/issues`;
-    gitHandler.addRemote(destPath, project.git.sshUrl);
-    project.hasRemote = true;
+  if (project.useGithub) {
+    const resp = await githubHandler.create(project.name, project.isPrivate);
+    if (resp !== false) {
+      project.git.httpUrl = resp.html_url;
+      project.git.name = resp.name;
+      project.git.sshUrl = resp.ssh_url;
+      project.issueTracker = `${project.git.httpUrl}/issues`;
+      gitHandler.addRemote(destPath, project.git.sshUrl);
+      project.hasRemote = true;
+    }
   }
 
   // Copy template files
