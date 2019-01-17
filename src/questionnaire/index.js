@@ -4,6 +4,9 @@ const auth = require('../auth');
 async function run(name) {
   const resp = await questions.getProjectDetails(name);
 
+  // Process keywords
+  resp.keywords = resp.keywords.split(',');
+
   if (!resp.useGithub) {
     Object.assign(resp, await questions.getGitRemoteDetails());
   } else {
@@ -11,8 +14,8 @@ async function run(name) {
     const token = await auth.getToken(resp.authPath);
     Object.assign(resp, await questions.getAuthToken(token));
     if (resp.token !== token) {
-      // Update the token on the auth.json?
-      // probably ask if they want to update it?
+      // TODO Update the token on the auth.json?
+      // TODO probably ask if they want to update it?
     }
   }
 

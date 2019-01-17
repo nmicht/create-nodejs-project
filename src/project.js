@@ -48,6 +48,7 @@ class Project {
     issueTracker = '',
     isPrivate = false,
     path = '',
+    year = '',
   }) {
     this.name = name;
     this.description = description;
@@ -69,6 +70,7 @@ class Project {
     this.issueTracker = issueTracker;
     this.isPrivate = isPrivate;
     this.path = path;
+    this.year = year;
   }
 
   /**
@@ -92,13 +94,13 @@ class Project {
       PROJECT_DESCRIPTION: this.description,
       PROJECT_VERSION: this.version,
       PROJECT_URL: this.url,
-      PROJECT_KEYWORDS: this.keywords, // TODO fix the issue with keywords
+      PROJECT_KEYWORDS: this.keywords,
       PROJECT_LICENSE: this.license,
       PROJECT_AUTHOR_NAME: this.author.name,
-      PROJECT_AUTHOR_EMAIL: `<${this.author.email}>`,
-      PROJECT_AUTHOR_URL: `(${this.author.url})`,
-      PROJECT_GIT_URL: `git+${this.git.httpUrl}`,
-      PROJECT_ISSUETRACKER: `${this.issueTracker}`,
+      PROJECT_AUTHOR_EMAIL: this.author.email,
+      PROJECT_AUTHOR_URL: this.author.url,
+      PROJECT_GIT_URL: this.git.sshUrl,
+      PROJECT_ISSUETRACKER: this.issueTracker,
       PROJECT_PRIVATE: this.isPrivate,
     };
   }
