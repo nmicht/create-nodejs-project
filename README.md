@@ -83,11 +83,10 @@ If you are planning to allow this script to create your github repositories, is 
 ```
 
 
-
 [license-url]: LICENSE
-[license-image]: https://img.shields.io/github/license/ahmadnassri/node-create.svg?style=for-the-badge&logo=circleci
+[license-image]: https://img.shields.io/github/license/nmicht/create-nodejs-project.svg?style=for-the-badge&logo=appveyor
 
 [npm-url]: https://www.npmjs.com/package/create-nodejs-project
-[npm-image]: https://img.shields.io/npm/v/@nmicht/create.svg?style=for-the-badge&logo=npm
+[npm-image]: https://img.shields.io/npm/v/create-nodejs-project.svg?style=for-the-badge&logo=npm
 
 [npm/init]: https://docs.npmjs.com/cli/init#description
