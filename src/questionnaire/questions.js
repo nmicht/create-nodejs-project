@@ -115,7 +115,7 @@ async function getAuthFile() {
       message: 'What is the path for the auth.json file?',
       default: settings.authPath,
       validate: (ans) => {
-        const path = utils.resolvePath(ans);
+        const path = utils.fs.resolvePath(ans);
         if (path && fs.existsSync(path)) {
           return true;
         }

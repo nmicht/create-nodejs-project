@@ -17,8 +17,8 @@ async function run() {
     throw new Error('A path for the new project is required');
   }
 
-  destPath = utils.resolvePath(destPath);
-  const projectFolder = utils.normalizeName(destPath);
+  destPath = utils.fs.resolvePath(destPath);
+  const projectFolder = utils.string.normalizeName(destPath);
   const templatePath = path.join(__dirname, '..', 'template');
 
   // TODO Include here a way to get "options" for the other args
@@ -84,7 +84,7 @@ async function run() {
   }
 
   // Copy template files
-  utils.copyDirRecursive(templatePath, destPath);
+  utils.fs.copyDirRecursive(templatePath, destPath);
 
   // TODO Copy license and update with project data
 
@@ -97,7 +97,7 @@ async function run() {
     throw error;
   }
 
-  const generatedReadmeFile = utils.replaceByDictionary(originalReadmeFile, project.dictionary);
+  const generatedReadmeFile = utils.string.replaceByDictionary(originalReadmeFile, project.dictionary);
   fs.writeFile(`${destPath}/README.md`, generatedReadmeFile, (err) => {
     if (err) {
       throw err;
@@ -113,7 +113,7 @@ async function run() {
     throw error;
   }
 
-  const generatedPackageFile = utils.replaceByDictionary(originalPackageFile, project.dictionary);
+  const generatedPackageFile = utils.string.replaceByDictionary(originalPackageFile, project.dictionary);
   // TODO Change this to sync because dependencies depends on it
   fs.writeFile(`${destPath}/package.json`, generatedPackageFile, 'utf8', (err) => {
     if (err) {
@@ -125,7 +125,7 @@ async function run() {
   // Install devDependencies
   console.log('Installing dev dependencies...');
   const args = ['install', '-D'].concat(settings.lintPkgs, answers.testPackages);
-  await utils.spawnp(
+  await utils.process.spawnp(
     'npm',
     args,
     destPath,

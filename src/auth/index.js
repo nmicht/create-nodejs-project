@@ -13,7 +13,7 @@ function getToken(user = undefined, jsonPath = '') {
   let auth = {};
   let ghData;
   const authPath = jsonPath || settings.authPath;
-  const authFile = utils.resolvePath(authPath);
+  const authFile = utils.fs.resolvePath(authPath);
 
   try {
     auth = JSON.parse(fs.readFileSync(authFile, 'utf8'));
@@ -48,7 +48,7 @@ function updateToken(user = undefined, token, jsonPath = '') {
   let currentToken = '';
   let userIndex = 0;
   const authPath = jsonPath || settings.authPath;
-  const authFile = utils.resolvePath(authPath);
+  const authFile = utils.fs.resolvePath(authPath);
 
   try {
     auth = JSON.parse(fs.readFileSync(authFile, 'utf8'));
@@ -85,7 +85,7 @@ function updateToken(user = undefined, token, jsonPath = '') {
 function getFirstUser(jsonPath = '') {
   let auth = {};
   const authPath = jsonPath || settings.authPath;
-  const authFile = utils.resolvePath(authPath);
+  const authFile = utils.fs.resolvePath(authPath);
 
   try {
     auth = JSON.parse(fs.readFileSync(authFile, 'utf8'));
