@@ -10,8 +10,11 @@ async function run(name) {
     resp.hasRemote = !!resp.git.url;
   } else {
     Object.assign(resp, await questions.getAuthFile());
+
     const token = await auth.getToken(resp.authPath);
+
     Object.assign(resp, await questions.getAuthToken(token));
+
     if (resp.token) {
       if (resp.token !== token && await auth.confirmUpdateToken()) {
         auth.updateToken(resp.token, settings.authPath);
@@ -19,10 +22,6 @@ async function run(name) {
     } else {
       resp.useGithub = false;
     }
-  }
-
-  if (resp.useTesting) {
-    Object.assign(resp, await questions.getTestingDetails());
   }
 
   return resp;

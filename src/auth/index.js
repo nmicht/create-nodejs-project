@@ -1,7 +1,7 @@
 const fs = require('fs');
-const path = require('path');
 
 const settings = require('../settings');
+const utils = require('../utils');
 
 /**
  * Get the Github token from the auth file
@@ -11,7 +11,7 @@ const settings = require('../settings');
 async function getToken(jsonPath = '') {
   let auth = {};
   const authPath = jsonPath || settings.authPath;
-  const authFile = path.resolve(authPath);
+  const authFile = utils.resolvePath(authPath);
 
   try {
     auth = JSON.parse(fs.readFileSync(authFile, 'utf8'));
@@ -35,7 +35,7 @@ async function getToken(jsonPath = '') {
 async function updateToken(token, jsonPath = '') {
   let auth = {};
   const authPath = jsonPath || settings.authPath;
-  const authFile = path.resolve(authPath);
+  const authFile = utils.resolvePath(authPath);
 
   try {
     auth = JSON.parse(fs.readFileSync(authFile, 'utf8'));

@@ -1,6 +1,19 @@
 const { exec, spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
+
+/**
+ * Resolve a path even if is using shell specific for home
+ * @param  {String} oPath The path to resolve
+ * @return {String}       The resolved path
+ */
+function resolvePath(oPath) {
+  let fPath = '';
+  fPath = oPath.replace('~', os.homedir());
+  fPath = path.resolve(fPath);
+  return fPath;
+}
 
 /**
  * Replace a string using a given dictionary
@@ -31,8 +44,8 @@ function normalizeName(filepath) {
  * @param  {String} [destPath='../new'] The destination path
  */
 function copyDirRecursive(currentPath = './', destPath = '../new') {
-  let dest = path.resolve(destPath);
-  let current = path.resolve(currentPath);
+  let dest = resolvePath(destPath);
+  let current = resolvePath(currentPath);
 
   // Create the dest folder
   if (!fs.existsSync(dest)) {
@@ -43,8 +56,8 @@ function copyDirRecursive(currentPath = './', destPath = '../new') {
   // Read files in folder
   let files = fs.readdirSync(current);
   for(file of files) {
-    src = path.resolve(path.join(current, file));
-    dest = path.resolve(path.join(destPath, file));
+    src = resolvePath(path.join(current, file));
+    dest = resolvePath(path.join(destPath, file));
 
     if (fs.lstatSync(src).isDirectory()) {
       // Recursive copy for folders
@@ -58,10 +71,10 @@ function copyDirRecursive(currentPath = './', destPath = '../new') {
 }
 
 function deleteDirRecursive(folderPath) {
-  const dirPath = path.resolve(folderPath);
+  const dirPath = resolvePath(folderPath);
   if (fs.existsSync(dirPath)) {
     fs.readdirSync(dirPath).forEach((file) => {
-      const curPath = path.resolve(path.join(dirPath, file));
+      const curPath = resolvePath(path.join(dirPath, file));
       if (fs.lstatSync(curPath).isDirectory()) { // recurse
         deleteDirRecursive(curPath);
       } else { // delete file
@@ -128,4 +141,5 @@ module.exports = {
   execp,
   spawnp,
   normalizeName,
+  resolvePath,
 };

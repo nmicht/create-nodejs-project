@@ -1,6 +1,8 @@
 const inquirer = require('inquirer');
+const fs = require('fs');
 
 const settings = require('../settings');
+const utils = require('../utils');
 
 async function getProjectDetails(name) {
   return inquirer.prompt([
@@ -71,15 +73,16 @@ async function getProjectDetails(name) {
     },
 
     {
-      type: 'confirm',
-      name: 'useGithub',
-      message: 'Would you like to create a GitHub repository?',
+      type: 'checkbox',
+      name: 'testPackages',
+      message: 'Which test packages do you want to include?',
+      choices: settings.testingPkgs,
     },
 
     {
       type: 'confirm',
-      name: 'useTesting',
-      message: 'Would you like to include testing?',
+      name: 'useGithub',
+      message: 'Would you like to create a GitHub repository?',
     },
   ]);
 }
@@ -102,17 +105,6 @@ async function getGitRemoteDetails() {
   ]);
 }
 
-async function getTestingDetails() {
-  return inquirer.prompt([
-    {
-      type: 'checkbox',
-      name: 'testPackages',
-      message: 'Which test packages do you want to include?',
-      choices: settings.testingPkgs,
-    },
-  ]);
-}
-
 async function getAuthFile() {
   return inquirer.prompt([
     {
@@ -120,6 +112,13 @@ async function getAuthFile() {
       name: 'authPath',
       message: 'What is the path for the auth.json file?',
       default: settings.authPath,
+      validate: (ans) => {
+        const path = utils.resolvePath(ans);
+        if (path && fs.existsSync(path)) {
+          return true;
+        }
+        return 'You should introduce a real path for the auth.json';
+      },
     },
   ]);
 }
@@ -148,7 +147,6 @@ async function confirmUpdateToken() {
 module.exports = {
   getProjectDetails,
   getGitRemoteDetails,
-  getTestingDetails,
   getAuthFile,
   getAuthToken,
   confirmUpdateToken,

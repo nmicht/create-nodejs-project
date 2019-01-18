@@ -10,9 +10,14 @@ const gitHandler = require('./gitHandler');
 const githubHandler = require('./githubHandler');
 const questionnaire = require('./questionnaire');
 
-async function myPackage() {
+async function run() {
   // First arg = path
-  const destPath = path.resolve(process.argv[2]);
+  let destPath = process.argv[2];
+  if (!destPath) {
+    throw new Error('A path for the new project is required');
+  }
+
+  destPath = utils.resolvePath(destPath);
   const projectFolder = utils.normalizeName(destPath);
   const templatePath = path.join(__dirname, '..', 'template');
 
@@ -23,14 +28,6 @@ async function myPackage() {
     throw new Error(`The project folder '${destPath} already exists. You need to specify a different path.`);
   }
 
-  // Create folder
-  try {
-    fs.mkdirSync(destPath);
-  } catch (error) {
-    console.error('The folder project was not created. See details on the log');
-    throw error;
-  }
-
   // Questionnaire for the options
   const answers = await questionnaire.run(projectFolder);
 
@@ -38,6 +35,14 @@ async function myPackage() {
   Object.assign(answers, {
     path: destPath,
   });
+
+  // Create folder
+  try {
+    fs.mkdirSync(destPath);
+  } catch (error) {
+    console.error('The folder project was not created');
+    throw error;
+  }
 
   // Create project object
   const project = new Project(answers);
@@ -126,4 +131,4 @@ async function myPackage() {
   }
 }
 
-myPackage();
+run();
