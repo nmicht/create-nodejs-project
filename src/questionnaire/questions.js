@@ -4,6 +4,16 @@ const fs = require('fs');
 const settings = require('../settings');
 const utils = require('../utils');
 
+/**
+ * Run the prompts to get the details for the project
+ * @param  {Object} defaults
+ * @param  {String} defaults.projectName    The default name for the project
+ * @param  {String} defaults.version        The default version for the project
+ * @param  {String} defaults.license        The default license for the project
+ * @param  {String} defaults.gitUserName    The git username setup for the project
+ * @param  {String} defaults.gitUserEmail   The git username setup for the project
+ * @return {Promise}
+ */
 async function getProjectDetails(defaults) {
   return inquirer.prompt([
     {
@@ -89,24 +99,30 @@ async function getProjectDetails(defaults) {
   ]);
 }
 
+/**
+ * Run the prompts to get the details for the remote git
+ * @return {Promise}
+ */
 async function getGitRemoteDetails() {
   return inquirer.prompt([
     {
       type: 'input',
       name: 'git.sshUrl',
       message: 'What git remote will you be using?',
-      default: '', // TODO include here the default github url
     },
 
     {
       type: 'input',
       name: 'issueTracker',
       message: 'Where is your issue tracker?',
-      default: '', // TODO include here the default github url
     },
   ]);
 }
 
+/**
+ * Run the prompts to geth the path for the auth file
+ * @return {Promise}
+ */
 async function getAuthFile() {
   return inquirer.prompt([
     {
@@ -125,6 +141,11 @@ async function getAuthFile() {
   ]);
 }
 
+/**
+ * Run the prompts to get the github user
+ * @param  {String} user The current user on the auth file
+ * @return {Promise}
+ */
 async function getGithubUser(user) {
   return inquirer.prompt([
     {
@@ -136,6 +157,12 @@ async function getGithubUser(user) {
   ]);
 }
 
+/**
+ * Run the prompts to get the github token
+ * @param  {String} user  The current github user on the auth file
+ * @param  {String} token The current github user on the auth file
+ * @return {Promise}
+ */
 async function getAuthToken(user, token) {
   return inquirer.prompt([
     {
@@ -147,6 +174,10 @@ async function getAuthToken(user, token) {
   ]);
 }
 
+/**
+ * Run the prompt to confirm if the user wants to update the token
+ * @return {Promise}
+ */
 async function confirmUpdateToken() {
   return inquirer.prompt([
     {
