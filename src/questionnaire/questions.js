@@ -134,8 +134,21 @@ async function getAuthToken(token) {
   ]);
 }
 
-exports.getProjectDetails = getProjectDetails;
-exports.getGitRemoteDetails = getGitRemoteDetails;
-exports.getTestingDetails = getTestingDetails;
-exports.getAuthFile = getAuthFile;
-exports.getAuthToken = getAuthToken;
+async function confirmUpdateToken() {
+  return inquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'updateToken',
+      message: 'Do you want to update the auth.json file with this token?',
+    },
+  ]);
+}
+
+module.exports = {
+  getProjectDetails,
+  getGitRemoteDetails,
+  getTestingDetails,
+  getAuthFile,
+  getAuthToken,
+  confirmUpdateToken,
+};

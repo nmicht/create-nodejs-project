@@ -1,5 +1,6 @@
 const questions = require('./questions');
 const auth = require('../auth');
+const settings = require('../settings');
 
 async function run(name) {
   const resp = await questions.getProjectDetails(name);
@@ -14,9 +15,12 @@ async function run(name) {
     Object.assign(resp, await questions.getAuthFile());
     const token = await auth.getToken(resp.authPath);
     Object.assign(resp, await questions.getAuthToken(token));
-    if (resp.token !== token) {
-      // TODO Update the token on the auth.json?
-      // TODO probably ask if they want to update it?
+    if (resp.token) {
+      if (resp.token !== token && await auth.confirmUpdateToken()) {
+        auth.updateToken(resp.token, settings.authPath);
+      }
+    } else {
+      resp.useGithub = false;
     }
   }
 
