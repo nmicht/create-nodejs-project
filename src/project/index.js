@@ -127,6 +127,14 @@ class Project {
   async setAuthorEmail() {
     this.author.email = this.author.email || await gitHandler.userValue('email');
   }
+
+  setGithubValues(data) {
+    this.git.httpUrl = data.html_url;
+    this.git.name = data.name;
+    this.git.sshUrl = data.ssh_url;
+    this.issueTracker = `${this.git.httpUrl}/issues`;
+    this.hasRemote = true;
+  }
 }
 
 module.exports = Project;

@@ -12,7 +12,12 @@ const auth = require('../auth');
  * github api response, otherwise, return false.
  * @throws If the token is not present
  */
-async function create(name, isPrivate = false, description = '', url = '') {
+async function create({
+  name,
+  isPrivate = false,
+  description = '',
+  url = '',
+}) {
   let token = '';
   let result;
 

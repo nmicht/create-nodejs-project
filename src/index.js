@@ -9,17 +9,16 @@ const settings = require('./settings');
 const gitHandler = require('./gitHandler');
 const githubHandler = require('./githubHandler');
 const questionnaire = require('./questionnaire');
+const template = require('./template');
 
 async function run() {
+  const TEMPLATE_PATH = path.join(__dirname, '..', 'template');
+
   // First arg = path
-  let destPath = process.argv[2];
+  const destPath = utils.fs.resolvePath(process.argv[2]);
   if (!destPath) {
     throw new Error('A path for the new project is required');
   }
-
-  destPath = utils.fs.resolvePath(destPath);
-  const projectFolder = utils.string.normalizeName(destPath);
-  const templatePath = path.join(__dirname, '..', 'template');
 
   // TODO Include here a way to get "options" for the other args
 
@@ -28,8 +27,9 @@ async function run() {
     throw new Error(`The project folder '${destPath} already exists. You need to specify a different path.`);
   }
 
+  // Setup the defaults
   const defaults = {
-    projectName: projectFolder,
+    projectName: utils.string.normalizeName(destPath),
     gitUserName: await gitHandler.userValue('name'),
     gitUserEmail: await gitHandler.userValue('email'),
     license: settings.default.license,
@@ -44,83 +44,38 @@ async function run() {
     path: destPath,
   });
 
+  // Create project object
+  const project = new Project(answers);
+
   // Create folder
   try {
-    fs.mkdirSync(destPath);
+    fs.mkdirSync(project.path);
   } catch (error) {
     console.error('The folder project was not created');
     throw error;
   }
 
-  // Create project object
-  const project = new Project(answers);
-
-  // Setup git configuration values for the project object
-  try {
-    await project.initGitConfig();
-  } catch (error) {
-    console.error(error);
-  }
-
-  // Initialize git
-  await gitHandler.init(destPath);
+  // Initialize git in the dest folder
+  await gitHandler.init(project.path);
 
   // Create github repository and include properties to the project object
   if (project.useGithub) {
-    const resp = await githubHandler.create(
-      project.name,
-      project.isPrivate,
-      project.description,
-      project.url
-    );
+    const resp = await githubHandler.create(project);
     if (resp !== false) {
-      project.git.httpUrl = resp.html_url;
-      project.git.name = resp.name;
-      project.git.sshUrl = resp.ssh_url;
-      project.issueTracker = `${project.git.httpUrl}/issues`;
-      gitHandler.addRemote(destPath, project.git.sshUrl);
-      project.hasRemote = true;
+      project.setGithubValues(resp);
+      gitHandler.addRemote(project.path, project.git.sshUrl);
     }
   }
 
   // Copy template files
-  utils.fs.copyDirRecursive(templatePath, destPath);
+  template.copy(TEMPLATE_PATH, project.path);
 
   // TODO Copy license and update with project data
 
 
   // Update readme with project data
-  let originalReadmeFile;
-  try {
-    originalReadmeFile = fs.readFileSync(path.join(templatePath, 'README.md'), 'utf8');
-  } catch (error) {
-    throw error;
-  }
-
-  const generatedReadmeFile = utils.string.replaceByDictionary(originalReadmeFile, project.dictionary);
-  fs.writeFile(`${destPath}/README.md`, generatedReadmeFile, (err) => {
-    if (err) {
-      throw err;
-    }
-    console.log('File updated: README.md');
-  });
-
-  // Update package.json with project data
-  let originalPackageFile;
-  try {
-    originalPackageFile = fs.readFileSync(path.join(templatePath, 'package.json'), 'utf8');
-  } catch (error) {
-    throw error;
-  }
-
-  const generatedPackageFile = utils.string.replaceByDictionary(originalPackageFile, project.dictionary);
-  // TODO Change this to sync because dependencies depends on it
-  fs.writeFile(`${destPath}/package.json`, generatedPackageFile, 'utf8', (err) => {
-    if (err) {
-      throw err;
-    }
-    console.log('File updated: package.json');
-  });
+  template.updateFile(path.join(project.path, 'README.md'), project.dictionary);
+  template.updateFile(path.join(project.path, 'package.json'), project.dictionary);
 
   // Install devDependencies
   console.log('Installing dev dependencies...');
@@ -132,10 +87,11 @@ async function run() {
   );
 
   // Commit and push
-  await gitHandler.commit(destPath);
+  console.log(await gitHandler.commit(project.path));
 
   if (project.hasRemote) {
-    gitHandler.push(destPath);
+    await gitHandler.push(project.path);
+    console.log(`Code pushed to ${project.git.sshUrl}`);
   }
 }
 
