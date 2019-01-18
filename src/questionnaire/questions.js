@@ -28,6 +28,7 @@ async function getProjectDetails(name) {
       type: 'input',
       name: 'keywords',
       message: 'Provide a comma-separated list of keywords:',
+      filter: ans => JSON.stringify(ans.split(',')),
     },
 
     {

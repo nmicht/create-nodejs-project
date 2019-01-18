@@ -5,9 +5,6 @@ const settings = require('../settings');
 async function run(name) {
   const resp = await questions.getProjectDetails(name);
 
-  // Process keywords
-  resp.keywords = resp.keywords.split(',');
-
   if (!resp.useGithub) {
     Object.assign(resp, await questions.getGitRemoteDetails());
     resp.hasRemote = !!resp.git.url;
