@@ -1,3 +1,5 @@
+<img width="75px" height="75px" align="right" alt="Create NodeJS Project Logo" src="" title="Create NodeJS Project"/>
+
 # Node Project Initializer
 
 [![License][license-image]][license-url] [![version][npm-image]][npm-url]
@@ -15,7 +17,18 @@ An [npm initializer][npm/init] to scaffold a node project and include basic tool
 
 ## Usage
 
-`npm init node-project path/to/project`
+1. Install the package as global
+```
+npm install -g create-nodejs-project
+```
+
+2. Config your github information  
+See [Github Auth](#configure-github-authentication)
+
+3. Create your project
+```
+npm init nodejs-project path/to/new/project
+```
 
 ## What it does
 
@@ -24,17 +37,22 @@ An [npm initializer][npm/init] to scaffold a node project and include basic tool
 2. Initialize a git repo
 3. Copy the template files (src, eslintrc, gitignore, readme, etc)
 4. Can create a Github repository
-5. Install eslint
+5. Handle the Github tokens for multiple accounts/users
+5. Install eslint dependencies
 5. Install the selected testing dependencies
 6. Generate package.json with all the project details
 7. Commit and push the initial commit
 
 ## About this package
 
-So, this started as a dry thing.  
-I'm not expert with NodeJS, but every time that I start a new project, I hate to go to other project, copy files like eslintrc, editorconfig, install the same dependencies, create folder structure, etc.  
+So, this started as a dry thing.
+
+I'm not expert with NodeJS, but every time that I start a new project, I hate to go to other project, copy files like eslintrc, editorconfig, install the same dependencies, create folder structure, etc.   
+
 So, the idea is to have a create package to use it in the form of:  
+
 `npm init node-project path/to/project`
+
 and with this have a new folder my-new-project with everything ready to work.  
 
 I know there are a lot of similar packages out there, but the idea is to learn more about nodejs api, handling files, packages, etc.
@@ -42,17 +60,16 @@ I know there are a lot of similar packages out there, but the idea is to learn m
 ## Future features
 
 1. Fix the structure of modules, classes and etc
-4. Add unit testing
-7. Add options to create the project with params instead of questionnaire
-10. Add a good error handler
+4. Unit testing
+7. Options to create the project with params instead of questionnaire
+10. A good error handler
 11. Color for the console messages
-12. Modify template structure (the one that is generated in the new project) to include unit test
+12. Improve the template structure (the one that is generated in the new project) to include unit test
 13. Include license files to the template copy/update process
 14. A logger ? (just for learning)
-17. Ability to handle auth for different github accounts
 18. Option to questionnaire with all the default values
 
-## Github Auth
+## Configure Github Authentication
 
 If you are planning to allow this script to create your github repositories, is required to generate a Github Token.
 
@@ -76,11 +93,19 @@ If you are planning to allow this script to create your github repositories, is 
 # nano ~/auth.json
 
 {
-  "github-oauth": {
-    "github.com": "YOUR_TOKEN"
-  }
+   "github": [
+     {
+       "user": "YOUR_USER",
+       "token": "YOUR_TOKEN"
+     },
+     {
+       "user": "OTHER_USER",
+       "token": "OTHER_TOKEN"
+     }
+   ]
 }
 ```
+
 
 
 [license-url]: LICENSE
