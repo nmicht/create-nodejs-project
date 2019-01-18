@@ -4,6 +4,7 @@
 
 * Handle the Github tokens for multiple accounts/users
 * Fix problem with keywords on package.json
+* Post install script to setup github auth details
 
 ## 0.1.3
 
