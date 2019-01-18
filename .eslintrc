@@ -2,5 +2,6 @@
   "extends": ["airbnb-base", "plugin:node/recommended"],
     "rules": {
       "no-console": off,
+      "comma-dangle": [error, always-multiline, {functions: never}]
   }
 }

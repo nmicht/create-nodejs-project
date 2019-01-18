@@ -1,17 +1,19 @@
 const fs = require('fs');
-const path = require('path');
 
 const settings = require('../settings');
+const utils = require('../utils');
 
 /**
  * Get the Github token from the auth file
- * @param  {String} [path=''] The path for the auth.json file
- * @return {String} The github token
+ * @param  {String} [user=undefined] The user owner of the token
+ * @param  {String} [path='']        The path for the auth.json file
+ * @return {String}                  The github token
  */
-async function getToken(jsonPath = '') {
+function getToken(user = undefined, jsonPath = '') {
   let auth = {};
+  let ghData;
   const authPath = jsonPath || settings.authPath;
-  const authFile = path.resolve(authPath);
+  const authFile = utils.fs.resolvePath(authPath);
 
   try {
     auth = JSON.parse(fs.readFileSync(authFile, 'utf8'));
@@ -19,13 +21,83 @@ async function getToken(jsonPath = '') {
     throw error;
   }
 
-  if (!auth.github.token) {
+  if (user) {
+    [ghData] = auth.github.filter(obj => obj.user === user);
+  } else {
+    [ghData] = auth.github;
+  }
+
+  const { token } = ghData;
+
+  if (!token) {
     throw new Error('Token missing');
   }
 
-  return auth.github.token;
+  return token;
+}
+
+/**
+ * Update the Token
+ * @param  {String} [user=undefined] The user owner of the token
+ * @param  {String} token            The token
+ * @param  {String} [jsonPath='']    The path for the auth.json file
+ * @return {Boolean}                 True in case the file gets updated
+ */
+function updateToken(user = undefined, token, jsonPath = '') {
+  let auth = {};
+  let currentToken = '';
+  let userIndex = 0;
+  const authPath = jsonPath || settings.authPath;
+  const authFile = utils.fs.resolvePath(authPath);
+
+  try {
+    auth = JSON.parse(fs.readFileSync(authFile, 'utf8'));
+  } catch (error) {
+    throw error;
+  }
+
+  currentToken = auth.github[0].token;
+
+  if (user) {
+    for (let k = 0; k < auth.github.length; k += 1) {
+      if (auth.github[k].user === user) {
+        userIndex = k;
+        currentToken = auth.github[k].token;
+        break;
+      }
+    }
+  }
+
+  if (currentToken !== token) {
+    auth.github[userIndex].token = token;
+    fs.writeFileSync(authFile, JSON.stringify(auth));
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Get the first user from the auth file
+ * @param  {String} [jsonPath=''] The auth.json file path
+ * @return {String}               The user
+ */
+function getFirstUser(jsonPath = '') {
+  let auth = {};
+  const authPath = jsonPath || settings.authPath;
+  const authFile = utils.fs.resolvePath(authPath);
+
+  try {
+    auth = JSON.parse(fs.readFileSync(authFile, 'utf8'));
+  } catch (error) {
+    throw error;
+  }
+
+  return auth.github[0].user;
 }
 
 module.exports = {
   getToken,
+  updateToken,
+  getFirstUser,
 };
