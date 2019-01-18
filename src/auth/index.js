@@ -11,6 +11,7 @@ const utils = require('../utils');
  */
 function getToken(user = undefined, jsonPath = '') {
   let auth = {};
+  let ghData;
   const authPath = jsonPath || settings.authPath;
   const authFile = utils.resolvePath(authPath);
 
@@ -20,11 +21,13 @@ function getToken(user = undefined, jsonPath = '') {
     throw error;
   }
 
-  let { token } = auth.github[0];
-
   if (user) {
-    token = auth.github.filter(obj => obj.user === user)[0].token;
+    [ghData] = auth.github.filter(obj => obj.user === user);
+  } else {
+    [ghData] = auth.github;
   }
+
+  const { token } = ghData;
 
   if (!token) {
     throw new Error('Token missing');
