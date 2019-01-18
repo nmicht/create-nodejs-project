@@ -19,7 +19,7 @@ An [npm initializer][npm/init] to scaffold a node project and include basic tool
 
 1. Install the package as global
 ```
-npm install -g create-NodeJS-project
+npm install -g create-nodejs-project
 ```
 
 2. You will be prompted for your Github information  
@@ -28,7 +28,7 @@ In order to create projects with Github integration, you will need to add the au
 
 3. Create your project
 ```
-npm init NodeJS-project path/to/new/project
+npm init nodejs-project path/to/new/project
 ```
 
 ## What it does
@@ -46,17 +46,12 @@ npm init NodeJS-project path/to/new/project
 
 ## About this package
 
-So, this started as a dry thing.
+The motivation started as a **DRY** thing.
 
 I'm not expert with NodeJS, but every time that I start a new project, I hate to go to other project, copy files like eslintrc, editorconfig, install the same dependencies, create folder structure, etc.   
 
-So, the idea is to have a create package to use it in the form of:  
+So, the idea is to have an automated way to initialize new NodeJS projects and with this have a new folder with everything ready to work in what really matters.  
 
-`npm init node-project path/to/project`
-
-and with this have a new folder my-new-project with everything ready to work.  
-
-I know there are a lot of similar packages out there, but the idea is to learn more about NodeJS API, handling files, packages, etc.
 
 ## Future features
 
@@ -108,7 +103,7 @@ If you are planning to allow this script to create your Github repositories, is 
 
 
 [license-url]: LICENSE
-[license-image]: https://img.shields.io/Github/license/nmicht/create-nodejs-project.svg?style=for-the-badge&logo=appveyor
+[license-image]: https://img.shields.io/github/license/nmicht/create-nodejs-project.svg?style=for-the-badge&logo=appveyor
 
 [npm-url]: https://www.npmjs.com/package/create-nodejs-project
 [npm-image]: https://img.shields.io/npm/v/create-nodejs-project.svg?style=for-the-badge&logo=npm
