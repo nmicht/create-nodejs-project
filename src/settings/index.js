@@ -29,6 +29,10 @@ const settings = {
     'MIT',
   ],
   authPath: path.join(os.homedir(), 'auth.json'),
+  default: {
+    license: 'MIT',
+    version: '0.1.0',
+  },
 };
 
 module.exports = settings;

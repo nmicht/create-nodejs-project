@@ -11,13 +11,17 @@ async function run(name) {
   } else {
     Object.assign(resp, await questions.getAuthFile());
 
-    const token = await auth.getToken(resp.authPath);
+    const githubUser = auth.getFirstUser(resp.authPath);
 
-    Object.assign(resp, await questions.getAuthToken(token));
+    Object.assign(resp, await questions.getGithubUser(githubUser));
+
+    const token = auth.getToken(resp.authUser, resp.authPath);
+
+    Object.assign(resp, await questions.getAuthToken(resp.authUser, token));
 
     if (resp.token) {
-      if (resp.token !== token && await auth.confirmUpdateToken()) {
-        auth.updateToken(resp.token, settings.authPath);
+      if (resp.token !== token && auth.confirmUpdateToken()) {
+        auth.updateToken(resp.authUser, resp.token, settings.authPath);
       }
     } else {
       resp.useGithub = false;

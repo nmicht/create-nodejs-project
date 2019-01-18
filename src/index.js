@@ -28,8 +28,16 @@ async function run() {
     throw new Error(`The project folder '${destPath} already exists. You need to specify a different path.`);
   }
 
+  const defaults = {
+    projectName: projectFolder,
+    gitUserName: await gitHandler.userValue('name'),
+    gitUserEmail: await gitHandler.userValue('email'),
+    license: settings.default.license,
+    version: settings.default.version,
+  };
+
   // Questionnaire for the options
-  const answers = await questionnaire.run(projectFolder);
+  const answers = await questionnaire.run(defaults);
 
   // Add extra values to the answers
   Object.assign(answers, {

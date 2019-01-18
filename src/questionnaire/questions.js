@@ -4,13 +4,13 @@ const fs = require('fs');
 const settings = require('../settings');
 const utils = require('../utils');
 
-async function getProjectDetails(name) {
+async function getProjectDetails(defaults) {
   return inquirer.prompt([
     {
       type: 'input',
       name: 'name',
       message: 'What is your project name?',
-      default: name,
+      default: defaults.projectName,
     },
 
     {
@@ -23,7 +23,7 @@ async function getProjectDetails(name) {
       type: 'input',
       name: 'version',
       message: 'What version do you want to start with?',
-      default: '0.1.0',
+      default: defaults.version,
     },
 
     {
@@ -38,19 +38,21 @@ async function getProjectDetails(name) {
       name: 'license',
       message: 'Please select a license',
       choices: settings.licenses,
-      default: 'MIT',
+      default: defaults.license,
     },
 
     {
       type: 'input',
       name: 'author.name',
       message: 'What is your name?',
+      default: defaults.gitUserName,
     },
 
     {
       type: 'input',
       name: 'author.email',
       message: 'What is your email?',
+      default: defaults.gitUserEmail,
     },
 
     {
@@ -123,12 +125,23 @@ async function getAuthFile() {
   ]);
 }
 
-async function getAuthToken(token) {
+async function getGithubUser(user) {
+  return inquirer.prompt([
+    {
+      type: 'input',
+      name: 'authUser',
+      message: 'What is your github user?',
+      default: user,
+    },
+  ]);
+}
+
+async function getAuthToken(user, token) {
   return inquirer.prompt([
     {
       type: 'input',
       name: 'token',
-      message: 'What is your GitHub token?',
+      message: `What is your GitHub token for user ${user}?`,
       default: token,
     },
   ]);
@@ -150,4 +163,5 @@ module.exports = {
   getAuthFile,
   getAuthToken,
   confirmUpdateToken,
+  getGithubUser,
 };
