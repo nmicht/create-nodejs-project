@@ -2,6 +2,11 @@ const fs = require('fs');
 
 const utils = require('../utils');
 
+/**
+ * Update a file using a dictionary
+ * @param  {String} [filePath=''] The path for the file
+ * @param  {Object} dictionary    A key-value dictionary
+ */
 function updateFile(filePath = '', dictionary) {
   const resolvedFilePath = utils.fs.resolvePath(filePath);
   let originalFile;
@@ -20,6 +25,11 @@ function updateFile(filePath = '', dictionary) {
   });
 }
 
+/**
+ * Copy the template folder recursively
+ * @param  {String} templatePath The template path
+ * @param  {String} destPath     The destination
+ */
 function copy(templatePath, destPath) {
   utils.fs.copyDirRecursive(templatePath, destPath);
 }
