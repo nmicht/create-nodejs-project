@@ -12,7 +12,12 @@ const auth = require('../auth');
  * github api response, otherwise, return false.
  * @throws If the token is not present
  */
-async function create(name, isPrivate = false, description = '', url = '') {
+async function create({
+  name,
+  isPrivate = false,
+  description = '',
+  url = '',
+}) {
   let token = '';
   let result;
 
@@ -27,7 +32,7 @@ async function create(name, isPrivate = false, description = '', url = '') {
   const cmd = `curl -w "%{http_code}" -H "Authorization: token ${token}" -d '{"name": "${name}", "private": ${isPrivate}, "description": "${description}", "homepage": "${url}"}' https://api.github.com/user/repos`;
 
   try {
-    result = await utils.execp(cmd);
+    result = await utils.process.execp(cmd);
   } catch (error) {
     console.error(error);
     return false;
@@ -74,7 +79,7 @@ async function deleteRepo(name, user) {
   const cmd = `curl -w "%{http_code}" -XDELETE -H "Authorization: token ${token}" https://api.github.com/repos/${user}/${name}`;
 
   try {
-    result = await utils.execp(cmd);
+    result = await utils.process.execp(cmd);
   } catch (error) {
     console.error(error);
     return false;

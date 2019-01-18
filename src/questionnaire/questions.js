@@ -1,14 +1,26 @@
 const inquirer = require('inquirer');
+const fs = require('fs');
 
 const settings = require('../settings');
+const utils = require('../utils');
 
-async function getProjectDetails(name) {
+/**
+ * Run the prompts to get the details for the project
+ * @param  {Object} defaults
+ * @param  {String} defaults.projectName    The default name for the project
+ * @param  {String} defaults.version        The default version for the project
+ * @param  {String} defaults.license        The default license for the project
+ * @param  {String} defaults.gitUserName    The git username setup for the project
+ * @param  {String} defaults.gitUserEmail   The git username setup for the project
+ * @return {Promise}
+ */
+async function getProjectDetails(defaults) {
   return inquirer.prompt([
     {
       type: 'input',
       name: 'name',
       message: 'What is your project name?',
-      default: name,
+      default: defaults.projectName,
     },
 
     {
@@ -21,13 +33,14 @@ async function getProjectDetails(name) {
       type: 'input',
       name: 'version',
       message: 'What version do you want to start with?',
-      default: '0.1.0',
+      default: defaults.version,
     },
 
     {
       type: 'input',
       name: 'keywords',
       message: 'Provide a comma-separated list of keywords:',
+      filter: ans => JSON.stringify(ans.split(',')),
     },
 
     {
@@ -35,19 +48,21 @@ async function getProjectDetails(name) {
       name: 'license',
       message: 'Please select a license',
       choices: settings.licenses,
-      default: 'MIT',
+      default: defaults.license,
     },
 
     {
       type: 'input',
       name: 'author.name',
       message: 'What is your name?',
+      default: defaults.gitUserName,
     },
 
     {
       type: 'input',
       name: 'author.email',
       message: 'What is your email?',
+      default: defaults.gitUserEmail,
     },
 
     {
@@ -70,48 +85,44 @@ async function getProjectDetails(name) {
     },
 
     {
-      type: 'confirm',
-      name: 'useGithub',
-      message: 'Would you like to create a GitHub repository?',
+      type: 'checkbox',
+      name: 'testPackages',
+      message: 'Which test packages do you want to include?',
+      choices: settings.testingPkgs,
     },
 
     {
       type: 'confirm',
-      name: 'useTesting',
-      message: 'Would you like to include testing?',
+      name: 'useGithub',
+      message: 'Would you like to create a GitHub repository?',
     },
   ]);
 }
 
+/**
+ * Run the prompts to get the details for the remote git
+ * @return {Promise}
+ */
 async function getGitRemoteDetails() {
   return inquirer.prompt([
     {
       type: 'input',
       name: 'git.sshUrl',
       message: 'What git remote will you be using?',
-      default: '', // TODO include here the default github url
     },
 
     {
       type: 'input',
       name: 'issueTracker',
       message: 'Where is your issue tracker?',
-      default: '', // TODO include here the default github url
     },
   ]);
 }
 
-async function getTestingDetails() {
-  return inquirer.prompt([
-    {
-      type: 'checkbox',
-      name: 'testPackages',
-      message: 'Which test packages do you want to include?',
-      choices: settings.testingPkgs,
-    },
-  ]);
-}
-
+/**
+ * Run the prompts to geth the path for the auth file
+ * @return {Promise}
+ */
 async function getAuthFile() {
   return inquirer.prompt([
     {
@@ -119,23 +130,69 @@ async function getAuthFile() {
       name: 'authPath',
       message: 'What is the path for the auth.json file?',
       default: settings.authPath,
+      validate: (ans) => {
+        const path = utils.fs.resolvePath(ans);
+        if (path && fs.existsSync(path)) {
+          return true;
+        }
+        return 'You should introduce a real path for the auth.json';
+      },
     },
   ]);
 }
 
-async function getAuthToken(token) {
+/**
+ * Run the prompts to get the github user
+ * @param  {String} user The current user on the auth file
+ * @return {Promise}
+ */
+async function getGithubUser(user) {
+  return inquirer.prompt([
+    {
+      type: 'input',
+      name: 'authUser',
+      message: 'What is your github user?',
+      default: user,
+    },
+  ]);
+}
+
+/**
+ * Run the prompts to get the github token
+ * @param  {String} user  The current github user on the auth file
+ * @param  {String} token The current github user on the auth file
+ * @return {Promise}
+ */
+async function getAuthToken(user, token) {
   return inquirer.prompt([
     {
       type: 'input',
       name: 'token',
-      message: 'What is your GitHub token?',
+      message: `What is your GitHub token for user ${user}?`,
       default: token,
     },
   ]);
 }
 
-exports.getProjectDetails = getProjectDetails;
-exports.getGitRemoteDetails = getGitRemoteDetails;
-exports.getTestingDetails = getTestingDetails;
-exports.getAuthFile = getAuthFile;
-exports.getAuthToken = getAuthToken;
+/**
+ * Run the prompt to confirm if the user wants to update the token
+ * @return {Promise}
+ */
+async function confirmUpdateToken() {
+  return inquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'updateToken',
+      message: 'Do you want to update the auth.json file with this token?',
+    },
+  ]);
+}
+
+module.exports = {
+  getProjectDetails,
+  getGitRemoteDetails,
+  getAuthFile,
+  getAuthToken,
+  confirmUpdateToken,
+  getGithubUser,
+};

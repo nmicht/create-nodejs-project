@@ -1,5 +1,12 @@
 {
-   "github": {
-     "token": "YOUR_TOKEN"
-   }
+   "github": [
+     {
+       "user": "YOUR_USER",
+       "token": "YOUR_TOKEN"
+     },
+     {
+       "user": "OTHER_USER",
+       "token": "OTHER_TOKEN"
+     }
+   ]
 }

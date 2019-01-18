@@ -1,6 +1,6 @@
 {
   "name": "create-nodejs-project",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "An npm initializer to scaffold a node project and include basic tools like lint, testing, etc.",
   "main": "src/index.js",
   "bin": "src/index.js",
@@ -18,9 +18,9 @@
   "license": "MIT",
   "private": false,
   "scripts": {
+    "postinstall": "node install/index.js",
     "start": "node src/index.js",
-    "cleanup": "node test/cleanup.js a-demo-project",
-    "test": "node src/index.js ../a-demo-project"
+    "cleanup": "node test/cleanup.js"
   },
   "engines": {
     "node": ">=10.0.0"

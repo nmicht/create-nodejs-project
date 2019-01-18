@@ -1,10 +1,12 @@
 const utils = require('../src/utils');
 const githubHandler = require('../src/githubHandler');
 
-function cleanup(name = 'a-demo-project') {
+function cleanup(path = 'a-demo-project') {
+  const name = utils.string.normalizeName(path);
+
   // Remove test folder
-  console.log(`Deleting folder ${name}`);
-  utils.deleteDirRecursive(`../${name}`);
+  console.log(`Deleting folder ${path}`);
+  utils.fs.deleteDirRecursive(path);
 
   // Delete github project
   githubHandler.deleteRepo(name, 'nmicht');

@@ -3,7 +3,7 @@
   "version": "PROJECT_VERSION",
   "description": "PROJECT_DESCRIPTION",
   "main": "src/index.js",
-  "keywords": [PROJECT_KEYWORDS],
+  "keywords": PROJECT_KEYWORDS,
   "author": "PROJECT_AUTHOR_NAME <PROJECT_AUTHOR_EMAIL> (PROJECT_AUTHOR_URL)",
   "license": "PROJECT_LICENSE",
   "private": PROJECT_PRIVATE,
