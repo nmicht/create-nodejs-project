@@ -18,6 +18,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
+    "postinstall": "node install/index.js",
     "start": "node src/index.js",
     "cleanup": "node test/cleanup.js"
   },
