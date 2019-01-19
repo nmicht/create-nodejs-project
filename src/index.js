@@ -11,7 +11,15 @@ const githubHandler = require('./githubHandler');
 const questionnaire = require('./questionnaire');
 const template = require('./template');
 
+/**
+   You can substitute the run function for a self invoke, take a look next approaches,
+   and you can do it in other places too.
+   (async function(){}());
+   (async () =>{})();
+ */
 async function run() {
+
+  // you can move this variable to the top level.
   const TEMPLATE_PATH = path.join(__dirname, '..', 'template');
 
   // First arg = path
@@ -23,11 +31,24 @@ async function run() {
   // TODO Include here a way to get "options" for the other args
 
   // Do not continue if the project folder already exists.
+
+  /**
+   You can use bluebird library to convert this sync method into async using promises.
+   http://bluebirdjs.com/docs/api/promise.promisify.html
+   */
   if (fs.existsSync(destPath)) {
     throw new Error(`The project folder '${destPath} already exists. You need to specify a different path.`);
   }
 
   // Setup the defaults
+  // This two awaits can be done in parallel
+  /*
+  const defaults = await Promise.all([gitHandler.userValue('name'), gitHandler.userValue('email')])
+    .then((data) => {
+      const [name, email] = data;
+      return {....}
+    })
+   */
   const defaults = {
     projectName: utils.string.normalizeName(destPath),
     gitUserName: await gitHandler.userValue('name'),
@@ -79,6 +100,10 @@ async function run() {
 
   // Install devDependencies
   console.log('Installing dev dependencies...');
+  /*
+  This is  very beautiful ES6 Trick
+  const args = ['install', '-D', ...settings.lintPkgs, ...answers.testPackages];
+   */
   const args = ['install', '-D'].concat(settings.lintPkgs, answers.testPackages);
   await utils.process.spawnp(
     'npm',

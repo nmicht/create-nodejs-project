@@ -84,6 +84,7 @@ class Project {
    * @return {Promise}
    */
   async initGitConfig() {
+    // Move this to be parallel not need to wait on serial.
     await this.setAuthorName();
     await this.setAuthorEmail();
   }
@@ -115,6 +116,7 @@ class Project {
    * @method setAuthorName
    * @return {Promise}
    */
+  // you can reword this method, is not a set, is more a initialize also you can merge this on one method initializeUserInformation
   async setAuthorName() {
     this.author.name = this.author.name || await gitHandler.userValue('name');
   }

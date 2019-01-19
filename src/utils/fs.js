@@ -1,3 +1,4 @@
+/** In general on this file, you can considerate move this to be async **/
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
