@@ -77,7 +77,7 @@ async function deleteRepo(name, user) {
   }
 
   console.log('Deleting github repository...\n');
-  // TODO consider use http instead curl? (yes you must, not all the computer have curl and you are excluding windows users)
+  // TODO consider use http instead curl?
   const cmd = `curl -w "%{http_code}" -XDELETE -H "Authorization: token ${token}" https://api.github.com/repos/${user}/${name}`;
 
   try {

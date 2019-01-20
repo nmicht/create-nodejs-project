@@ -11,17 +11,9 @@ const githubHandler = require('./githubHandler');
 const questionnaire = require('./questionnaire');
 const template = require('./template');
 
-/**
-   You can substitute the run function for a self invoke, take a look next approaches,
-   and you can do it in other places too.
-   (async function(){}());
-   (async () =>{})();
- */
-async function run() {
+const TEMPLATE_PATH = path.join(__dirname, '..', 'template');
 
-  // you can move this variable to the top level.
-  const TEMPLATE_PATH = path.join(__dirname, '..', 'template');
-
+(async () => {
   // First arg = path
   const destPath = utils.fs.resolvePath(process.argv[2]);
   if (!destPath) {
@@ -40,22 +32,17 @@ async function run() {
     throw new Error(`The project folder '${destPath} already exists. You need to specify a different path.`);
   }
 
-  // Setup the defaults
-  // This two awaits can be done in parallel
-  /*
   const defaults = await Promise.all([gitHandler.userValue('name'), gitHandler.userValue('email')])
     .then((data) => {
       const [name, email] = data;
-      return {....}
-    })
-   */
-  const defaults = {
-    projectName: utils.string.normalizeName(destPath),
-    gitUserName: await gitHandler.userValue('name'),
-    gitUserEmail: await gitHandler.userValue('email'),
-    license: settings.default.license,
-    version: settings.default.version,
-  };
+      return {
+        projectName: utils.string.normalizeName(destPath),
+        gitUserName: name,
+        gitUserEmail: email,
+        license: settings.default.license,
+        version: settings.default.version,
+      };
+    });
 
   // Questionnaire for the options
   const answers = await questionnaire.run(defaults);
@@ -100,11 +87,7 @@ async function run() {
 
   // Install devDependencies
   console.log('Installing dev dependencies...');
-  /*
-  This is  very beautiful ES6 Trick
   const args = ['install', '-D', ...settings.lintPkgs, ...answers.testPackages];
-   */
-  const args = ['install', '-D'].concat(settings.lintPkgs, answers.testPackages);
   await utils.process.spawnp(
     'npm',
     args,
@@ -118,6 +101,4 @@ async function run() {
     await gitHandler.push(project.path);
     console.log(`Code pushed to ${project.git.sshUrl}`);
   }
-}
-
-run();
+})();
