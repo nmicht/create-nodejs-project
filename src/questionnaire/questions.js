@@ -193,6 +193,6 @@ module.exports = {
   getGitRemoteDetails,
   getAuthFile,
   getAuthToken,
-  confirmUpdateToken,
+  confirmUpdateToken, // This should be complained by eslint, if not used removed.
   getGithubUser,
 };

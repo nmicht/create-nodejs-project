@@ -21,6 +21,8 @@ async function create({
   let token = '';
   let result;
 
+  // Actually you can put all your code in one try/catch block, every async function failing is trait as exception
+  // you can save many code here.
   try {
     token = await auth.getToken();
   } catch (error) {
@@ -67,7 +69,7 @@ async function create({
 async function deleteRepo(name, user) {
   let token = '';
   let result;
-
+  //Same here you can move this as a one try/catch block.
   try {
     token = await auth.getToken();
   } catch (error) {
@@ -75,7 +77,7 @@ async function deleteRepo(name, user) {
   }
 
   console.log('Deleting github repository...\n');
-  // TODO consider use http instead curl?
+  // TODO consider use http instead curl? (yes you must, not all the computer have curl and you are excluding windows users)
   const cmd = `curl -w "%{http_code}" -XDELETE -H "Authorization: token ${token}" https://api.github.com/repos/${user}/${name}`;
 
   try {
