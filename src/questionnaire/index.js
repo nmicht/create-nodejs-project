@@ -4,32 +4,36 @@ const settings = require('../settings');
 
 async function run(name) {
   const resp = await questions.getProjectDetails(name);
+  let remoteAnswers;
+  let authFileAnswers;
+  let userAnswers;
+  let tokenAnswers;
+  let currentAuthUser;
+  let currentToken;
 
   if (!resp.useGithub) {
-    Object.assign(resp, await questions.getGitRemoteDetails());
-    resp.hasRemote = !!resp.git.url;
+    remoteAnswers = await questions.getGitRemoteDetails();
+    resp.hasRemote = !!remoteAnswers.git.url;
   } else {
-    // Organizar obtención de datos y despues asignaciones
-    Object.assign(resp, await questions.getAuthFile());
+    authFileAnswers = await questions.getAuthFile();
 
-    const githubUser = auth.getFirstUser(resp.authPath);
+    currentAuthUser = auth.firstUser(authFileAnswers.authPath).user;
 
-    Object.assign(resp, await questions.getGithubUser(githubUser));
+    userAnswers = await questions.getGithubUser(currentAuthUser);
 
-    const token = auth.getToken(resp.authUser, resp.authPath);
+    currentToken = auth.getToken(userAnswers.authUser, authFileAnswers.authPath);
 
-    Object.assign(resp, await questions.getAuthToken(resp.authUser, token));
+    tokenAnswers = await questions.getAuthToken(userAnswers.authUser, currentToken);
 
-    // FIXME: validación innecesaria
-    if (resp.token) {
-      // FIXME: auth.confirmUpdateToken no existe
-      if (resp.token !== token && auth.confirmUpdateToken()) {
-        auth.updateToken(resp.authUser, resp.token, settings.authPath);
-      }
+    if ((userAnswers.authUser !== currentAuthUser || tokenAnswers.token !== currentToken)
+    && questions.confirmUpdateToken()) {
+      auth.updateToken(userAnswers.authUser, tokenAnswers.token, settings.authPath);
     } else {
       resp.useGithub = false;
     }
   }
+
+  Object.assign(resp, remoteAnswers, authFileAnswers, userAnswers, tokenAnswers);
 
   return resp;
 }

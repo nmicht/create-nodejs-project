@@ -127,12 +127,16 @@ class Project {
     this.author.email = this.author.email || await gitHandler.userValue('email');
   }
 
+  /**
+   * Set the github values into the object
+   * @param {Object} data All the github data
+   */
   setGithubValues(data) {
     this.git.httpUrl = data.html_url;
     this.git.name = data.name;
     this.git.sshUrl = data.ssh_url;
     this.issueTracker = `${this.git.httpUrl}/issues`;
-    this.hasRemote = true;
+    this.hasRemote = !!this.git.sshUrl;
   }
 }
 

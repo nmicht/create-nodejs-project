@@ -4,11 +4,10 @@ const utils = require('../utils');
 
 /**
  * Update a file using a dictionary
- * @param  {String} [filePath=''] The path for the file
  * @param  {Object} dictionary    A key-value dictionary
+ * @param  {String} [filePath=''] The path for the file
  */
-// FIXME: optional params to the right
-function updateFile(filePath = '', dictionary) {
+function updateFile(dictionary, filePath = '') {
   const resolvedFilePath = utils.fs.resolvePath(filePath);
   let originalFile;
   try {
@@ -32,7 +31,6 @@ function updateFile(filePath = '', dictionary) {
  * @param  {String} destPath     The destination
  */
 function copy(templatePath, destPath) {
-  // FIXME: es confuso tener un modulo `utils.fs` y también usar 'fs'. Si tendrás tu propio utils.fs sería ideal abstraer el funcinamiento de fs
   utils.fs.copyDirRecursive(templatePath, destPath);
 }
 

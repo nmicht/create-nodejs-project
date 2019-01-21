@@ -7,7 +7,8 @@ const auth = require('../auth');
  * @param  {Boolean} [isPrivate=false]  Defines is the project will be created as private
  * or public on github
  * @param  {String} [description='']    The description for the github project
- * @param  {String} [ul='']             The url for the github project
+ * @param  {String} [url='']            The url for the github project
+ * @param  {String} [user='']           The github user
  * @return {json|Boolean}   In case of success will return the json from the
  * github api response, otherwise, return false.
  * @throws If the token is not present
@@ -17,46 +18,37 @@ async function create({
   isPrivate = false,
   description = '',
   url = '',
+  user = '',
 }) {
-  let token = '';
+  const token = auth.getToken(user);
   let result;
 
-  // Actually you can put all your code in one try/catch block, every async function failing is trait as exception
-  // you can save many code here.
+  if (!token) {
+    throw new Error('Token missing');
+  }
+
   try {
-    token = await auth.getToken();
+    console.log('Creating github repository...\n');
+    // TODO consider use http instead curl?
+    const cmd = `curl -w "%{http_code}" -H "Authorization: token ${token}" -d '{"name": "${name}", "private": ${isPrivate}, "description": "${description}", "homepage": "${url}"}' https://api.github.com/user/repos`;
+
+    result = await utils.process.execp(cmd);
+
+    let json = result.substring(0, result.lastIndexOf('\n'));
+    const statusCode = Number(result.substring(result.lastIndexOf('\n')));
+
+    json = JSON.parse(json);
+
+    if (statusCode !== 201) {
+      console.error('Repository not created: ', json.errors[0].message);
+      return false;
+    }
+
+    console.log(`Repository ${json.name} created`);
+    return json;
   } catch (error) {
     throw error;
   }
-
-  console.log('Creating github repository...\n');
-  // TODO consider use http instead curl?
-  const cmd = `curl -w "%{http_code}" -H "Authorization: token ${token}" -d '{"name": "${name}", "private": ${isPrivate}, "description": "${description}", "homepage": "${url}"}' https://api.github.com/user/repos`;
-
-  try {
-    result = await utils.process.execp(cmd);
-  } catch (error) {
-    // FIXME: Por qué no throw
-    console.error(error);
-    return false;
-  }
-
-  let json = result.substring(0, result.lastIndexOf('\n'));
-  const statusCode = Number(result.substring(result.lastIndexOf('\n')));
-
-  try {
-    json = JSON.parse(json);
-  } catch (error) {
-    return false;
-  }
-
-  if (statusCode !== 201) {
-    console.error('Repository not created: ', json.errors[0].message);
-    return false;
-  }
-
-  console.log(`Repository ${json.name} created`);
-  return json;
 }
 
 /**
@@ -68,46 +60,40 @@ async function create({
  * @throws If the token is not present
  */
 async function deleteRepo(name, user) {
-  let token = '';
+  const token = auth.getToken(user);
   let result;
 
-  // Same here you can move this as a one try/catch block.
+  if (!token) {
+    throw new Error('Token missing');
+  }
+
   try {
-    token = await auth.getToken();
+    console.log('Deleting github repository...\n');
+    // TODO consider use http instead curl?
+    const cmd = `curl -w "%{http_code}" -XDELETE -H "Authorization: token ${token}" https://api.github.com/repos/${user}/${name}`;
+
+    result = await utils.process.execp(cmd);
+
+    const statusCode = Number(result.substring(result.lastIndexOf('\n')));
+
+    if (statusCode !== 204) {
+      let json = result.substring(0, result.lastIndexOf('\n'));
+
+      json = JSON.parse(json);
+
+      console.error('Repository not deleted: ', json.message);
+      return false;
+    }
+
+    console.log(`Repository ${name} deleted`);
+
+    return {
+      message: 'Repository deleted',
+      statusCode,
+    };
   } catch (error) {
     throw error;
   }
-
-  console.log('Deleting github repository...\n');
-  // TODO consider use http instead curl?
-  const cmd = `curl -w "%{http_code}" -XDELETE -H "Authorization: token ${token}" https://api.github.com/repos/${user}/${name}`;
-
-  try {
-    result = await utils.process.execp(cmd);
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
-
-  const statusCode = Number(result.substring(result.lastIndexOf('\n')));
-
-  if (statusCode !== 204) {
-    let json = result.substring(0, result.lastIndexOf('\n'));
-    try {
-      json = JSON.parse(json);
-    } catch (error) {
-      return false;
-    }
-    console.error('Repository not deleted: ', json.message);
-    return false;
-  }
-
-  console.log(`Repository ${name} deleted`);
-
-  return {
-    message: 'Repository deleted',
-    statusCode,
-  };
 }
 
 // TODO include a method to handle the topics (will require to get the github user)

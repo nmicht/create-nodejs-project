@@ -1,39 +1,28 @@
 const fs = require('fs');
-const inquirer = require('inquirer');
+const path = require('path');
 
-const utils = require('../src/utils');
+const questions = require('../src/questionnaire/questions');
+const settings = require('../src/settings');
 
-async function install() {
-  // FIXME: sería bueno almacenar ese archivo dentro de una carpeta que de contexto de tu modulo
-  const authPath = utils.fs.resolvePath('~/auth.json');
+const AUTH_PATH = path.resolve(settings.authPath);
 
-  // no se pueden reutilizar las preguntas del cuestionario?
-  const answers = await inquirer.prompt([
-    {
-      type: 'input',
-      name: 'user',
-      message: 'What is your github user?',
-    },
+/**
+ * Install function for the package, it set up the github auth details
+ */
+(async () => {
+  const authDetails = await Promise.all([questions.getGithubUser(''), questions.getAuthToken('', '')])
+    .then((data) => {
+      const [authUser, token] = data;
+      return {
+        github: [
+          {
+            user: authUser,
+            token,
+          },
+        ],
+      };
+    });
 
-    {
-      type: 'input',
-      name: 'token',
-      message: 'What is your GitHub token?',
-    },
-  ]);
-
-  // Write file
-  const data = {
-    github: [
-      {
-        user: answers.user,
-        token: answers.token,
-      },
-    ],
-  };
-
-  fs.writeFileSync(authPath, JSON.stringify(data));
-  console.log(`File ${authPath} created with your github details`);
-}
-
-install();
+  fs.writeFileSync(AUTH_PATH, JSON.stringify(authDetails));
+  console.log(`File ${AUTH_PATH} created with your github details`);
+})();

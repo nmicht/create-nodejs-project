@@ -4,113 +4,83 @@ const settings = require('../settings');
 const utils = require('../utils');
 
 /**
- * Get the Github token from the auth file
- * @param  {String} [user=undefined] The user owner of the token
- * @param  {String} [path='']        The path for the auth.json file
- * @return {String}                  The github token
+ * Return the first user on the auth data
+ * @param  {String} [jsonPath=settings.authPath] The path for the create-nodejs-project.json file
+ * @return {Object|undefined}
  */
-function getToken(user = undefined, jsonPath = '') {
-  let auth = {};
-  let ghData;
-  const authPath = jsonPath || settings.authPath;
-  const authFile = utils.fs.resolvePath(authPath);
+function firstUser(jsonPath = settings.authPath) {
+  const auth = utils.fs.readJsonFile(jsonPath); // FIXME bubble the error
 
-  // FIXME: estructura repetitiva. getAuthConfig()?
-  try {
-    auth = JSON.parse(fs.readFileSync(authFile, 'utf8'));
-  } catch (error) {
-    throw error;
-  }
+  return auth.github[0];
+}
+
+/**
+ * Find a user on the auth file
+ * @param  {String} user                         The user to find
+ * @param  {String} [jsonPath=settings.authPath] The path for the create-nodejs-project.json file
+ * @return {Object|undefined}
+ */
+function findUser(user, jsonPath = settings.authPath) {
+  const auth = utils.fs.readJsonFile(jsonPath); // FIXME bubble the error
+
+  return auth.github.find(obj => obj.user === user);
+}
+
+/**
+ * Get the Github token from the auth file
+ * @param  {String} user                         The user owner of the token
+ * @param  {String} [jsonPath=settings.authPath] The path for the create-nodejs-project.json file
+ * @return {String}                              The github token or empty string.
+ */
+function getToken(user, jsonPath = settings.authPath) {
+  let userData;
 
   if (user) {
-    // FIXME: si no encuentra objetos ghData será undefined
-    [ghData] = auth.github.filter(obj => obj.user === user);
+    userData = findUser(user, jsonPath);
   } else {
-    [ghData] = auth.github;
+    userData = firstUser();
   }
 
-  const { token } = ghData;
-
-  if (!token) {
-    throw new Error('Token missing');
-  }
+  const { token } = userData || '';
 
   return token;
 }
 
 /**
  * Update the Token
- * @param  {String} [user=undefined] The user owner of the token
- * @param  {String} token            The token
- * @param  {String} [jsonPath='']    The path for the auth.json file
- * @return {Boolean}                 True in case the file gets updated
+ * @param  {String} user                            The user owner of the token
+ * @param  {String} token                           The token
+ * @param  {String} [jsonPath=settings.authPath]    The path for the create-nodejs-project.json file
+ * @return {Boolean}                                True in case the file gets updated
  */
-// FIXME: los valores no especificados son undefined
-function updateToken(user = undefined, token, jsonPath = '') {
+function updateToken(user, token, jsonPath = settings.authPath) {
   let auth = {};
   let currentToken = '';
-  let userIndex = 0;
-  // Qué valores por puede tener jsonPath; podría setearse como valor por default jsonPath = settings.authPath
-  const authPath = jsonPath || settings.authPath;
-  const authFile = utils.fs.resolvePath(authPath);
+  let userIndex;
+  const authPath = utils.fs.resolvePath(jsonPath);
 
-  try {
-    auth = JSON.parse(fs.readFileSync(authFile, 'utf8'));
-  } catch (error) {
-    throw error;
-  }
+  auth = utils.fs.readJsonFile(jsonPath); // FIXME buble the error
 
-  currentToken = auth.github[0].token;
+  currentToken = firstUser().token;
 
-  // FIXME: no se puede reemplazar por un find o separalo en otra función?
   if (user) {
-    // FIXME: qué es `k`?
-    // FIXME: reemplazar por findIndex?
-    for (let k = 0; k < auth.github.length; k += 1) {
-      if (auth.github[k].user === user) {
-        userIndex = k;
-        currentToken = auth.github[k].token;
-        break;
-      }
-    }
+    userIndex = auth.github.findIndex(elem => elem.user === user);
+    currentToken = auth.github[userIndex].token;
   }
 
-  // FIXME: tal vez se vería mejor si se invierte la validación
-  if (currentToken !== token) {
-    auth.github[userIndex].token = token;
-    fs.writeFileSync(authFile, JSON.stringify(auth));
-    return true;
+  if (currentToken === token) {
+    return false;
   }
 
-  return false;
-}
+  auth.github[userIndex].token = token;
+  fs.writeFileSync(authPath, JSON.stringify(auth));
 
-/**
- * Get the first user from the auth file
- * @param  {String} [jsonPath=''] The auth.json file path
- * @return {String}               The user
- */
-function getFirstUser(jsonPath = '') {
-  let auth = {};
-  // FIXME: podría setearse como valor por default jsonPath = settings.authPath
-  const authPath = jsonPath || settings.authPath;
-  const authFile = utils.fs.resolvePath(authPath);
-
-  try {
-    auth = JSON.parse(fs.readFileSync(authFile, 'utf8'));
-  } catch (error) {
-    throw error;
-  }
-
-  // FIMXE:
-  // const [ firstUserData ] = auth.github;
-  // retun firstUserData.user;
-
-  return auth.github[0].user;
+  return true;
 }
 
 module.exports = {
+  firstUser,
+  findUser,
   getToken,
   updateToken,
-  getFirstUser,
 };

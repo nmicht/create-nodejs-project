@@ -7,12 +7,13 @@ const path = require('path');
  * @return {String}            The string with the replacements
  */
 function replaceByDictionary(original, dictionary) {
-  // FIXME: no es buena practica modificar los valores originales de los parametros
+  let processed = original;
+
   for(key in dictionary){
-    original = original.replace(key, dictionary[key]);
+    processed = processed.replace(key, dictionary[key]);
   }
 
-  return original;
+  return processed;
 }
 
 /**

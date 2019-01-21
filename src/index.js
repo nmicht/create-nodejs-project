@@ -30,10 +30,6 @@ const TEMPLATE_PATH = path.join(__dirname, '..', 'template');
 
   // Do not continue if the project folder already exists.
 
-  /**
-   You can use bluebird library to convert this sync method into async using promises.
-   http://bluebirdjs.com/docs/api/promise.promisify.html
-   */
   if (fs.existsSync(destPath)) {
     throw new Error(`The project folder '${destPath} already exists. You need to specify a different path.`);
   }
@@ -75,7 +71,7 @@ const TEMPLATE_PATH = path.join(__dirname, '..', 'template');
   // Create github repository and include properties to the project object
   if (project.useGithub) {
     const resp = await githubHandler.create(project);
-    if (resp !== false) {
+    if (resp) {
       project.setGithubValues(resp);
       gitHandler.addRemote(project.path, project.git.sshUrl);
     }
@@ -87,13 +83,12 @@ const TEMPLATE_PATH = path.join(__dirname, '..', 'template');
   // TODO Copy license and update with project data
 
 
-  // FIXME:
-  //  readmePath = path.join(project.path, 'README.md')
-  //  packagePath = path.join(project.path, 'package.json')
+  const readmePath = path.join(project.path, 'README.md');
+  const packagePath = path.join(project.path, 'package.json');
 
-  // Update readme with project data
-  template.updateFile(path.join(project.path, 'README.md'), project.dictionary);
-  template.updateFile(path.join(project.path, 'package.json'), project.dictionary);
+  // Update files with project data
+  template.updateFile(project.dictionary, readmePath);
+  template.updateFile(project.dictionary, packagePath);
 
   // Install devDependencies
   console.log('Installing dev dependencies...');
@@ -105,8 +100,8 @@ const TEMPLATE_PATH = path.join(__dirname, '..', 'template');
   );
 
   // Commit and push
-  // FIXME: resultado de la operación en variable
-  console.log(await gitHandler.commit(project.path));
+  const commitResult = await gitHandler.commit(project.path);
+  console.log(commitResult);
 
   if (project.hasRemote) {
     await gitHandler.push(project.path);

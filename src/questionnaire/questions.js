@@ -128,14 +128,14 @@ async function getAuthFile() {
     {
       type: 'input',
       name: 'authPath',
-      message: 'What is the path for the auth.json file?',
+      message: 'What is the path for the create-nodejs-project.json file?',
       default: settings.authPath,
       validate: (ans) => {
         const path = utils.fs.resolvePath(ans);
         if (path && fs.existsSync(path)) {
           return true;
         }
-        return 'You should introduce a real path for the auth.json';
+        return 'You should introduce a real path for the create-nodejs-project.json';
       },
     },
   ]);
@@ -183,7 +183,7 @@ async function confirmUpdateToken() {
     {
       type: 'confirm',
       name: 'updateToken',
-      message: 'Do you want to update the auth.json file with this token?',
+      message: 'Do you want to update the create-nodejs-project.json file with this token?',
     },
   ]);
 }

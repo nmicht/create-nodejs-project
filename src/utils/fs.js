@@ -1,26 +1,47 @@
-/** In general on this file, you can considerate move this to be async **/
+// FIXME: es confuso tener un modulo `utils.fs` y también usar 'fs'. Si tendrás tu propio utils.fs sería ideal abstraer el funcinamiento de fs
+
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
 /**
  * Resolve a path even if is using shell specific for home
- * @param  {String} oPath The path to resolve
- * @return {String}       The resolved path
+ * @param  {String} originalPath The path to resolve
+ * @return {String}              The resolved path
  */
-function resolvePath(oPath) {
-  let fPath = '';
-  // FIXME: incosistencia con la manera en que se guardal el archov auth.json
-  fPath = oPath.replace('~', os.homedir());
-  fPath = path.resolve(fPath);
-  return fPath;
+function resolvePath(originalPath) {
+  let finalPath = '';
+
+  if (os.platform() !== 'win32') {
+    finalPath = originalPath.replace('~', os.homedir());
+  }
+
+  finalPath = path.resolve(finalPath);
+
+  return finalPath;
 }
 
+/**
+ * Read a file and translate to json
+ * @param  {String} file The path to the file
+ * @return {Object}      An object from the json parse
+ */
+function readJsonFile(file) {
+  let json;
+
+  try {
+    json = JSON.parse(fs.readFileSync(resolvePath(file), 'utf8'));
+  } catch (error) {
+    throw error;
+  }
+
+  return json;
+}
 
 /**
  * Copy a folder recursively
  * @param  {String} [currentPath='./']   The folder path to copy
- * @param  {String} [destPath='../new'] The destination path
+ * @param  {String} [destPath='../new']  The destination path
  */
 function copyDirRecursive(currentPath = './', destPath = '../new') {
   let dest = resolvePath(destPath);
@@ -73,4 +94,5 @@ module.exports = {
   copyDirRecursive,
   deleteDirRecursive,
   resolvePath,
+  readJsonFile,
 };

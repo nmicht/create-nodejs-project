@@ -84,7 +84,7 @@ If you are planning to allow this script to create your Github repositories, is 
 5. Open Terminal and add the Github token.
 
 ```
-# nano ~/auth.json
+# nano ~/create-nodejs-project.json
 
 {
    "Github": [
