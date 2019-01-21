@@ -84,11 +84,7 @@ class Project {
    * @return {Promise}
    */
   async initGitConfig() {
-    // Move this to be parallel not need to wait on serial.
-    // await Promise.all([this.initializeAuthorName(), this.setAuthorEmail()]); like this?
-
-    await this.initializeAuthorName();
-    await this.initializeAuthorEmail();
+    await Promise.all([this.initializeAuthorName(), this.setAuthorEmail()]);
   }
 
   /**

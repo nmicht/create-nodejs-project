@@ -69,7 +69,8 @@ async function create({
 async function deleteRepo(name, user) {
   let token = '';
   let result;
-  //Same here you can move this as a one try/catch block.
+
+  // Same here you can move this as a one try/catch block.
   try {
     token = await auth.getToken();
   } catch (error) {
