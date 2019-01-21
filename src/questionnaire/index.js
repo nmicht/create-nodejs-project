@@ -9,6 +9,7 @@ async function run(name) {
     Object.assign(resp, await questions.getGitRemoteDetails());
     resp.hasRemote = !!resp.git.url;
   } else {
+    // Organizar obtención de datos y despues asignaciones
     Object.assign(resp, await questions.getAuthFile());
 
     const githubUser = auth.getFirstUser(resp.authPath);
@@ -19,7 +20,9 @@ async function run(name) {
 
     Object.assign(resp, await questions.getAuthToken(resp.authUser, token));
 
+    // FIXME: validación innecesaria
     if (resp.token) {
+      // FIXME: auth.confirmUpdateToken no existe
       if (resp.token !== token && auth.confirmUpdateToken()) {
         auth.updateToken(resp.authUser, resp.token, settings.authPath);
       }

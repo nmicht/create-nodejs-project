@@ -15,6 +15,7 @@ function getToken(user = undefined, jsonPath = '') {
   const authPath = jsonPath || settings.authPath;
   const authFile = utils.fs.resolvePath(authPath);
 
+  // FIXME: estructura repetitiva. getAuthConfig()?
   try {
     auth = JSON.parse(fs.readFileSync(authFile, 'utf8'));
   } catch (error) {
@@ -22,6 +23,7 @@ function getToken(user = undefined, jsonPath = '') {
   }
 
   if (user) {
+    // FIXME: si no encuentra objetos ghData será undefined
     [ghData] = auth.github.filter(obj => obj.user === user);
   } else {
     [ghData] = auth.github;
@@ -43,10 +45,12 @@ function getToken(user = undefined, jsonPath = '') {
  * @param  {String} [jsonPath='']    The path for the auth.json file
  * @return {Boolean}                 True in case the file gets updated
  */
+// FIXME: los valores no especificados son undefined
 function updateToken(user = undefined, token, jsonPath = '') {
   let auth = {};
   let currentToken = '';
   let userIndex = 0;
+  // Qué valores por puede tener jsonPath; podría setearse como valor por default jsonPath = settings.authPath
   const authPath = jsonPath || settings.authPath;
   const authFile = utils.fs.resolvePath(authPath);
 
@@ -58,7 +62,10 @@ function updateToken(user = undefined, token, jsonPath = '') {
 
   currentToken = auth.github[0].token;
 
+  // FIXME: no se puede reemplazar por un find o separalo en otra función?
   if (user) {
+    // FIXME: qué es `k`?
+    // FIXME: reemplazar por findIndex?
     for (let k = 0; k < auth.github.length; k += 1) {
       if (auth.github[k].user === user) {
         userIndex = k;
@@ -68,6 +75,7 @@ function updateToken(user = undefined, token, jsonPath = '') {
     }
   }
 
+  // FIXME: tal vez se vería mejor si se invierte la validación
   if (currentToken !== token) {
     auth.github[userIndex].token = token;
     fs.writeFileSync(authFile, JSON.stringify(auth));
@@ -84,6 +92,7 @@ function updateToken(user = undefined, token, jsonPath = '') {
  */
 function getFirstUser(jsonPath = '') {
   let auth = {};
+  // FIXME: podría setearse como valor por default jsonPath = settings.authPath
   const authPath = jsonPath || settings.authPath;
   const authFile = utils.fs.resolvePath(authPath);
 
@@ -92,6 +101,10 @@ function getFirstUser(jsonPath = '') {
   } catch (error) {
     throw error;
   }
+
+  // FIMXE:
+  // const [ firstUserData ] = auth.github;
+  // retun firstUserData.user;
 
   return auth.github[0].user;
 }

@@ -34,6 +34,7 @@ async function create({
   try {
     result = await utils.process.execp(cmd);
   } catch (error) {
+    // FIXME: Por qué no throw
     console.error(error);
     return false;
   }

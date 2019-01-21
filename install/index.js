@@ -4,8 +4,10 @@ const inquirer = require('inquirer');
 const utils = require('../src/utils');
 
 async function install() {
+  // FIXME: sería bueno almacenar ese archivo dentro de una carpeta que de contexto de tu modulo
   const authPath = utils.fs.resolvePath('~/auth.json');
 
+  // no se pueden reutilizar las preguntas del cuestionario?
   const answers = await inquirer.prompt([
     {
       type: 'input',

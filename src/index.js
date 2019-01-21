@@ -11,6 +11,12 @@ const githubHandler = require('./githubHandler');
 const questionnaire = require('./questionnaire');
 const template = require('./template');
 
+// FIXME: separación en funciones async para construir un proyecto.
+// - Obtener valores
+// - crear proyecto
+// - inicializar git
+// - configurar template
+// - commit
 async function run() {
   const TEMPLATE_PATH = path.join(__dirname, '..', 'template');
 
@@ -73,12 +79,18 @@ async function run() {
   // TODO Copy license and update with project data
 
 
+  // FIXME:
+  //  readmePath = path.join(project.path, 'README.md')
+  //  packagePath = path.join(project.path, 'package.json')
+
   // Update readme with project data
   template.updateFile(path.join(project.path, 'README.md'), project.dictionary);
   template.updateFile(path.join(project.path, 'package.json'), project.dictionary);
 
   // Install devDependencies
   console.log('Installing dev dependencies...');
+  // FIXME: es6 syntax
+  // ['install', '-D', ...settings.lintPkg, ...answers.testPackages]
   const args = ['install', '-D'].concat(settings.lintPkgs, answers.testPackages);
   await utils.process.spawnp(
     'npm',
@@ -87,6 +99,7 @@ async function run() {
   );
 
   // Commit and push
+  // FIXME: resultado de la operación en variable
   console.log(await gitHandler.commit(project.path));
 
   if (project.hasRemote) {
