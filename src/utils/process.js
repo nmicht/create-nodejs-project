@@ -6,11 +6,10 @@ const { exec, spawn } = require('child_process');
  * @param  {String} cmd  The commando to be executed
  * @return {Promise}     Promise object represents the exec of command
  */
+// FIXME cwd param documentation
 function execp(cmd, cwd = null) {
   return new Promise((resolve, reject) => {
-    exec(cmd, {
-      cwd,
-    }, (error, stdout) => {
+    exec(cmd, { cwd }, (error, stdout) => {
       if (error) {
         console.error(`There was an error with the command: ${cmd}`);
         reject(error);

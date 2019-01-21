@@ -13,6 +13,12 @@ const template = require('./template');
 
 const TEMPLATE_PATH = path.join(__dirname, '..', 'template');
 
+// FIXME: separación en funciones async para construir un proyecto.
+// - Obtener valores
+// - crear proyecto
+// - inicializar git
+// - configurar template
+// - commit
 (async () => {
   // First arg = path
   const destPath = utils.fs.resolvePath(process.argv[2]);
@@ -81,6 +87,10 @@ const TEMPLATE_PATH = path.join(__dirname, '..', 'template');
   // TODO Copy license and update with project data
 
 
+  // FIXME:
+  //  readmePath = path.join(project.path, 'README.md')
+  //  packagePath = path.join(project.path, 'package.json')
+
   // Update readme with project data
   template.updateFile(path.join(project.path, 'README.md'), project.dictionary);
   template.updateFile(path.join(project.path, 'package.json'), project.dictionary);
@@ -95,6 +105,7 @@ const TEMPLATE_PATH = path.join(__dirname, '..', 'template');
   );
 
   // Commit and push
+  // FIXME: resultado de la operación en variable
   console.log(await gitHandler.commit(project.path));
 
   if (project.hasRemote) {

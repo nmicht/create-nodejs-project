@@ -7,6 +7,7 @@ const path = require('path');
  * @return {String}            The string with the replacements
  */
 function replaceByDictionary(original, dictionary) {
+  // FIXME: no es buena practica modificar los valores originales de los parametros
   for(key in dictionary){
     original = original.replace(key, dictionary[key]);
   }

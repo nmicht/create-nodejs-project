@@ -10,6 +10,7 @@ const os = require('os');
  */
 function resolvePath(oPath) {
   let fPath = '';
+  // FIXME: incosistencia con la manera en que se guardal el archov auth.json
   fPath = oPath.replace('~', os.homedir());
   fPath = path.resolve(fPath);
   return fPath;
