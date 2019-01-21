@@ -8,8 +8,9 @@ const utils = require('../utils');
  * @param  {String} [filePath=''] The path for the file
  */
 function updateFile(dictionary, filePath = '') {
-  const resolvedFilePath = utils.fs.resolvePath(filePath);
+  const resolvedFilePath = utils.files.resolvePath(filePath);
   let originalFile;
+
   try {
     originalFile = fs.readFileSync(resolvedFilePath, 'utf8');
   } catch (error) {
@@ -17,11 +18,12 @@ function updateFile(dictionary, filePath = '') {
   }
 
   const generatedFile = utils.string.replaceByDictionary(originalFile, dictionary);
+
   fs.writeFile(resolvedFilePath, generatedFile, (err) => {
     if (err) {
       throw err;
     }
-    console.log(`File updated: ${resolvedFilePath}`);
+    console.log(`File ${resolvedFilePath} updated`);
   });
 }
 
@@ -31,7 +33,7 @@ function updateFile(dictionary, filePath = '') {
  * @param  {String} destPath     The destination
  */
 function copy(templatePath, destPath) {
-  utils.fs.copyDirRecursive(templatePath, destPath);
+  utils.files.copyDirRecursive(templatePath, destPath);
 }
 
 module.exports = {

@@ -87,7 +87,7 @@ If you are planning to allow this script to create your Github repositories, is 
 # nano ~/create-nodejs-project.json
 
 {
-   "Github": [
+   "github": [
      {
        "user": "YOUR_USER",
        "token": "YOUR_TOKEN"

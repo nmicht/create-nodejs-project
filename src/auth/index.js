@@ -8,8 +8,8 @@ const utils = require('../utils');
  * @param  {String} [jsonPath=settings.authPath] The path for the create-nodejs-project.json file
  * @return {Object|undefined}
  */
-function firstUser(jsonPath = settings.authPath) {
-  const auth = utils.fs.readJsonFile(jsonPath); // FIXME bubble the error
+async function firstUser(jsonPath = settings.authPath) {
+  const auth = await utils.files.readJsonFile(jsonPath);
 
   return auth.github[0];
 }
@@ -20,8 +20,8 @@ function firstUser(jsonPath = settings.authPath) {
  * @param  {String} [jsonPath=settings.authPath] The path for the create-nodejs-project.json file
  * @return {Object|undefined}
  */
-function findUser(user, jsonPath = settings.authPath) {
-  const auth = utils.fs.readJsonFile(jsonPath); // FIXME bubble the error
+async function findUser(user, jsonPath = settings.authPath) {
+  const auth = await utils.files.readJsonFile(jsonPath);
 
   return auth.github.find(obj => obj.user === user);
 }
@@ -32,13 +32,13 @@ function findUser(user, jsonPath = settings.authPath) {
  * @param  {String} [jsonPath=settings.authPath] The path for the create-nodejs-project.json file
  * @return {String}                              The github token or empty string.
  */
-function getToken(user, jsonPath = settings.authPath) {
+async function getToken(user, jsonPath = settings.authPath) {
   let userData;
 
   if (user) {
-    userData = findUser(user, jsonPath);
+    userData = await findUser(user, jsonPath);
   } else {
-    userData = firstUser();
+    userData = await firstUser();
   }
 
   const { token } = userData || '';
@@ -53,17 +53,18 @@ function getToken(user, jsonPath = settings.authPath) {
  * @param  {String} [jsonPath=settings.authPath]    The path for the create-nodejs-project.json file
  * @return {Boolean}                                True in case the file gets updated
  */
-function updateToken(user, token, jsonPath = settings.authPath) {
+async function updateToken(user, token, jsonPath = settings.authPath) {
   let auth = {};
   let currentToken = '';
   let userIndex;
-  const authPath = utils.fs.resolvePath(jsonPath);
+  const authPath = utils.files.resolvePath(jsonPath);
 
-  auth = utils.fs.readJsonFile(jsonPath); // FIXME buble the error
+  auth = await utils.files.readJsonFile(jsonPath);
 
   currentToken = firstUser().token;
 
   if (user) {
+    // FIXME consider the case for a new user data
     userIndex = auth.github.findIndex(elem => elem.user === user);
     currentToken = auth.github[userIndex].token;
   }
@@ -73,7 +74,7 @@ function updateToken(user, token, jsonPath = settings.authPath) {
   }
 
   auth.github[userIndex].token = token;
-  fs.writeFileSync(authPath, JSON.stringify(auth));
+  fs.writeFile(authPath, JSON.stringify(auth));
 
   return true;
 }

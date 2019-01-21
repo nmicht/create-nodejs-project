@@ -20,7 +20,7 @@ async function create({
   url = '',
   user = '',
 }) {
-  const token = auth.getToken(user);
+  const token = await auth.getToken(user);
   let result;
 
   if (!token) {
@@ -28,7 +28,7 @@ async function create({
   }
 
   try {
-    console.log('Creating github repository...\n');
+    console.info('Creating github repository ...');
     // TODO consider use http instead curl?
     const cmd = `curl -w "%{http_code}" -H "Authorization: token ${token}" -d '{"name": "${name}", "private": ${isPrivate}, "description": "${description}", "homepage": "${url}"}' https://api.github.com/user/repos`;
 
@@ -60,7 +60,7 @@ async function create({
  * @throws If the token is not present
  */
 async function deleteRepo(name, user) {
-  const token = auth.getToken(user);
+  const token = await auth.getToken(user);
   let result;
 
   if (!token) {
@@ -68,7 +68,7 @@ async function deleteRepo(name, user) {
   }
 
   try {
-    console.log('Deleting github repository...\n');
+    console.info('Deleting github repository ...');
     // TODO consider use http instead curl?
     const cmd = `curl -w "%{http_code}" -XDELETE -H "Authorization: token ${token}" https://api.github.com/repos/${user}/${name}`;
 

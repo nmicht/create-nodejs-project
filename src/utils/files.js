@@ -1,5 +1,3 @@
-// FIXME: es confuso tener un modulo `utils.fs` y también usar 'fs'. Si tendrás tu propio utils.fs sería ideal abstraer el funcinamiento de fs
-
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
@@ -24,18 +22,18 @@ function resolvePath(originalPath) {
 /**
  * Read a file and translate to json
  * @param  {String} file The path to the file
- * @return {Object}      An object from the json parse
+ * @return {Promise}     The json object from the file
  */
-function readJsonFile(file) {
+async function readJsonFile(file) {
   let json;
 
-  try {
-    json = JSON.parse(fs.readFileSync(resolvePath(file), 'utf8'));
-  } catch (error) {
-    throw error;
-  }
-
-  return json;
+  return new Promise((resolve, reject) => {
+    fs.readFile(resolvePath(file), 'utf8', (err, data) => {
+      if (err) reject(err);
+      json = JSON.parse(data);
+      resolve(json);
+    });
+  });
 }
 
 /**
@@ -50,7 +48,7 @@ function copyDirRecursive(currentPath = './', destPath = '../new') {
   // Create the dest folder
   if (!fs.existsSync(dest)) {
     fs.mkdirSync(dest);
-    console.log(`Folder created: ${dest}`);
+    console.log(`Folder ${dest} created`);
   }
 
   // Read files in folder
@@ -66,7 +64,7 @@ function copyDirRecursive(currentPath = './', destPath = '../new') {
     } else {
       // Copy file
       fs.copyFileSync(src, dest);
-      console.log(`File copied: ${file}`);
+      console.log(`File ${file} copied`);
     }
   }
 }
@@ -84,9 +82,9 @@ function deleteDirRecursive(folderPath) {
       }
     });
     fs.rmdirSync(dirPath);
-    console.log(`Dir ${dirPath} deleted`);
+    console.log(`Folder ${dirPath} deleted`);
   } else {
-    console.error(`Dir not deleted: ${dirPath} not found`);
+    console.error(`Folder ${dirPath} not deleted: Not found`);
   }
 }
 

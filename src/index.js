@@ -21,7 +21,7 @@ const TEMPLATE_PATH = path.join(__dirname, '..', 'template');
 // - commit
 (async () => {
   // First arg = path
-  const destPath = utils.fs.resolvePath(process.argv[2]);
+  const destPath = utils.files.resolvePath(process.argv[2]);
   if (!destPath) {
     throw new Error('A path for the new project is required');
   }
@@ -91,7 +91,7 @@ const TEMPLATE_PATH = path.join(__dirname, '..', 'template');
   template.updateFile(project.dictionary, packagePath);
 
   // Install devDependencies
-  console.log('Installing dev dependencies...');
+  console.info('Installing dev dependencies ...');
   const args = ['install', '-D', ...settings.lintPkgs, ...answers.testPackages];
   await utils.process.spawnp(
     'npm',
@@ -101,7 +101,8 @@ const TEMPLATE_PATH = path.join(__dirname, '..', 'template');
 
   // Commit and push
   const commitResult = await gitHandler.commit(project.path);
-  console.log(commitResult);
+  console.log('Code commited');
+  console.info(commitResult);
 
   if (project.hasRemote) {
     await gitHandler.push(project.path);

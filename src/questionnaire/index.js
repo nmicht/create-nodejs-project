@@ -17,11 +17,11 @@ async function run(name) {
   } else {
     authFileAnswers = await questions.getAuthFile();
 
-    currentAuthUser = auth.firstUser(authFileAnswers.authPath).user;
+    currentAuthUser = await auth.firstUser(authFileAnswers.authPath).user;
 
     userAnswers = await questions.getGithubUser(currentAuthUser);
 
-    currentToken = auth.getToken(userAnswers.authUser, authFileAnswers.authPath);
+    currentToken = await auth.getToken(userAnswers.authUser, authFileAnswers.authPath);
 
     tokenAnswers = await questions.getAuthToken(userAnswers.authUser, currentToken);
 
