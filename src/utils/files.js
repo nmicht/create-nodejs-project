@@ -1,3 +1,4 @@
+const fsP = require('fs').promises;
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
@@ -41,32 +42,51 @@ async function readJsonFile(file) {
  * @param  {String} [currentPath='./']   The folder path to copy
  * @param  {String} [destPath='../new']  The destination path
  */
-function copyDirRecursive(currentPath = './', destPath = '../new') {
+async function copyDirRecursive(currentPath = './', destPath = '../new') {
   let dest = resolvePath(destPath);
   const current = resolvePath(currentPath);
 
   // Create the dest folder
-  if (!fs.existsSync(dest)) {
-    fs.mkdirSync(dest);
-    console.log(`Folder ${dest} created`);
-  }
+  fsP.access(dest)
+    .catch(async () => {
+      await fsP.mkdir(dest, { recursive: true });
+      console.log(`Folder ${dest} created`);
+    });
 
   // Read files in folder
-  const files = fs.readdirSync(current);
+  const files = await fsP.readdir(current);
 
   for(file of files) {
     src = resolvePath(path.join(current, file));
     dest = resolvePath(path.join(destPath, file));
 
-    if (fs.lstatSync(src).isDirectory()) {
+    srcObj = await fsP.lstat(src);
+    if (srcObj.isDirectory()) {
       // Recursive copy for folders
-      copyDirRecursive(src, dest);
+      await copyDirRecursive(src, dest);
     } else {
       // Copy file
-      fs.copyFileSync(src, dest);
+      await fsP.copyFile(src, dest);
       console.log(`File ${file} copied`);
     }
   }
+
+  // const promises = files.map(file => new Promise(async () => {
+  //   const src = resolvePath(path.join(current, file));
+  //   dest = resolvePath(path.join(destPath, file));
+  //
+  //   const srcObj = await fsP.lstat(src);
+  //   if (srcObj.isDirectory()) {
+  //     // Recursive copy for folders
+  //     await copyDirRecursive(src, dest);
+  //   } else {
+  //     // Copy file
+  //     await fsP.copyFile(src, dest);
+  //     console.log(`File ${file} copied`);
+  //   }
+  // }));
+  //
+  // await Promise.all(promises);
 }
 
 function deleteDirRecursive(folderPath) {
