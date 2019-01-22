@@ -83,7 +83,7 @@ async function updateAuthFile(user, token, jsonPath = settings.authPath) {
   currentToken = firstUser().token;
 
   if (user) {
-    // FIXME consider the case for a new user data
+    // TODO consider the case for a new user data
     userIndex = auth.github.findIndex(elem => elem.user === user);
     currentToken = auth.github[userIndex].token;
   }
