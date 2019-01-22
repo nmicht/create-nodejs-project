@@ -151,7 +151,7 @@ async function getGithubUser(user) {
     {
       type: 'input',
       name: 'authUser',
-      message: 'What is your github user?',
+      message: 'What is your Github user?',
       default: user,
     },
   ]);

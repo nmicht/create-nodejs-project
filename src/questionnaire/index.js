@@ -3,7 +3,6 @@ const auth = require('../auth');
 const settings = require('../settings');
 
 async function run(name) {
-  const resp = await questions.getProjectDetails(name);
   let remoteAnswers;
   let authFileAnswers;
   let userAnswers;
@@ -11,24 +10,28 @@ async function run(name) {
   let currentAuthUser;
   let currentToken;
 
+  const resp = await questions.getProjectDetails(name);
+
   if (!resp.useGithub) {
     remoteAnswers = await questions.getGitRemoteDetails();
     resp.hasRemote = !!remoteAnswers.git.url;
   } else {
     authFileAnswers = await questions.getAuthFile();
 
-    currentAuthUser = await auth.firstUser(authFileAnswers.authPath).user;
+    currentAuthUser = await auth.firstUser(authFileAnswers.authPath);
 
-    userAnswers = await questions.getGithubUser(currentAuthUser);
+    userAnswers = await questions.getGithubUser(currentAuthUser.user);
 
     currentToken = await auth.getToken(userAnswers.authUser, authFileAnswers.authPath);
 
     tokenAnswers = await questions.getAuthToken(userAnswers.authUser, currentToken);
 
-    if ((userAnswers.authUser !== currentAuthUser || tokenAnswers.token !== currentToken)
+    if ((userAnswers.authUser !== currentAuthUser.user || tokenAnswers.token !== currentToken)
     && questions.confirmUpdateToken()) {
       auth.updateToken(userAnswers.authUser, tokenAnswers.token, settings.authPath);
-    } else {
+    }
+
+    if (!currentToken) {
       resp.useGithub = false;
     }
   }
