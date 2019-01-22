@@ -1,4 +1,14 @@
+const pathModule = require('path');
+const fs = require('fs').promises;
+
 const gitHandler = require('../gitHandler');
+const githubHandler = require('../githubHandler');
+const settings = require('../settings');
+const utils = require('../utils');
+const template = require('../template');
+const questionnaire = require('../questionnaire');
+
+const TEMPLATE_PATH = pathModule.join(__dirname, '..', '..', 'template');
 
 /**
  * Project handle all the information for the new node project
@@ -27,8 +37,9 @@ class Project {
    * @param {String}  [git.sshUrl='']   The git ssh url
    * @param {String}  [issueTracker=''] The url for issue tracker
    * @param {Boolean} [isPrivate=false] If the project is private or public
-   * @param {String}  [path='']         The path for the project folder
+   * @param {String}  [path='']         The full path for the project folder
    * @param {String}  [year='']         The year to be used on the license
+   * @param {Array}   [testPackages=[]] The list of the test packages selected
    */
   constructor({
     name = '',
@@ -43,6 +54,10 @@ class Project {
       url: '',
     },
     useGithub = false,
+    github = {
+      user: '',
+      token: '',
+    },
     hasRemote = false,
     git = {
       name: '',
@@ -53,6 +68,7 @@ class Project {
     isPrivate = false,
     path = '',
     year = '',
+    testPackages = [],
   }) {
     this.name = name;
     this.description = description;
@@ -66,6 +82,10 @@ class Project {
       url: author.url,
     };
     this.useGithub = useGithub;
+    this.github = {
+      user: github.user,
+      token: github.token,
+    };
     this.hasRemote = hasRemote;
     this.git = {
       name: git.name,
@@ -76,6 +96,7 @@ class Project {
     this.isPrivate = isPrivate;
     this.path = path;
     this.year = year;
+    this.testPackages = testPackages;
   }
 
   /**
@@ -84,8 +105,7 @@ class Project {
    * @return {Promise}
    */
   async initGitConfig() {
-    await this.setAuthorName();
-    await this.setAuthorEmail();
+    await Promise.all([this.initializeAuthorName(), this.setAuthorEmail()]);
   }
 
   /**
@@ -112,28 +132,173 @@ class Project {
 
   /**
    * Set the project's author name using git information
-   * @method setAuthorName
+   * @method initializeAuthorName
    * @return {Promise}
    */
-  async setAuthorName() {
+  async initializeAuthorName() {
     this.author.name = this.author.name || await gitHandler.userValue('name');
   }
 
   /**
    * Set the project's author email using git information
-   * @method setAuthorEmail
+   * @method initializeAuthorEmail
    * @return {Promise}
    */
-  async setAuthorEmail() {
+  async initializeAuthorEmail() {
     this.author.email = this.author.email || await gitHandler.userValue('email');
   }
 
+  /**
+   * Set the github values into the object
+   * @param {Object} data All the github data
+   */
   setGithubValues(data) {
     this.git.httpUrl = data.html_url;
     this.git.name = data.name;
     this.git.sshUrl = data.ssh_url;
     this.issueTracker = `${this.git.httpUrl}/issues`;
-    this.hasRemote = true;
+    this.hasRemote = !!this.git.sshUrl;
+  }
+
+  /**
+   * Install the npm dev dependencies
+   * @return {Promise}
+   */
+  async installDependencies() {
+    console.info('Installing dev dependencies ...');
+    const args = ['install', '-D', ...settings.lintPkgs, ...this.testPackages];
+    await utils.process.spawnp(
+      'npm',
+      args,
+      this.path,
+    );
+  }
+
+  /**
+   * Do the initial commit for the project
+   * @return {Promise}
+   */
+  async commit() {
+    const commitResult = await gitHandler.commit(this.path);
+    console.log('Code commited');
+    console.info(commitResult);
+  }
+
+  /**
+   * Push the project code to the remote
+   * @return {Promise}
+   */
+  async push() {
+    if (this.hasRemote) {
+      await gitHandler.push(this.path);
+      console.log(`Code pushed to ${this.git.sshUrl}`);
+    }
+  }
+
+  /**
+   * Update the template files (package, readme) with the project data
+   * @return {Promise}
+   */
+  updateTemplateFiles() {
+    const readmePath = pathModule.join(this.path, 'README.md');
+    const packagePath = pathModule.join(this.path, 'package.json');
+
+    return Promise.all([
+      template.updateFile(this.dictionary, readmePath),
+      template.updateFile(this.dictionary, packagePath),
+    ]);
+  }
+
+  /**
+   * Copy the template files to the project folder
+   * @return {Promise}
+   */
+  copyTemplateFiles() {
+    return template.copy(TEMPLATE_PATH, this.path);
+  }
+
+  /**
+   * Create a github repository for the project
+   * @return {Promise}
+   */
+  async createGithubRepository() {
+    if (this.useGithub) {
+      const resp = await githubHandler.create(this);
+      if (resp) {
+        this.setGithubValues(resp);
+        gitHandler.addRemote(this.path, this.git.sshUrl);
+      }
+    }
+  }
+
+  /**
+   * Initialize a git repository on the project folder
+   * @return {Promise}
+   */
+  async initializeGitRepository() {
+    const resp = await gitHandler.init(this.path);
+    console.info(resp);
+    console.log('Git repository initialized');
+  }
+
+  /**
+   * Create the project folder
+   * @return {Promise}
+   */
+  async createFolder() {
+    await fs.mkdir(this.path, { recursive: true });
+    console.log(`Project folder ${this.path} created`);
+  }
+
+  /**
+   * Obtain the project details
+   * @param  {String}  destPath The project destination full path folder
+   * @return {Promise}
+   */
+  static async getDetails(destPath) {
+    const defaults = await Promise.all([gitHandler.userValue('name'), gitHandler.userValue('email')])
+      .then((data) => {
+        const [name, email] = data;
+        return {
+          projectName: utils.string.normalizeName(destPath),
+          gitUserName: name,
+          gitUserEmail: email,
+          license: settings.default.license,
+          version: settings.default.version,
+        };
+      });
+
+    // Questionnaire for the options
+    const answers = await questionnaire.run(defaults);
+
+    // Add extra values to the answers
+    Object.assign(answers, {
+      path: destPath,
+    });
+
+    return answers;
+  }
+
+  /**
+   * Obtain the destination path for the project
+   * @param  {Strnng}  arg The param used when the initializer runs
+   * @return {Promise}
+   */
+  static async getDestPath(arg) {
+    const destPath = utils.files.resolvePath(arg);
+
+    if (!destPath) {
+      throw new Error('A path for the new project is required');
+    }
+
+    // TODO Include here a way to get "options" for the other args
+
+    // Do not continue if the project folder already exists.
+    return new Promise((resolve, reject) => {
+      fs.access(destPath)
+        .then(() => reject(new Error(`The project folder '${destPath} already exists. You need to specify a different path.`)))
+        .catch(() => resolve(destPath));
+    });
   }
 }
 

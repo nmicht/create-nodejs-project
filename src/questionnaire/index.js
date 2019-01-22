@@ -3,30 +3,52 @@ const auth = require('../auth');
 const settings = require('../settings');
 
 async function run(name) {
+  let remoteAnswers;
+  let authFileAnswers;
+  let userAnswers;
+  let tokenAnswers;
+  let updateAnswers = {
+    updateToken: false,
+  };
+
+  const github = {};
+  let currentAuthUser;
+  let currentToken;
+
   const resp = await questions.getProjectDetails(name);
 
   if (!resp.useGithub) {
-    Object.assign(resp, await questions.getGitRemoteDetails());
-    resp.hasRemote = !!resp.git.url;
+    remoteAnswers = await questions.getGitRemoteDetails();
+    resp.hasRemote = !!remoteAnswers.git.url;
   } else {
-    Object.assign(resp, await questions.getAuthFile());
+    authFileAnswers = await questions.getAuthFile();
 
-    const githubUser = auth.getFirstUser(resp.authPath);
+    currentAuthUser = await auth.firstUser(authFileAnswers.authPath);
 
-    Object.assign(resp, await questions.getGithubUser(githubUser));
+    userAnswers = await questions.getGithubUser(currentAuthUser.user);
 
-    const token = auth.getToken(resp.authUser, resp.authPath);
+    currentToken = await auth.getToken(userAnswers.github.user, authFileAnswers.authPath);
 
-    Object.assign(resp, await questions.getAuthToken(resp.authUser, token));
+    tokenAnswers = await questions.getAuthToken(userAnswers.github.user, currentToken);
 
-    if (resp.token) {
-      if (resp.token !== token && auth.confirmUpdateToken()) {
-        auth.updateToken(resp.authUser, resp.token, settings.authPath);
-      }
-    } else {
+    github.user = userAnswers.github.user;
+    github.token = tokenAnswers.github.token;
+
+    if (github.user !== currentAuthUser.user
+      || github.token !== currentToken) {
+      updateAnswers = await questions.confirmUpdateToken();
+    }
+
+    if (updateAnswers.updateToken) {
+      auth.updateAuthFile(github.user, github.token, settings.authPath);
+    }
+
+    if (!currentToken) {
       resp.useGithub = false;
     }
   }
+
+  Object.assign(resp, remoteAnswers, authFileAnswers, { github });
 
   return resp;
 }

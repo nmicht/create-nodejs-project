@@ -13,7 +13,7 @@ An [npm initializer][npm/init] to scaffold a node project and include basic tool
 ## Requirements
 
 - `npm >= 6.5`
-- `node >= 10.9`
+- `node >= 10.1.0`
 
 ## Usage
 
@@ -62,6 +62,7 @@ So, the idea is to have an automated way to initialize new NodeJS projects and w
 12. Improve the template structure (the one that is generated in the new project) to include unit test
 13. Include license files to the template copy/update process
 18. Option to questionnaire with all the default values
+2. Logic to handle multiple auth files and multiple github accounts
 
 ## Configure Github Authentication
 
@@ -77,17 +78,16 @@ If you are planning to allow this script to create your Github repositories, is 
          [X] repo_deployment
          [X] public_repo
          [X] repo:invite
-     [X] delete_repo
 ```
 3. Click Generate token.
 4. Copy the generated string to a safe place, such as a password safe.
 5. Open Terminal and add the Github token.
 
 ```
-# nano ~/auth.json
+# nano ~/create-nodejs-project.json
 
 {
-   "Github": [
+   "github": [
      {
        "user": "YOUR_USER",
        "token": "YOUR_TOKEN"
