@@ -23,8 +23,8 @@ const AUTH_PATH = settings.authPath;
   const authDetails = {
     github: [
       {
-        user: authUser.user,
-        token: authToken.token,
+        user: authUser.github.user,
+        token: authToken.github.token,
       },
     ],
   };

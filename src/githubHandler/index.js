@@ -18,37 +18,40 @@ async function create({
   isPrivate = false,
   description = '',
   url = '',
-  user = '',
+  github = {
+    user: '',
+    token: '',
+  },
 }) {
-  const token = await auth.getToken(user);
-  let result;
+  let data;
 
-  if (!token) {
+  if (!github.token) {
     throw new Error('Token missing');
   }
 
+  console.info('Creating github repository ...');
+  const project = {
+    name,
+    private: isPrivate,
+    description,
+    homepage: url,
+  };
+
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/vnd.github.v3+json',
+    Authorization: `token ${github.token}`,
+    'User-Agent': github.user,
+  };
+
   try {
-    console.info('Creating github repository ...');
-    // TODO consider use http instead curl?
-    const cmd = `curl -w "%{http_code}" -H "Authorization: token ${token}" -d '{"name": "${name}", "private": ${isPrivate}, "description": "${description}", "homepage": "${url}"}' https://api.github.com/user/repos`;
-
-    result = await utils.process.execp(cmd);
-
-    let json = result.substring(0, result.lastIndexOf('\n'));
-    const statusCode = Number(result.substring(result.lastIndexOf('\n')));
-
-    json = JSON.parse(json);
-
-    if (statusCode !== 201) {
-      console.error('Repository not created: ', json.errors[0].message);
-      return false;
-    }
-
-    console.log(`Repository ${json.name} created`);
-    return json;
-  } catch (error) {
-    throw error;
+    data = await utils.requests.postReq(project, 'https://api.github.com/user/repos', headers);
+    console.log(`Repository ${data.name} created`);
+  } catch (e) {
+    console.error('Repository not created: ', e.statusCode, e.data);
   }
+
+  return data;
 }
 
 /**
@@ -61,39 +64,29 @@ async function create({
  */
 async function deleteRepo(name, user) {
   const token = await auth.getToken(user);
-  let result;
+  let data;
+
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/vnd.github.v3+json',
+    Authorization: `token ${token}`,
+    'User-Agent': user,
+  };
 
   if (!token) {
     throw new Error('Token missing');
   }
 
+
+  console.info('Deleting github repository ...');
   try {
-    console.info('Deleting github repository ...');
-    // TODO consider use http instead curl?
-    const cmd = `curl -w "%{http_code}" -XDELETE -H "Authorization: token ${token}" https://api.github.com/repos/${user}/${name}`;
-
-    result = await utils.process.execp(cmd);
-
-    const statusCode = Number(result.substring(result.lastIndexOf('\n')));
-
-    if (statusCode !== 204) {
-      let json = result.substring(0, result.lastIndexOf('\n'));
-
-      json = JSON.parse(json);
-
-      console.error('Repository not deleted: ', json.message);
-      return false;
-    }
-
+    data = await utils.requests.deleteReq(null, `https://api.github.com/repos/${user}/${name}`, headers);
     console.log(`Repository ${name} deleted`);
-
-    return {
-      message: 'Repository deleted',
-      statusCode,
-    };
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    console.error('Repository not deleted: ', e.statusCode, e.data);
   }
+
+  return data;
 }
 
 // TODO include a method to handle the topics (will require to get the github user)

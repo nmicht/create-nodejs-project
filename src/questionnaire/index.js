@@ -11,6 +11,7 @@ async function run(name) {
     updateToken: false,
   };
 
+  const github = {};
   let currentAuthUser;
   let currentToken;
 
@@ -26,17 +27,20 @@ async function run(name) {
 
     userAnswers = await questions.getGithubUser(currentAuthUser.user);
 
-    currentToken = await auth.getToken(userAnswers.user, authFileAnswers.authPath);
+    currentToken = await auth.getToken(userAnswers.github.user, authFileAnswers.authPath);
 
-    tokenAnswers = await questions.getAuthToken(userAnswers.user, currentToken);
+    tokenAnswers = await questions.getAuthToken(userAnswers.github.user, currentToken);
 
+    github.user = userAnswers.github.user;
+    github.token = tokenAnswers.github.token;
 
-    if (userAnswers.user !== currentAuthUser.user || tokenAnswers.token !== currentToken) {
+    if (github.user !== currentAuthUser.user
+      || github.token !== currentToken) {
       updateAnswers = await questions.confirmUpdateToken();
     }
 
     if (updateAnswers.updateToken) {
-      auth.updateAuthFile(userAnswers.user, tokenAnswers.token, settings.authPath);
+      auth.updateAuthFile(github.user, github.token, settings.authPath);
     }
 
     if (!currentToken) {
@@ -44,7 +48,7 @@ async function run(name) {
     }
   }
 
-  Object.assign(resp, remoteAnswers, authFileAnswers, userAnswers, tokenAnswers);
+  Object.assign(resp, remoteAnswers, authFileAnswers, { github });
 
   return resp;
 }

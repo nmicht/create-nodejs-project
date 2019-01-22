@@ -150,7 +150,7 @@ async function getGithubUser(user) {
   return inquirer.prompt([
     {
       type: 'input',
-      name: 'user',
+      name: 'github.user',
       message: 'What is your Github user?',
       default: user,
     },
@@ -167,7 +167,7 @@ async function getAuthToken(user, token) {
   return inquirer.prompt([
     {
       type: 'input',
-      name: 'token',
+      name: 'github.token',
       message: `What is your GitHub token for user ${user}?`,
       default: token,
     },
