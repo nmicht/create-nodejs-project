@@ -78,7 +78,6 @@ If you are planning to allow this script to create your Github repositories, is 
          [X] repo_deployment
          [X] public_repo
          [X] repo:invite
-     [X] delete_repo
 ```
 3. Click Generate token.
 4. Copy the generated string to a safe place, such as a password safe.

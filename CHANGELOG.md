@@ -1,8 +1,13 @@
 # Changelog
 
+## 0.1.5
+* Using https instead curl
+* File management with promises
+* Several minor fixes and code improvements
+
 ## 0.1.4
 
-* Handle the Github tokens for multiple accounts/users
+* Partial support to Github tokens for multiple accounts/users
 * Fix problem with keywords on package.json
 * Post install script to setup github auth details
 
