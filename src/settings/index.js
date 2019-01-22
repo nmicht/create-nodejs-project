@@ -28,7 +28,7 @@ const settings = {
     'LGPL-3.0-or-later',
     'MIT',
   ],
-  authPath: path.join(os.homedir(), 'auth.json'),
+  authPath: path.join(os.homedir(), 'create-nodejs-project.json'),
   default: {
     license: 'MIT',
     version: '0.1.0',

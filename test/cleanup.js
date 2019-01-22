@@ -6,7 +6,7 @@ function cleanup(path = 'a-demo-project') {
 
   // Remove test folder
   console.log(`Deleting folder ${path}`);
-  utils.fs.deleteDirRecursive(path);
+  utils.files.deleteDirRecursive(path);
 
   // Delete github project
   githubHandler.deleteRepo(name, 'nmicht');

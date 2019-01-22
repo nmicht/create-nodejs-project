@@ -128,14 +128,14 @@ async function getAuthFile() {
     {
       type: 'input',
       name: 'authPath',
-      message: 'What is the path for the auth.json file?',
+      message: 'What is the path for the create-nodejs-project.json file?',
       default: settings.authPath,
       validate: (ans) => {
-        const path = utils.fs.resolvePath(ans);
+        const path = utils.files.resolvePath(ans);
         if (path && fs.existsSync(path)) {
           return true;
         }
-        return 'You should introduce a real path for the auth.json';
+        return 'You should introduce a real path for the create-nodejs-project.json';
       },
     },
   ]);
@@ -150,8 +150,8 @@ async function getGithubUser(user) {
   return inquirer.prompt([
     {
       type: 'input',
-      name: 'authUser',
-      message: 'What is your github user?',
+      name: 'github.user',
+      message: 'What is your Github user?',
       default: user,
     },
   ]);
@@ -167,7 +167,7 @@ async function getAuthToken(user, token) {
   return inquirer.prompt([
     {
       type: 'input',
-      name: 'token',
+      name: 'github.token',
       message: `What is your GitHub token for user ${user}?`,
       default: token,
     },
@@ -183,7 +183,7 @@ async function confirmUpdateToken() {
     {
       type: 'confirm',
       name: 'updateToken',
-      message: 'Do you want to update the auth.json file with this token?',
+      message: 'Do you want to update the create-nodejs-project.json file with this token?',
     },
   ]);
 }

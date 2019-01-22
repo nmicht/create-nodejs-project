@@ -1,37 +1,34 @@
-const fs = require('fs');
-const inquirer = require('inquirer');
+const questions = require('../src/questionnaire/questions');
+const settings = require('../src/settings');
+const auth = require('../src/auth');
 
-const utils = require('../src/utils');
+const AUTH_PATH = settings.authPath;
 
-async function install() {
-  const authPath = utils.fs.resolvePath('~/auth.json');
+/**
+ * Install function for the package, it set up the github auth details
+ * TODO Consider the case for a previous auth file with different tokens
+ */
+(async () => {
+  let user;
 
-  const answers = await inquirer.prompt([
-    {
-      type: 'input',
-      name: 'user',
-      message: 'What is your github user?',
-    },
+  try {
+    user = await auth.firstUser(AUTH_PATH);
+  } catch (e) {
+    // console.log('fixme');
+  }
 
-    {
-      type: 'input',
-      name: 'token',
-      message: 'What is your GitHub token?',
-    },
-  ]);
+  const authUser = await questions.getGithubUser(user.user || '');
+  const authToken = await questions.getAuthToken(user.user || '', user.token || '');
 
-  // Write file
-  const data = {
+  const authDetails = {
     github: [
       {
-        user: answers.user,
-        token: answers.token,
+        user: authUser.github.user,
+        token: authToken.github.token,
       },
     ],
   };
 
-  fs.writeFileSync(authPath, JSON.stringify(data));
-  console.log(`File ${authPath} created with your github details`);
-}
-
-install();
+  await auth.writeAuthFile(authDetails, AUTH_PATH);
+  console.log(`File ${AUTH_PATH} created with your github details`);
+})();

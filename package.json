@@ -1,6 +1,6 @@
 {
   "name": "create-nodejs-project",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "An npm initializer to scaffold a node project and include basic tools like lint, testing, etc.",
   "main": "src/index.js",
   "bin": "src/index.js",
@@ -18,12 +18,12 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "postinstall": "node install/index.js",
-    "start": "node src/index.js",
-    "cleanup": "node test/cleanup.js"
+    "postinstall": "node --no-warnings install/index.js",
+    "start": "node --no-warnings src/index.js",
+    "cleanup": "node --no-warnings test/cleanup.js"
   },
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=10.9.0"
   },
   "devDependencies": {
     "eslint": "^5.12.0",
@@ -31,8 +31,7 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-node": "^8.0.1",
-    "eslint-plugin-react": "^7.12.3",
-    "jest": "^23.6.0"
+    "eslint-plugin-react": "^7.12.3"
   },
   "dependencies": {
     "inquirer": "^6.2.1"

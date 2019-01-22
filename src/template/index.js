@@ -1,28 +1,21 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 
 const utils = require('../utils');
 
 /**
  * Update a file using a dictionary
- * @param  {String} [filePath=''] The path for the file
  * @param  {Object} dictionary    A key-value dictionary
+ * @param  {String} [filePath=''] The path for the file
  */
-function updateFile(filePath = '', dictionary) {
-  const resolvedFilePath = utils.fs.resolvePath(filePath);
-  let originalFile;
-  try {
-    originalFile = fs.readFileSync(resolvedFilePath, 'utf8');
-  } catch (error) {
-    throw error;
-  }
+async function updateFile(dictionary, filePath = '') {
+  const resolvedFilePath = utils.files.resolvePath(filePath);
+
+  const originalFile = await fs.readFile(resolvedFilePath, 'utf8');
 
   const generatedFile = utils.string.replaceByDictionary(originalFile, dictionary);
-  fs.writeFile(resolvedFilePath, generatedFile, (err) => {
-    if (err) {
-      throw err;
-    }
-    console.log(`File updated: ${resolvedFilePath}`);
-  });
+
+  await fs.writeFile(resolvedFilePath, generatedFile);
+  console.log(`File ${resolvedFilePath} updated`);
 }
 
 /**
@@ -30,8 +23,8 @@ function updateFile(filePath = '', dictionary) {
  * @param  {String} templatePath The template path
  * @param  {String} destPath     The destination
  */
-function copy(templatePath, destPath) {
-  utils.fs.copyDirRecursive(templatePath, destPath);
+async function copy(templatePath, destPath) {
+  await utils.files.copyDirRecursive(templatePath, destPath);
 }
 
 module.exports = {

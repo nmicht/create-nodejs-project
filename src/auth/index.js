@@ -1,103 +1,107 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 
 const settings = require('../settings');
 const utils = require('../utils');
 
 /**
- * Get the Github token from the auth file
- * @param  {String} [user=undefined] The user owner of the token
- * @param  {String} [path='']        The path for the auth.json file
- * @return {String}                  The github token
+ * Get the auth file contents converted to json
+ * @param  {String} [jsonPath=settings.authPath] The path for the create-nodejs-project.json file
+ * @return {Promise}
  */
-function getToken(user = undefined, jsonPath = '') {
-  let auth = {};
-  let ghData;
-  const authPath = jsonPath || settings.authPath;
-  const authFile = utils.fs.resolvePath(authPath);
+function getFileData(jsonPath = settings.authPath) {
+  return utils.files.readJsonFile(jsonPath);
+}
 
-  try {
-    auth = JSON.parse(fs.readFileSync(authFile, 'utf8'));
-  } catch (error) {
-    throw error;
-  }
+/**
+ * Return the first user on the auth data
+ * @param  {String} [jsonPath=settings.authPath] The path for the create-nodejs-project.json file
+ * @return {Object|undefined}
+ */
+async function firstUser(jsonPath = settings.authPath) {
+  const auth = await getFileData(jsonPath);
+
+  return auth.github[0];
+}
+
+/**
+ * Find a user on the auth file
+ * @param  {String} user                         The user to find
+ * @param  {String} [jsonPath=settings.authPath] The path for the create-nodejs-project.json file
+ * @return {Object|undefined}
+ */
+async function findUser(user, jsonPath = settings.authPath) {
+  const auth = await getFileData(jsonPath);
+
+  return auth.github.find(obj => obj.user === user);
+}
+
+/**
+ * Get the Github token from the auth file
+ * @param  {String} user                         The user owner of the token
+ * @param  {String} [jsonPath=settings.authPath] The path for the create-nodejs-project.json file
+ * @return {String}                              The github token or empty string.
+ */
+async function getToken(user, jsonPath = settings.authPath) {
+  let userData;
 
   if (user) {
-    [ghData] = auth.github.filter(obj => obj.user === user);
+    userData = await findUser(user, jsonPath);
   } else {
-    [ghData] = auth.github;
+    userData = await firstUser();
   }
 
-  const { token } = ghData;
-
-  if (!token) {
-    throw new Error('Token missing');
-  }
+  const { token } = userData || '';
 
   return token;
 }
 
 /**
- * Update the Token
- * @param  {String} [user=undefined] The user owner of the token
- * @param  {String} token            The token
- * @param  {String} [jsonPath='']    The path for the auth.json file
- * @return {Boolean}                 True in case the file gets updated
+ * Write the auth data json in the file
+ * @param  {Object} data                         The object/json data
+ * @param  {String} [jsonPath=settings.authPath] The path
+ * @return {Promise}
  */
-function updateToken(user = undefined, token, jsonPath = '') {
-  let auth = {};
-  let currentToken = '';
-  let userIndex = 0;
-  const authPath = jsonPath || settings.authPath;
-  const authFile = utils.fs.resolvePath(authPath);
-
-  try {
-    auth = JSON.parse(fs.readFileSync(authFile, 'utf8'));
-  } catch (error) {
-    throw error;
-  }
-
-  currentToken = auth.github[0].token;
-
-  if (user) {
-    for (let k = 0; k < auth.github.length; k += 1) {
-      if (auth.github[k].user === user) {
-        userIndex = k;
-        currentToken = auth.github[k].token;
-        break;
-      }
-    }
-  }
-
-  if (currentToken !== token) {
-    auth.github[userIndex].token = token;
-    fs.writeFileSync(authFile, JSON.stringify(auth));
-    return true;
-  }
-
-  return false;
+function writeAuthFile(data, jsonPath = settings.authPath) {
+  const authPath = utils.files.resolvePath(jsonPath);
+  const json = JSON.stringify(data, null, 2);
+  return fs.writeFile(authPath, json);
 }
 
 /**
- * Get the first user from the auth file
- * @param  {String} [jsonPath=''] The auth.json file path
- * @return {String}               The user
+ * Update the auth data file
+ * @param  {String} user                            The user owner of the token
+ * @param  {String} token                           The token
+ * @param  {String} [jsonPath=settings.authPath]    The path for the create-nodejs-project.json file
+ * @return {Boolean}                                True in case the file gets updated
  */
-function getFirstUser(jsonPath = '') {
-  let auth = {};
-  const authPath = jsonPath || settings.authPath;
-  const authFile = utils.fs.resolvePath(authPath);
+async function updateAuthFile(user, token, jsonPath = settings.authPath) {
+  let currentToken = '';
+  let userIndex;
+  const authPath = utils.files.resolvePath(jsonPath);
+  const auth = await getFileData(jsonPath);
 
-  try {
-    auth = JSON.parse(fs.readFileSync(authFile, 'utf8'));
-  } catch (error) {
-    throw error;
+  currentToken = firstUser().token;
+
+  if (user) {
+    // TODO consider the case for a new user data
+    userIndex = auth.github.findIndex(elem => elem.user === user);
+    currentToken = auth.github[userIndex].token;
   }
 
-  return auth.github[0].user;
+  if (currentToken === token) {
+    return false;
+  }
+
+  auth.github[userIndex].token = token;
+  writeAuthFile(auth, authPath);
+
+  return true;
 }
 
 module.exports = {
+  firstUser,
+  findUser,
   getToken,
-  updateToken,
-  getFirstUser,
+  updateAuthFile,
+  writeAuthFile,
 };
