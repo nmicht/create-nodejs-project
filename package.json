@@ -23,7 +23,7 @@
     "cleanup": "node test/cleanup.js"
   },
   "engines": {
-    "node": ">=10.1.0"
+    "node": ">=10.9.0"
   },
   "devDependencies": {
     "eslint": "^5.12.0",

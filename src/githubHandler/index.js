@@ -9,7 +9,7 @@ const auth = require('../auth');
  * @param  {String} [description='']    The description for the github project
  * @param  {String} [url='']            The url for the github project
  * @param  {String} [user='']           The github user
- * @return {json|Boolean}   In case of success will return the json from the
+ * @return {json|Boolean}               In case of success will return the json from the
  * github api response, otherwise, return false.
  * @throws If the token is not present
  */
@@ -53,8 +53,8 @@ async function create({
 
 /**
  * Delete a github repository
- * @param  {String} name The name of the repository
- * @param  {String} user The owner of the repository
+ * @param  {String} name    The name of the repository
+ * @param  {String} user    The owner of the repository
  * @return {json|Boolean}   In case of success will return the json from the
  * github api response, otherwise, return false.
  * @throws If the token is not present

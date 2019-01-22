@@ -191,21 +191,22 @@ class Project {
    * Update the template files (package, readme) with the project data
    * @return {Promise}
    */
-  async updateTemplateFiles() {
+  updateTemplateFiles() {
     const readmePath = pathModule.join(this.path, 'README.md');
     const packagePath = pathModule.join(this.path, 'package.json');
 
-    await template.updateFile(this.dictionary, readmePath);
-    await template.updateFile(this.dictionary, packagePath);
+    return Promise.all([
+      template.updateFile(this.dictionary, readmePath),
+      template.updateFile(this.dictionary, packagePath),
+    ]);
   }
 
   /**
    * Copy the template files to the project folder
    * @return {Promise}
    */
-  async copyTemplateFiles() {
-    console.log('in copy');
-    template.copy(TEMPLATE_PATH, this.path);
+  copyTemplateFiles() {
+    return template.copy(TEMPLATE_PATH, this.path);
   }
 
   /**
@@ -227,7 +228,9 @@ class Project {
    * @return {Promise}
    */
   async initializeGitRepository() {
-    await gitHandler.init(this.path);
+    const resp = await gitHandler.init(this.path);
+    console.info(resp);
+    console.log('Git repository initialized');
   }
 
   /**

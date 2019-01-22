@@ -1,5 +1,4 @@
-const fs = require('fs');
-const fsP = require('fs').promises;
+const fs = require('fs').promises;
 
 const utils = require('../utils');
 
@@ -11,11 +10,11 @@ const utils = require('../utils');
 async function updateFile(dictionary, filePath = '') {
   const resolvedFilePath = utils.files.resolvePath(filePath);
 
-  const originalFile = await fsP.readFile(resolvedFilePath, 'utf8');
+  const originalFile = await fs.readFile(resolvedFilePath, 'utf8');
 
   const generatedFile = utils.string.replaceByDictionary(originalFile, dictionary);
 
-  await fsP.writeFile(resolvedFilePath, generatedFile);
+  await fs.writeFile(resolvedFilePath, generatedFile);
   console.log(`File ${resolvedFilePath} updated`);
 }
 

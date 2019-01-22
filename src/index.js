@@ -3,9 +3,9 @@
 const Project = require('./project');
 
 (async () => {
-  const destPath = await Project.getDestPath(process.argv[2]);
+  // TODO Work with args
 
-  console.log(destPath);
+  const destPath = await Project.getDestPath(process.argv[2]);
 
   const details = await Project.getDetails(destPath);
 
@@ -15,16 +15,17 @@ const Project = require('./project');
 
   await project.copyTemplateFiles();
 
-  project.initializeGitRepository();
-
-  project.createGithubRepository();
+  await project.updateTemplateFiles();
 
   // TODO Copy license and update with project data
 
-  // await project.updateTemplateFiles();
+  await project.initializeGitRepository();
 
   await project.installDependencies();
 
   await project.commit();
+
+  await project.createGithubRepository();
+
   await project.push();
 })();
