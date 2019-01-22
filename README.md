@@ -62,6 +62,7 @@ So, the idea is to have an automated way to initialize new NodeJS projects and w
 12. Improve the template structure (the one that is generated in the new project) to include unit test
 13. Include license files to the template copy/update process
 18. Option to questionnaire with all the default values
+2. Logic to handle multiple auth files and multiple github accounts
 
 ## Configure Github Authentication
 

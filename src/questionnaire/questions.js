@@ -150,7 +150,7 @@ async function getGithubUser(user) {
   return inquirer.prompt([
     {
       type: 'input',
-      name: 'authUser',
+      name: 'user',
       message: 'What is your Github user?',
       default: user,
     },

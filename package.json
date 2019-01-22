@@ -18,9 +18,9 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "postinstall": "node install/index.js",
-    "start": "node src/index.js",
-    "cleanup": "node test/cleanup.js"
+    "postinstall": "node --no-warnings install/index.js",
+    "start": "node --no-warnings src/index.js",
+    "cleanup": "node --no-warnings test/cleanup.js"
   },
   "engines": {
     "node": ">=10.9.0"

@@ -7,6 +7,10 @@ async function run(name) {
   let authFileAnswers;
   let userAnswers;
   let tokenAnswers;
+  let updateAnswers = {
+    updateToken: false,
+  };
+
   let currentAuthUser;
   let currentToken;
 
@@ -22,13 +26,17 @@ async function run(name) {
 
     userAnswers = await questions.getGithubUser(currentAuthUser.user);
 
-    currentToken = await auth.getToken(userAnswers.authUser, authFileAnswers.authPath);
+    currentToken = await auth.getToken(userAnswers.user, authFileAnswers.authPath);
 
-    tokenAnswers = await questions.getAuthToken(userAnswers.authUser, currentToken);
+    tokenAnswers = await questions.getAuthToken(userAnswers.user, currentToken);
 
-    if ((userAnswers.authUser !== currentAuthUser.user || tokenAnswers.token !== currentToken)
-    && questions.confirmUpdateToken()) {
-      auth.updateToken(userAnswers.authUser, tokenAnswers.token, settings.authPath);
+
+    if (userAnswers.user !== currentAuthUser.user || tokenAnswers.token !== currentToken) {
+      updateAnswers = await questions.confirmUpdateToken();
+    }
+
+    if (updateAnswers.updateToken) {
+      auth.updateAuthFile(userAnswers.user, tokenAnswers.token, settings.authPath);
     }
 
     if (!currentToken) {
