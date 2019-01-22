@@ -13,7 +13,7 @@ An [npm initializer][npm/init] to scaffold a node project and include basic tool
 ## Requirements
 
 - `npm >= 6.5`
-- `node >= 10.9`
+- `node >= 10.1.0`
 
 ## Usage
 
