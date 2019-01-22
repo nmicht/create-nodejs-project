@@ -1,111 +1,30 @@
 #!/usr/bin/env node
 
-const path = require('path');
-const fs = require('fs');
-
 const Project = require('./project');
-const utils = require('./utils');
-const settings = require('./settings');
-const gitHandler = require('./gitHandler');
-const githubHandler = require('./githubHandler');
-const questionnaire = require('./questionnaire');
-const template = require('./template');
 
-const TEMPLATE_PATH = path.join(__dirname, '..', 'template');
-
-// FIXME: separación en funciones async para construir un proyecto.
-// - Obtener valores
-// - crear proyecto
-// - inicializar git
-// - configurar template
-// - commit
 (async () => {
-  // First arg = path
-  const destPath = utils.files.resolvePath(process.argv[2]);
-  if (!destPath) {
-    throw new Error('A path for the new project is required');
-  }
+  const destPath = await Project.getDestPath(process.argv[2]);
 
-  // TODO Include here a way to get "options" for the other args
+  console.log(destPath);
 
-  // Do not continue if the project folder already exists.
+  const details = await Project.getDetails(destPath);
 
-  if (fs.existsSync(destPath)) {
-    throw new Error(`The project folder '${destPath} already exists. You need to specify a different path.`);
-  }
+  const project = new Project(details);
 
-  const defaults = await Promise.all([gitHandler.userValue('name'), gitHandler.userValue('email')])
-    .then((data) => {
-      const [name, email] = data;
-      return {
-        projectName: utils.string.normalizeName(destPath),
-        gitUserName: name,
-        gitUserEmail: email,
-        license: settings.default.license,
-        version: settings.default.version,
-      };
-    });
+  await project.createFolder();
 
-  // Questionnaire for the options
-  const answers = await questionnaire.run(defaults);
+  await project.copyTemplateFiles();
 
-  // Add extra values to the answers
-  Object.assign(answers, {
-    path: destPath,
-  });
+  project.initializeGitRepository();
 
-  // Create project object
-  const project = new Project(answers);
-
-  // Create folder
-  try {
-    fs.mkdirSync(project.path);
-  } catch (error) {
-    console.error('The folder project was not created');
-    throw error;
-  }
-
-  // Initialize git in the dest folder
-  await gitHandler.init(project.path);
-
-  // Create github repository and include properties to the project object
-  if (project.useGithub) {
-    const resp = await githubHandler.create(project);
-    if (resp) {
-      project.setGithubValues(resp);
-      gitHandler.addRemote(project.path, project.git.sshUrl);
-    }
-  }
-
-  // Copy template files
-  template.copy(TEMPLATE_PATH, project.path);
+  project.createGithubRepository();
 
   // TODO Copy license and update with project data
 
+  // await project.updateTemplateFiles();
 
-  const readmePath = path.join(project.path, 'README.md');
-  const packagePath = path.join(project.path, 'package.json');
+  await project.installDependencies();
 
-  // Update files with project data
-  template.updateFile(project.dictionary, readmePath);
-  template.updateFile(project.dictionary, packagePath);
-
-  // Install devDependencies
-  console.info('Installing dev dependencies ...');
-  const args = ['install', '-D', ...settings.lintPkgs, ...answers.testPackages];
-  await utils.process.spawnp(
-    'npm',
-    args,
-    destPath,
-  );
-
-  // Commit and push
-  const commitResult = await gitHandler.commit(project.path);
-  console.log('Code commited');
-  console.info(commitResult);
-
-  if (project.hasRemote) {
-    await gitHandler.push(project.path);
-    console.log(`Code pushed to ${project.git.sshUrl}`);
-  }
+  await project.commit();
+  await project.push();
 })();
