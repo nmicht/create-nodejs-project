@@ -43,6 +43,7 @@ npm init nodejs-project path/to/new/project
 5. Install the selected testing dependencies
 6. Generate package.json with all the project details
 7. Commit and push the initial commit
+8. Generate the license file
 
 ## About this package
 
@@ -60,7 +61,6 @@ So, the idea is to have an automated way to initialize new NodeJS projects and w
 10. A good error handler
 11. Color for the console messages
 12. Improve the template structure (the one that is generated in the new project) to include unit test
-13. Include license files to the template copy/update process
 18. Option to questionnaire with all the default values
 2. Logic to handle multiple auth files and multiple github accounts
 
