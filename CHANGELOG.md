@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.0
+* Generate license file
+
 ## 0.1.5
 * Using https instead curl
 * File management with promises

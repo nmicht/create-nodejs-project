@@ -8,8 +8,6 @@ const utils = require('../utils');
 const template = require('../template');
 const questionnaire = require('../questionnaire');
 
-const TEMPLATE_PATH = pathModule.join(__dirname, '..', '..', 'template');
-
 /**
  * Project handle all the information for the new node project
  *
@@ -95,7 +93,7 @@ class Project {
     this.issueTracker = issueTracker;
     this.isPrivate = isPrivate;
     this.path = path;
-    this.year = year;
+    this.year = year || (new Date()).getFullYear();
     this.testPackages = testPackages;
   }
 
@@ -127,6 +125,7 @@ class Project {
       PROJECT_GIT_URL: this.git.sshUrl,
       PROJECT_ISSUETRACKER: this.issueTracker,
       PROJECT_PRIVATE: this.isPrivate,
+      PROJECT_YEAR: this.year,
     };
   }
 
@@ -196,25 +195,17 @@ class Project {
   }
 
   /**
-   * Update the template files (package, readme) with the project data
+   * Copy the template files to the project folder, update them and generate the
+   * license.
    * @return {Promise}
    */
-  updateTemplateFiles() {
-    const readmePath = pathModule.join(this.path, 'README.md');
-    const packagePath = pathModule.join(this.path, 'package.json');
+  async generateTemplateFiles() {
+    await template.copyTemplate(this.path);
 
     return Promise.all([
-      template.updateFile(this.dictionary, readmePath),
-      template.updateFile(this.dictionary, packagePath),
+      template.updateTemplateFiles(this.dictionary, this.path),
+      template.copyLicense(this.license, this.dictionary, this.path),
     ]);
-  }
-
-  /**
-   * Copy the template files to the project folder
-   * @return {Promise}
-   */
-  copyTemplateFiles() {
-    return template.copy(TEMPLATE_PATH, this.path);
   }
 
   /**

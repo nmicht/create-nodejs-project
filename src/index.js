@@ -13,11 +13,7 @@ const Project = require('./project');
 
   await project.createFolder();
 
-  await project.copyTemplateFiles();
-
-  await project.updateTemplateFiles();
-
-  // TODO Copy license and update with project data
+  await project.generateTemplateFiles();
 
   await project.initializeGitRepository();
 
