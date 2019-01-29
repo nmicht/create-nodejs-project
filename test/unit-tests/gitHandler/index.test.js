@@ -52,7 +52,8 @@ describe('Git handler', () => {
 
   it('add remote should work', async () => {
     await gitHandler.addRemote(folderPath, 'someurl', 'origin');
-    const resp = await utils.process.execp('git remote get-url origin', folderPath);
+    let resp = await utils.process.execp('git remote get-url origin', folderPath);
+    resp = resp.replace('\n', '');
     resp.should.equal('someurl');
   });
 });

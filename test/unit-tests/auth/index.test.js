@@ -6,11 +6,6 @@ const auth = require('../../../src/auth');
 describe('Authentication file management', () => {
   const filePath = 'test/unit-tests/auth/test-auth.json';
 
-  it('getFileData should return a valid object', async () => {
-    const file = await auth.getFileData(filePath);
-    file.should.be.a('object');
-  });
-
   it('The object from file should have github property', async () => {
     const file = await auth.getFileData(filePath);
     file.should.have.property('github');

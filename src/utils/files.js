@@ -25,8 +25,14 @@ function resolvePath(originalPath) {
  * @return {Promise}     The json object from the file
  */
 async function readJsonFile(file) {
+  let json;
+
   const fileContent = await fs.readFile(resolvePath(file), 'utf8');
-  const json = JSON.parse(fileContent);
+  try {
+    json = JSON.parse(fileContent);
+  } catch (e) {
+    throw e;
+  }
 
   return json;
 }
