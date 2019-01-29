@@ -2,19 +2,19 @@ const utils = require('../utils');
 
 /**
  * Get the git user property from the git configuration
- * @param  {String} prop The property requested, ex. name
- * @return {String}      The git config value for the user
+ * @param  {String} prop      The property requested, ex. name
+ * @return {String|undefined} The git config value for the user
  */
 async function userValue(prop) {
-  let data = '';
+  let data;
 
   try {
-    data = await utils.process.execp(`git config user.${prop}`);
+    data = (await utils.process.execp(`git config user.${prop}`)).trim();
   } catch (error) {
     console.error(error);
   }
 
-  return data.trim();
+  return data;
 }
 
 /**
