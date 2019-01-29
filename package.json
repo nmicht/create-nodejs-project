@@ -20,18 +20,22 @@
   "scripts": {
     "postinstall": "node --no-warnings install/index.js",
     "start": "node --no-warnings src/index.js",
-    "cleanup": "node --no-warnings test/cleanup.js"
+    "cleanup": "node --no-warnings test/integration/cleanup.js",
+    "test": "mocha"
   },
   "engines": {
     "node": ">=10.9.0"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "eslint": "^5.12.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-node": "^8.0.1",
-    "eslint-plugin-react": "^7.12.3"
+    "eslint-plugin-react": "^7.12.3",
+    "mocha": "^5.2.0"
   },
   "dependencies": {
     "inquirer": "^6.2.1"

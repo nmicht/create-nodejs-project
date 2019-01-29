@@ -1,5 +1,5 @@
-const utils = require('../src/utils');
-const githubHandler = require('../src/githubHandler');
+const utils = require('../../src/utils');
+const githubHandler = require('../../src/githubHandler');
 
 function cleanup(path = 'a-demo-project') {
   const name = utils.string.normalizeName(path);
@@ -12,4 +12,4 @@ function cleanup(path = 'a-demo-project') {
   githubHandler.deleteRepo(name, 'nmicht');
 }
 
-cleanup(process.argv[2]);
+// cleanup(process.argv[2]);
