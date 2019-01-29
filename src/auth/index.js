@@ -39,7 +39,7 @@ async function findUser(user, jsonPath = settings.authPath) {
  * Get the Github token from the auth file
  * @param  {String} user                         The user owner of the token
  * @param  {String} [jsonPath=settings.authPath] The path for the create-nodejs-project.json file
- * @return {String}                              The github token or empty string.
+ * @return {String|undefined}                    The github token or undefined if there is no token.
  */
 async function getToken(user, jsonPath = settings.authPath) {
   let userData;
@@ -50,7 +50,7 @@ async function getToken(user, jsonPath = settings.authPath) {
     userData = await firstUser();
   }
 
-  const { token } = userData || '';
+  const token = userData ? userData.token : undefined;
 
   return token;
 }
@@ -99,6 +99,7 @@ async function updateAuthFile(user, token, jsonPath = settings.authPath) {
 }
 
 module.exports = {
+  getFileData,
   firstUser,
   findUser,
   getToken,

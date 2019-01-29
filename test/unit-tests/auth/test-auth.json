@@ -1,0 +1,16 @@
+{
+  "github": [
+    {
+      "user": "first",
+      "token": "the-token"
+    },
+    {
+      "user": "second",
+      "token": "second-token"
+    },
+    {
+      "user": "third",
+      "token": "third-token"
+    }
+  ]
+}
