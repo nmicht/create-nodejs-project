@@ -1,6 +1,6 @@
 <img width="75px" height="75px" align="right" alt="Create NodeJS Project Logo" src="https://raw.githubusercontent.com/nmicht/create-nodejs-project/master/assets/create-nodejs-project.png" title="Create NodeJS Project"/>
 
-# Node Project Initializer
+# Node.js Project Initializer
 
 [![License][license-image]][license-url] [![version][npm-image]][npm-url]
 

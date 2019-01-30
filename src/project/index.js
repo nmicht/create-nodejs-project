@@ -254,8 +254,8 @@ class Project {
           projectName: utils.string.normalizeName(destPath),
           gitUserName: name,
           gitUserEmail: email,
-          license: settings.default.license,
-          version: settings.default.version,
+          license: settings.defaults.license,
+          version: settings.defaults.version,
         };
       });
 

@@ -20,7 +20,7 @@ async function userValue(prop) {
 /**
  * Initialize a git repository on the given path
  * @param  {String} [path='.'] The path for the git project
- * @return {String}            The result of the git init command
+ * @return {String}            The result of the git init command or empty in case of error
  */
 async function init(path = '.') {
   let resp = '';
@@ -38,7 +38,7 @@ async function init(path = '.') {
  * Add all and commit
  * @param  {String} [path='.']    The path for the git project
  * @param  {String} [msg='Initial commit']      The commit message
- * @return {String}               The result of the git commit command
+ * @return {String}               The result of the git commit command or empty in case of error
  */
 async function commit(path = '.', msg = 'Initial commit') {
   let resp = '';
@@ -57,7 +57,7 @@ async function commit(path = '.', msg = 'Initial commit') {
  * @param {String} [path='.']        The path for the git project
  * @param {[type]} url               The remote url
  * @param {String} [remote='origin'] The name for the remote
- * @return {String}                  The result of the git command
+ * @return {String}                  The result of the git command or empty in case of error
  */
 async function addRemote(path = '.', url, remote = 'origin') {
   let resp = '';
@@ -76,7 +76,7 @@ async function addRemote(path = '.', url, remote = 'origin') {
  * @param  {String} [path='.']        The path for the git project
  * @param  {String} [remote='origin'] The remote to push
  * @param  {String} [branch='master'] The branch pushed
- * @return {String}                   Tne result of the git push command
+ * @return {String}                   Tne result of the git push command or empty in case of error
  */
 async function push(path = '.', remote = 'origin', branch = 'master') {
   let resp = '';

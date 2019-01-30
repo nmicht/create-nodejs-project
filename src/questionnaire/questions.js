@@ -127,9 +127,9 @@ async function getAuthFile() {
   return inquirer.prompt([
     {
       type: 'input',
-      name: 'authPath',
+      name: 'settingsPath',
       message: 'What is the path for the create-nodejs-project.json file?',
-      default: settings.authPath,
+      default: settings.settingsPath,
       validate: (ans) => {
         const path = utils.files.resolvePath(ans);
         if (path && fs.existsSync(path)) {

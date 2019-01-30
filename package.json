@@ -18,9 +18,9 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "postinstall": "node --no-warnings install/index.js",
+    "postinstall": "node --no-warnings scripts/install.js",
     "start": "node --no-warnings src/index.js",
-    "cleanup": "node --no-warnings test/integration/cleanup.js",
+    "cleanup": "node --no-warnings scripts/cleanup.js",
     "test": "mocha"
   },
   "engines": {

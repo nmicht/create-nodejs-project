@@ -22,12 +22,14 @@ async function run(name) {
     resp.hasRemote = !!remoteAnswers.git.url;
   } else {
     authFileAnswers = await questions.getAuthFile();
+    settings.settingsPath = authFileAnswers.settingsPath;
+    settings.writeFile();
 
-    currentAuthUser = await auth.firstUser(authFileAnswers.authPath);
+    currentAuthUser = await auth.firstUser();
 
     userAnswers = await questions.getGithubUser(currentAuthUser.user);
 
-    currentToken = await auth.getToken(userAnswers.github.user, authFileAnswers.authPath);
+    currentToken = await auth.getToken(userAnswers.github.user);
 
     tokenAnswers = await questions.getAuthToken(userAnswers.github.user, currentToken);
 
@@ -40,7 +42,7 @@ async function run(name) {
     }
 
     if (updateAnswers.updateToken) {
-      auth.updateAuthFile(github.user, github.token, settings.authPath);
+      auth.updateToken(github.user, github.token, settings.settingsPath);
     }
 
     if (!currentToken) {

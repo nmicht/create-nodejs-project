@@ -2,9 +2,10 @@ const fs = require('fs').promises;
 const path = require('path');
 
 const utils = require('../utils');
+const settings = require('../settings');
 
-const TEMPLATE_PATH = path.join(__dirname, '..', '..', 'template');
-const LICENSES_PATH = path.join(__dirname, '..', '..', 'licenses');
+const TEMPLATE_PATH = settings.nodejsTemplatePath;
+const LICENSES_PATH = settings.licensesPath;
 
 /**
  * Update a file using a dictionary
