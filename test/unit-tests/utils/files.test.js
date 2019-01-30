@@ -1,10 +1,11 @@
-const chai = require("chai");
-const chaiAsPromised = require("chai-as-promised");
-chai.use(chaiAsPromised);
-const should = chai.should();
 const os = require('os');
 const path = require('path');
 const fs = require('fs').promises;
+const chai = require("chai");
+const chaiAsPromised = require("chai-as-promised");
+
+chai.use(chaiAsPromised);
+const should = chai.should();
 
 const utils = require('../../../src/utils');
 
@@ -38,8 +39,4 @@ describe('Utils for files', () => {
     await utils.files.deleteDirRecursive(tempFolder);
     return fs.access(tempFolder).should.eventually.be.rejectedWith(Error);
   });
-
-
-
-
 });

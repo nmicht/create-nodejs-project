@@ -1,4 +1,3 @@
-const assert = require('assert');
 const should = require('chai').should();
 
 const auth = require('../../../src/auth');

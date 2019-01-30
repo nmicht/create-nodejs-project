@@ -1,10 +1,11 @@
-const chai = require("chai");
-const chaiAsPromised = require("chai-as-promised");
-chai.use(chaiAsPromised);
-const should = chai.should();
 const fs = require('fs').promises;
 const path = require('path');
 const os = require('os');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+
+chai.use(chaiAsPromised);
+const should = chai.should();
 
 const gitHandler = require('../../../src/gitHandler');
 const utils = require('../../../src/utils');
