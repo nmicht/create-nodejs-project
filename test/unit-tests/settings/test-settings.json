@@ -31,8 +31,10 @@
     "license": "GNU GPLv3",
     "version": "0.1.0"
   },
+  "templates": [
+    "nodejs-project"
+  ],
   "settingsPath": "/YOUR_PATH/create-nodejs-project/create-nodejs-settings.json",
   "templatesPath": "/YOUR_PATH/create-nodejs-project/templates",
-  "nodejsTemplatePath": "/YOUR_PATH/create-nodejs-project/templates/nodejs-project",
   "licensesPath": "/YOUR_PATH/create-nodejs-project/templates/licenses"
 }

@@ -12,17 +12,27 @@ const utils = require('../utils');
  * @param  {String} defaults.license        The default license for the project
  * @param  {String} defaults.gitUserName    The git username setup for the project
  * @param  {String} defaults.gitUserEmail   The git username setup for the project
+ * @param  {String} defaults.template       The name for the default template
  * @param  {Array} licenses                 The list of options for licenses
  * @param  {Array} testingPkgs              The list of options for testingPkgs
+ * @param  {Array} templates                The list of options for templates
  * @return {Promise}
  */
-async function promptProjectDetails(defaults, licenses, testingPkgs) {
+async function promptProjectDetails(defaults, licenses, testingPkgs, templates) {
   return inquirer.prompt([
     {
       type: 'input',
       name: 'name',
       message: 'What is your project name?',
       default: defaults.projectName,
+    },
+
+    {
+      type: 'list',
+      name: 'template',
+      message: 'What kind of project are you creating?',
+      choices: templates,
+      default: defaults.template,
     },
 
     {

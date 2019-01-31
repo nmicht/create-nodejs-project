@@ -36,13 +36,16 @@ class Settings {
       'MIT License',
       'ISC License',
     ],
+    templates = [
+      'nodejs-project',
+    ],
     settingsPath = SETTINGS_PATH,
     templatesPath = path.resolve(path.join(__dirname, '..', '..', 'templates')),
-    nodejsTemplatePath = path.resolve(path.join(__dirname, '..', '..', 'templates', 'nodejs-project')),
     licensesPath = path.resolve(path.join(__dirname, '..', '..', 'templates', 'licenses')),
     defaults = {
       license: 'GNU GPLv3',
       version: '0.1.0',
+      template: 'nodejs-project',
     },
     githubAuth = {
       user: 'YOUR_USER',
@@ -59,10 +62,11 @@ class Settings {
     this.defaults = {
       license: defaults.license,
       version: defaults.version,
+      template: defaults.template,
     };
+    this.templates = templates;
     this.settingsPath = settingsPath;
     this.templatesPath = templatesPath;
-    this.nodejsTemplatePath = nodejsTemplatePath;
     this.licensesPath = licensesPath;
   }
 
@@ -98,7 +102,7 @@ class Settings {
     this.licenses = json.licenses;
     this.settingsPath = json.settingsPath;
     this.templatesPath = json.templatesPath;
-    this.nodejsTemplatePath = json.nodejsTemplatePath;
+    this.templates = json.templates;
     this.licensesPath = json.licensesPath;
   }
 
