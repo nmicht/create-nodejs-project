@@ -3,7 +3,7 @@ const should = require('chai').should();
 const settings = require('../../../src/settings');
 
 describe('Settings management', () => {
-  const filePath = 'test/unit-tests/auth/test-settings.json';
+  const filePath = 'test/unit-tests/settings/test-settings.json';
 
   before('load settings data', async () => {
     await settings.load(filePath);

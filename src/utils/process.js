@@ -29,6 +29,7 @@ function execp(command, cwd = null) {
  * @param  {String} command  command name
  * @param  {string} args     command arguments
  * @param  {String} cwd      working directory to run the commad
+ * @return {Promise}
  */
 async function spawnp(command, args, cwd) {
   const proc = spawn(command, args, {
@@ -50,6 +51,10 @@ async function spawnp(command, args, cwd) {
   });
 }
 
+/**
+ * Utilities for processes
+ * @module utils.process
+ */
 module.exports = {
   execp,
   spawnp,
