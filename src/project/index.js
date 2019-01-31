@@ -275,7 +275,7 @@ class Project {
 
   /**
    * Obtain the destination path for the project
-   * @param  {Strnng}  arg The param used when the initializer runs
+   * @param  {String}  arg The param used when the initializer runs
    * @return {Promise}
    */
   static async getDestPath(arg) {
