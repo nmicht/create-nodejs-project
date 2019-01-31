@@ -133,14 +133,14 @@ async function promptSettingsFile(settingsPath) {
     {
       type: 'input',
       name: 'settingsPath',
-      message: 'What is the path for the create-nodejs-project.json file?',
+      message: 'What is the path for the create-nodejs-settings.json file?',
       default: settingsPath,
       validate: (ans) => {
         const path = utils.files.resolvePath(ans);
         if (path && fs.existsSync(path)) {
           return true;
         }
-        return 'You should introduce a real path for the create-nodejs-project.json';
+        return 'You should introduce a real path for the create-nodejs-settings.json';
       },
     },
   ]);

@@ -9,11 +9,15 @@ const settings = require('../src/settings');
   let user;
   await settings.load();
 
+  const authFileAnswers = await questions.promptSettingsFile(settings.settingsPath);
+  settings.settingsPath = authFileAnswers.settingsPath;
+
   try {
     user = await settings.firstUser();
   } catch (e) {
     // console.log('fixme');
   }
+
 
   const authUser = await questions.promptGithubUser(user.user || '');
   const authToken = await questions.promptAuthToken(user.user || '', user.token || '');
@@ -24,5 +28,5 @@ const settings = require('../src/settings');
   };
 
   await settings.update();
-  console.log('File created with your github details');
+  console.log(`Your settings file was updated on ${settings.settingsPath}`);
 })();
