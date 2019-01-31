@@ -1,3 +1,5 @@
+const fs = require('fs').promises;
+
 const questions = require('../src/questionnaire/questions');
 const settings = require('../src/settings');
 
@@ -7,7 +9,12 @@ const settings = require('../src/settings');
  */
 (async () => {
   let user;
-  await settings.load();
+  try {
+    await fs.access(settings.settingsPath);
+    await settings.load();
+  } catch (e) {
+    settings.update();
+  }
 
   const authFileAnswers = await questions.promptSettingsFile(settings.settingsPath);
   settings.settingsPath = authFileAnswers.settingsPath;

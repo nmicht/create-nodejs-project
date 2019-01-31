@@ -10,7 +10,6 @@ const SETTINGS_PATH = path.resolve(path.join(__dirname, '..', '..', 'create-node
  * @class Settings
  */
 class Settings {
-
   constructor({
     lintPkgs = [
       'eslint',
