@@ -99,7 +99,7 @@ class Settings {
    * Return the first user on the auth data
    * @return {Object|undefined}
    */
-  async firstUser() {
+  firstUser() {
     return this.githubAuth;
   }
 
@@ -108,7 +108,7 @@ class Settings {
    * @param  {String} user       The user to find
    * @return {Object|undefined}
    */
-  async findUser(user) {
+  findUser(user) {
     return this.githubAuth.user === user ? this.githubAuth : undefined;
   }
 
@@ -117,7 +117,7 @@ class Settings {
    * @param  {String} user      The user owner of the token
    * @return {String|undefined} The github token or undefined if there is no token.
    */
-  async getToken(user) {
+  getToken(user) {
     // let userData;
     //
     // if (user) {
@@ -154,7 +154,7 @@ class Settings {
     }
 
     this.githubAuth[userIndex].token = token;
-    this.update();
+    await this.update();
 
     return true;
   }
