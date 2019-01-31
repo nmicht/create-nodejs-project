@@ -18,20 +18,24 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "postinstall": "node --no-warnings install/index.js",
+    "postinstall": "node --no-warnings scripts/install.js",
     "start": "node --no-warnings src/index.js",
-    "cleanup": "node --no-warnings test/cleanup.js"
+    "cleanup": "node --no-warnings scripts/cleanup.js",
+    "test": "mocha"
   },
   "engines": {
-    "node": ">=10.9.0"
+    "node": ">=10.12.0"
   },
   "devDependencies": {
-    "eslint": "^5.12.0",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^5.12.1",
     "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jsx-a11y": "^6.2.0",
     "eslint-plugin-node": "^8.0.1",
-    "eslint-plugin-react": "^7.12.3"
+    "eslint-plugin-react": "^7.12.4",
+    "mocha": "^5.2.0"
   },
   "dependencies": {
     "inquirer": "^6.2.1"

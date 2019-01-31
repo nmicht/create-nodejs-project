@@ -1,6 +1,6 @@
 <img width="75px" height="75px" align="right" alt="Create NodeJS Project Logo" src="https://raw.githubusercontent.com/nmicht/create-nodejs-project/master/assets/create-nodejs-project.png" title="Create NodeJS Project"/>
 
-# Node Project Initializer
+# Node.js Project Initializer
 
 [![License][license-image]][license-url] [![version][npm-image]][npm-url]
 
@@ -13,7 +13,7 @@ An [npm initializer][npm/init] to scaffold a node project and include basic tool
 ## Requirements
 
 - `npm >= 6.5`
-- `node >= 10.1.0`
+- `node >= 10.12.0`
 
 ## Usage
 
@@ -84,20 +84,16 @@ If you are planning to allow this script to create your Github repositories, is 
 5. Open Terminal and add the Github token.
 
 ```
-# nano ~/create-nodejs-project.json
+# nano /YOUR-NODE_MODULES-PATH/create-nodejs-project/create-nodejs-settings.json
 
-{
-   "github": [
-     {
-       "user": "YOUR_USER",
-       "token": "YOUR_TOKEN"
-     },
-     {
-       "user": "OTHER_USER",
-       "token": "OTHER_TOKEN"
-     }
-   ]
-}
+...
+...
+   "githubAuth": {
+     "user": "YOUR_USER",
+     "token": "YOUR_TOKEN"
+   }
+...
+...
 ```
 
 
