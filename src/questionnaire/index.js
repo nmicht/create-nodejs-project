@@ -1,8 +1,6 @@
 const questions = require('./questions');
-const auth = require('../auth');
-const settings = require('../settings');
 
-async function run(name) {
+async function run(name, settings) {
   let remoteAnswers;
   let authFileAnswers;
   let userAnswers;
@@ -15,21 +13,21 @@ async function run(name) {
   let currentAuthUser;
   let currentToken;
 
-  const resp = await questions.getProjectDetails(name);
+  const resp = await questions.getProjectDetails(name, settings.licenses, settings.testingPkgs);
 
   if (!resp.useGithub) {
     remoteAnswers = await questions.getGitRemoteDetails();
     resp.hasRemote = !!remoteAnswers.git.url;
   } else {
-    authFileAnswers = await questions.getAuthFile();
-    settings.settingsPath = authFileAnswers.settingsPath;
-    settings.writeFile();
+    authFileAnswers = await questions.getAuthFile(settings.settingsPath);
+    const { settingsPath } = authFileAnswers;
+    settings.update('settingsPath', settingsPath);
 
-    currentAuthUser = await auth.firstUser();
+    currentAuthUser = await settings.firstUser();
 
     userAnswers = await questions.getGithubUser(currentAuthUser.user);
 
-    currentToken = await auth.getToken(userAnswers.github.user);
+    currentToken = await settings.getToken(userAnswers.github.user);
 
     tokenAnswers = await questions.getAuthToken(userAnswers.github.user, currentToken);
 
@@ -42,7 +40,7 @@ async function run(name) {
     }
 
     if (updateAnswers.updateToken) {
-      auth.updateToken(github.user, github.token, settings.settingsPath);
+      settings.updateToken(github.user, github.token, settings.settingsPath);
     }
 
     if (!currentToken) {

@@ -1,5 +1,4 @@
 const utils = require('../utils');
-const auth = require('../auth');
 
 /**
  * Create a github repository
@@ -11,7 +10,7 @@ const auth = require('../auth');
  * @param  {String} [user='']           The github user
  * @return {json|Boolean}               In case of success will return the json from the
  * github api response, otherwise, return false.
- * @throws If the token is not present
+ * @throws {Error}                      If the token is not present
  */
 async function create({
   name,
@@ -58,12 +57,12 @@ async function create({
  * Delete a github repository
  * @param  {String} name    The name of the repository
  * @param  {String} user    The owner of the repository
+ * @param  {String} token   The github token for the user
  * @return {json|Boolean}   In case of success will return the json from the
  * github api response, otherwise, return false.
  * @throws If the token is not present
  */
-async function deleteRepo(name, user) {
-  const token = await auth.getToken(user);
+async function deleteRepo(name, user, token) {
   let data;
 
   const headers = {

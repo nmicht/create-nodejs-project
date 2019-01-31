@@ -2,16 +2,12 @@ const fs = require('fs').promises;
 const path = require('path');
 
 const utils = require('../utils');
-const settings = require('../settings');
-
-const TEMPLATE_PATH = settings.nodejsTemplatePath;
-const LICENSES_PATH = settings.licensesPath;
 
 /**
- * Update a file using a dictionary
- * @param  {Object} dictionary    A key-value dictionary
- * @param  {String} [filePath=''] The path for the file
- */
+* Update a file using a dictionary
+* @param  {Object} dictionary    A key-value dictionary
+* @param  {String} [filePath=''] The path for the file
+*/
 async function updateFile(dictionary, filePath = '') {
   const resolvedFilePath = utils.files.resolvePath(filePath);
 
@@ -24,17 +20,17 @@ async function updateFile(dictionary, filePath = '') {
 }
 
 /**
- * Copy the template folder recursively
- * @param  {String} templatePath The template path
- * @param  {String} destPath     The destination
- */
-async function copyTemplate(destPath) {
-  await utils.files.copyDirRecursive(TEMPLATE_PATH, destPath);
+* Copy the template folder recursively
+* @param  {String} templatePath The template path
+* @param  {String} destPath     The destination
+*/
+async function copyTemplate(originPath, destPath) {
+  await utils.files.copyDirRecursive(originPath, destPath);
 }
 
-async function copyLicense(license, dictionary, destPath) {
+async function copyLicense(license, dictionary, originPath, destPath) {
   // Get the license file
-  const resolvedFilePath = path.join(LICENSES_PATH, license.replace(' ', '-'));
+  const resolvedFilePath = path.join(originPath, license.replace(' ', '-'));
   const originalFile = await fs.readFile(resolvedFilePath, 'utf8');
 
   // Replace with dictionary

@@ -1,6 +1,5 @@
 const questions = require('../src/questionnaire/questions');
 const settings = require('../src/settings');
-const auth = require('../src/auth');
 
 /**
  * Install function for the package, it set up the github auth details
@@ -8,9 +7,10 @@ const auth = require('../src/auth');
  */
 (async () => {
   let user;
+  await settings.load();
 
   try {
-    user = await auth.firstUser();
+    user = await settings.firstUser();
   } catch (e) {
     // console.log('fixme');
   }
@@ -18,13 +18,11 @@ const auth = require('../src/auth');
   const authUser = await questions.getGithubUser(user.user || '');
   const authToken = await questions.getAuthToken(user.user || '', user.token || '');
 
-  settings.auth.github = [
-    {
-      user: authUser.github.user,
-      token: authToken.github.token,
-    },
-  ];
+  settings.githubAuth = {
+    user: authUser.github.user,
+    token: authToken.github.token,
+  };
 
-  await settings.writeFile();
+  await settings.update();
   console.log('File created with your github details');
 })();

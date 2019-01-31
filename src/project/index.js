@@ -1,12 +1,10 @@
-const pathModule = require('path');
 const fs = require('fs').promises;
 
+const questionnaire = require('../questionnaire');
 const gitHandler = require('../gitHandler');
 const githubHandler = require('../githubHandler');
-const settings = require('../settings');
-const utils = require('../utils');
 const template = require('../template');
-const questionnaire = require('../questionnaire');
+const utils = require('../utils');
 
 /**
  * Project handle all the information for the new node project
@@ -165,7 +163,7 @@ class Project {
    */
   async installDependencies() {
     console.info('Installing dev dependencies ...');
-    const args = ['install', '-D', ...settings.lintPkgs, ...this.testPackages];
+    const args = ['install', '-D', ...Project.settings.lintPkgs, ...this.testPackages];
     await utils.process.spawnp(
       'npm',
       args,
@@ -200,11 +198,16 @@ class Project {
    * @return {Promise}
    */
   async generateTemplateFiles() {
-    await template.copyTemplate(this.path);
+    await template.copyTemplate(Project.settings.nodejsTemplatePath, this.path);
 
     return Promise.all([
       template.updateTemplateFiles(this.dictionary, this.path),
-      template.copyLicense(this.license, this.dictionary, this.path),
+      template.copyLicense(
+        this.license,
+        this.dictionary,
+        Project.settings.licensesPath,
+        this.path
+      ),
     ]);
   }
 
@@ -254,13 +257,13 @@ class Project {
           projectName: utils.string.normalizeName(destPath),
           gitUserName: name,
           gitUserEmail: email,
-          license: settings.defaults.license,
-          version: settings.defaults.version,
+          license: Project.settings.defaults.license,
+          version: Project.settings.defaults.version,
         };
       });
 
     // Questionnaire for the options
-    const answers = await questionnaire.run(defaults);
+    const answers = await questionnaire.run(defaults, Project.settings);
 
     // Add extra values to the answers
     Object.assign(answers, {
@@ -290,6 +293,10 @@ class Project {
         .then(() => reject(new Error(`The project folder '${destPath} already exists. You need to specify a different path.`)))
         .catch(() => resolve(destPath));
     });
+  }
+
+  static setDependencies(settings) {
+    Project.settings = settings;
   }
 }
 

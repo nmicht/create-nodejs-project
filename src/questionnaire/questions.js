@@ -1,7 +1,6 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 
-const settings = require('../settings');
 const utils = require('../utils');
 
 /**
@@ -12,9 +11,11 @@ const utils = require('../utils');
  * @param  {String} defaults.license        The default license for the project
  * @param  {String} defaults.gitUserName    The git username setup for the project
  * @param  {String} defaults.gitUserEmail   The git username setup for the project
+ * @param  {String} licenses                The list of options for licenses
+ * @param  {String} testingPkgs             The list of options for testingPkgs
  * @return {Promise}
  */
-async function getProjectDetails(defaults) {
+async function getProjectDetails(defaults, licenses, testingPkgs) {
   return inquirer.prompt([
     {
       type: 'input',
@@ -47,7 +48,7 @@ async function getProjectDetails(defaults) {
       type: 'list',
       name: 'license',
       message: 'Please select a license',
-      choices: settings.licenses,
+      choices: licenses,
       default: defaults.license,
     },
 
@@ -88,7 +89,7 @@ async function getProjectDetails(defaults) {
       type: 'checkbox',
       name: 'testPackages',
       message: 'Which test packages do you want to include?',
-      choices: settings.testingPkgs,
+      choices: testingPkgs,
     },
 
     {
@@ -121,15 +122,16 @@ async function getGitRemoteDetails() {
 
 /**
  * Run the prompts to geth the path for the auth file
+ * @param  {String} settingsPath  The default path for the settings file
  * @return {Promise}
  */
-async function getAuthFile() {
+async function getAuthFile(settingsPath) {
   return inquirer.prompt([
     {
       type: 'input',
       name: 'settingsPath',
       message: 'What is the path for the create-nodejs-project.json file?',
-      default: settings.settingsPath,
+      default: settingsPath,
       validate: (ans) => {
         const path = utils.files.resolvePath(ans);
         if (path && fs.existsSync(path)) {
