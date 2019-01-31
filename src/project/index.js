@@ -15,6 +15,7 @@ const utils = require('../utils');
 class Project {
   /**
    * The Project constructor
+   * @method constructor
    * @param {String}  [name='']         The name of the project
    * @param {String}  [description='']  The description of the project
    * @param {String}  [version='0.1.0'] The version for the project
@@ -26,6 +27,9 @@ class Project {
    * @param {String}  [author.email=''] The email of the author
    * @param {[type]}  [author.url='']   The url of the author
    * @param {Boolean} [useGithub=false] If the project will use the github integration
+   * @param {Object}  [github]
+   * @param {String}  [github.user='']  The github user
+   * @param {String}  [github.token=''] The github token
    * @param {Boolean} [hasRemote=false] If the project has a git url
    * @param {Object}  [git]
    * @param {String}  [git.name='']     The git project name
@@ -147,6 +151,7 @@ class Project {
 
   /**
    * Set the github values into the object
+   * @method setGithubValues
    * @param {Object} data All the github data
    */
   setGithubValues(data) {
@@ -159,6 +164,7 @@ class Project {
 
   /**
    * Install the npm dev dependencies
+   * @method installDependencies
    * @return {Promise}
    */
   async installDependencies() {
@@ -173,6 +179,7 @@ class Project {
 
   /**
    * Do the initial commit for the project
+   * @method commit
    * @return {Promise}
    */
   async commit() {
@@ -183,6 +190,7 @@ class Project {
 
   /**
    * Push the project code to the remote
+   * @method push
    * @return {Promise}
    */
   async push() {
@@ -195,6 +203,7 @@ class Project {
   /**
    * Copy the template files to the project folder, update them and generate the
    * license.
+   * @method generateTemplateFiles
    * @return {Promise}
    */
   async generateTemplateFiles() {
@@ -213,6 +222,7 @@ class Project {
 
   /**
    * Create a github repository for the project
+   * @method createGithubRepository
    * @return {Promise}
    */
   async createGithubRepository() {
@@ -227,6 +237,7 @@ class Project {
 
   /**
    * Initialize a git repository on the project folder
+   * @method initializeGitRepository
    * @return {Promise}
    */
   async initializeGitRepository() {
@@ -237,6 +248,7 @@ class Project {
 
   /**
    * Create the project folder
+   * @method createFolder
    * @return {Promise}
    */
   async createFolder() {
@@ -246,6 +258,7 @@ class Project {
 
   /**
    * Obtain the project details
+   * @method getDetails
    * @param  {String}  destPath The project destination full path folder
    * @return {Promise}
    */
@@ -275,8 +288,10 @@ class Project {
 
   /**
    * Obtain the destination path for the project
+   * @method getDestPath
    * @param  {String}  arg The param used when the initializer runs
    * @return {Promise}
+   * @throws if the path is not valid
    */
   static async getDestPath(arg) {
     const destPath = utils.files.resolvePath(arg);
@@ -295,9 +310,18 @@ class Project {
     });
   }
 
+  /**
+   * Set the project dependencies
+   * @method setDependencies
+   * @param {Settings} settings Settings object to be injected as dependency
+   */
   static setDependencies(settings) {
     Project.settings = settings;
   }
 }
 
+/**
+ * The project class
+ * @module project
+ */
 module.exports = Project;

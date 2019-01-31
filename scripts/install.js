@@ -15,8 +15,8 @@ const settings = require('../src/settings');
     // console.log('fixme');
   }
 
-  const authUser = await questions.getGithubUser(user.user || '');
-  const authToken = await questions.getAuthToken(user.user || '', user.token || '');
+  const authUser = await questions.promptGithubUser(user.user || '');
+  const authToken = await questions.promptAuthToken(user.user || '', user.token || '');
 
   settings.githubAuth = {
     user: authUser.github.user,

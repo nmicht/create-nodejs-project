@@ -2,18 +2,20 @@ const { exec, spawn } = require('child_process');
 
 /**
  * Promisified exec
+ * @method execp
  * @see https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback
- * @param  {String} cmd  The commando to be executed
- * @param  {String} cwd  The current directoy where the the command should be executed
- * @return {Promise}     Promise object represents the exec of command
+ * @param  {String} command  The command to be executed
+ * @param  {String} cwd      The current working directoy where the the command
+ * should be executed
+ * @return {Promise}
  */
-function execp(cmd, cwd = null) {
+function execp(command, cwd = null) {
   return new Promise((resolve, reject) => {
-    exec(cmd, {
+    exec(command, {
       cwd,
     }, (error, stdout) => {
       if (error) {
-        console.error(`There was an error with the command: ${cmd}`);
+        console.error(`There was an error with the command: ${command}`);
         reject(error);
       }
       resolve(stdout);
@@ -23,6 +25,7 @@ function execp(cmd, cwd = null) {
 
 /**
  * Promisified spawn
+ * @method spawnp
  * @param  {String} command  command name
  * @param  {string} args     command arguments
  * @param  {String} cwd      working directory to run the commad

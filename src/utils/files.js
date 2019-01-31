@@ -4,6 +4,7 @@ const os = require('os');
 
 /**
  * Resolve a path even if is using shell specific for home
+ * @method resolvePath
  * @param  {String} originalPath The path to resolve
  * @return {String}              The resolved path
  */
@@ -21,8 +22,10 @@ function resolvePath(originalPath) {
 
 /**
  * Read a file and translate to json
+ * @method readJsonFile
  * @param  {String} file The path to the file
  * @return {Promise}     The json object from the file
+ * @throws if the file can not be processed as json
  */
 async function readJsonFile(file) {
   let json;
@@ -39,8 +42,10 @@ async function readJsonFile(file) {
 
 /**
  * Copy a folder recursively
+ * @method copyDirRecursive
  * @param  {String} [currentPath='./']   The folder path to copy
  * @param  {String} [destPath='../new']  The destination path
+ * @return {Promise}
  */
 async function copyDirRecursive(currentPath = './', destPath = '../new') {
   let dest = resolvePath(destPath);
@@ -57,11 +62,11 @@ async function copyDirRecursive(currentPath = './', destPath = '../new') {
   // Read files in folder
   const files = await fs.readdir(current);
 
-  for(file of files) {
-    src = resolvePath(path.join(current, file));
+  for(const file of files) {
+    const src = resolvePath(path.join(current, file));
     dest = resolvePath(path.join(destPath, file));
 
-    srcObj = await fs.lstat(src);
+    const srcObj = await fs.lstat(src);
     if (srcObj.isDirectory()) {
       // Recursive copy for folders
       await copyDirRecursive(src, dest);
@@ -75,8 +80,9 @@ async function copyDirRecursive(currentPath = './', destPath = '../new') {
 
 /**
  * Delete a directory recursively
+ * @method deleteDirRecursive
  * @param  {String} folderPath The path of the folder to be deleted
- * @return {[type]}            [description]
+ * @return {Promise}
  */
 async function deleteDirRecursive(folderPath) {
   const dirPath = resolvePath(folderPath);
@@ -90,10 +96,10 @@ async function deleteDirRecursive(folderPath) {
 
   const files = await fs.readdir(dirPath);
 
-  for(file of files){
+  for (const file of files) {
     const curPath = resolvePath(path.join(dirPath, file));
 
-    srcObj = await fs.lstat(curPath);
+    const srcObj = await fs.lstat(curPath);
     if (srcObj.isDirectory()) {
       await deleteDirRecursive(curPath);
     } else { // delete file
@@ -105,6 +111,10 @@ async function deleteDirRecursive(folderPath) {
   console.log(`Folder ${dirPath} deleted`);
 }
 
+/**
+ * Utilities for file system
+ * @module utils.files
+ */
 module.exports = {
   copyDirRecursive,
   deleteDirRecursive,

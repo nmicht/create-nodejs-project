@@ -1,5 +1,12 @@
 const questions = require('./questions');
 
+/**
+ * Runs the full questionnaire for the configuration of the project
+ * @method run
+ * @param  {String} name       The name for the project
+ * @param  {Settings} settings The settings object
+ * @return {Object}            An object with all the answers
+ */
 async function run(name, settings) {
   let remoteAnswers;
   let authFileAnswers;
@@ -13,30 +20,30 @@ async function run(name, settings) {
   let currentAuthUser;
   let currentToken;
 
-  const resp = await questions.getProjectDetails(name, settings.licenses, settings.testingPkgs);
+  const resp = await questions.promptProjectDetails(name, settings.licenses, settings.testingPkgs);
 
   if (!resp.useGithub) {
-    remoteAnswers = await questions.getGitRemoteDetails();
+    remoteAnswers = await questions.promptGitRemoteDetails();
     resp.hasRemote = !!remoteAnswers.git.url;
   } else {
-    authFileAnswers = await questions.getAuthFile(settings.settingsPath);
+    authFileAnswers = await questions.promptSettingsFile(settings.settingsPath);
     const { settingsPath } = authFileAnswers;
     settings.update('settingsPath', settingsPath);
 
     currentAuthUser = await settings.firstUser();
 
-    userAnswers = await questions.getGithubUser(currentAuthUser.user);
+    userAnswers = await questions.promptGithubUser(currentAuthUser.user);
 
     currentToken = await settings.getToken(userAnswers.github.user);
 
-    tokenAnswers = await questions.getAuthToken(userAnswers.github.user, currentToken);
+    tokenAnswers = await questions.promptAuthToken(userAnswers.github.user, currentToken);
 
     github.user = userAnswers.github.user;
     github.token = tokenAnswers.github.token;
 
     if (github.user !== currentAuthUser.user
       || github.token !== currentToken) {
-      updateAnswers = await questions.confirmUpdateToken();
+      updateAnswers = await questions.promptUpdateToken();
     }
 
     if (updateAnswers.updateToken) {
@@ -53,6 +60,10 @@ async function run(name, settings) {
   return resp;
 }
 
+/**
+ * The questionnaire for the project
+ * @module questionnaire
+ */
 module.exports = {
   run,
 };

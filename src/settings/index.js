@@ -5,7 +5,12 @@ const utils = require('../utils');
 
 const SETTINGS_PATH = path.resolve(path.join(__dirname, '..', '..', 'create-nodejs-settings.json'));
 
+/**
+ * A settings class
+ * @class Settings
+ */
 class Settings {
+
   constructor({
     lintPkgs = [
       'eslint',
@@ -63,6 +68,7 @@ class Settings {
 
   /**
    * Write the auth data json in the file
+   * @method update
    * @param  {String} [property='all']        The property to be updated
    * @param  {String|Array|Object} [data='']  The value to be updated
    * @param  {String} filePath                The path of the file
@@ -76,66 +82,65 @@ class Settings {
     return fs.writeFile(filePath, json);
   }
 
+  /**
+   * Load the settings values from the settings file
+   * @method load
+   * @param  {String}  [filePath=this.settingsPath] The path for the settings file
+   * @return {Promise}
+   */
   async load(filePath = this.settingsPath) {
-    try {
-      fs.access(filePath);
-      const json = await utils.files.readJsonFile(filePath);
-      this.defaults = json.defaults;
-      this.githubAuth = json.githubAuth;
-      this.lintPkgs = json.lintPkgs;
-      this.testingPkgs = json.testingPkgs;
-      this.licenses = json.licenses;
-      this.settingsPath = json.settingsPath;
-      this.templatesPath = json.templatesPath;
-      this.nodejsTemplatePath = json.nodejsTemplatePath;
-      this.licensesPath = json.licensesPath;
-    } catch (e) {
-      // nothing
-    }
-    return this;
+    fs.access(filePath);
+    const json = await utils.files.readJsonFile(filePath);
+    this.defaults = json.defaults;
+    this.githubAuth = json.githubAuth;
+    this.lintPkgs = json.lintPkgs;
+    this.testingPkgs = json.testingPkgs;
+    this.licenses = json.licenses;
+    this.settingsPath = json.settingsPath;
+    this.templatesPath = json.templatesPath;
+    this.nodejsTemplatePath = json.nodejsTemplatePath;
+    this.licensesPath = json.licensesPath;
   }
 
   /**
-   * Return the first user on the auth data
+   * Return the first user on the auth settings
+   * @method firstUser
    * @return {Object|undefined}
+   * TODO implement logic to allow multiple auth values
    */
   firstUser() {
     return this.githubAuth;
   }
 
   /**
-   * Find a user on the auth file
+   * Find a user on the auth settings
+   * @method findUser
    * @param  {String} user       The user to find
    * @return {Object|undefined}
+   * TODO implement logic to allow multiple auth values
    */
   findUser(user) {
     return this.githubAuth.user === user ? this.githubAuth : undefined;
   }
 
   /**
-   * Get the Github token from the auth file
+   * Get the Github token from the auth settings
+   * @method getToken
    * @param  {String} user      The user owner of the token
    * @return {String|undefined} The github token or undefined if there is no token.
+   * TODO implement logic to allow multiple auth values
    */
   getToken(user) {
-    // let userData;
-    //
-    // if (user) {
-    //   userData = await this.findUser(user);
-    // } else {
-    //   userData = await this.firstUser();
-    // }
-    //
-    // const token = userData ? userData.token : undefined;
-
     return this.githubAuth.user === user ? this.githubAuth.token : undefined;
   }
 
   /**
-   * Update the auth data file
+   * Update the auth settings
+   * @method updateToken
    * @param  {String} user    The user owner of the token
    * @param  {String} token   The token
-   * @return {Boolean}        True in case the file gets updated
+   * @return {Promise}        Resolve with true in case the file gets updated
+   * TODO implement logic to allow multiple auth values
    */
   async updateToken(user, token) {
     let currentToken = '';
@@ -160,4 +165,7 @@ class Settings {
   }
 }
 
+/**
+ * @module settings
+ */
 module.exports = new Settings({});

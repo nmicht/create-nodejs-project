@@ -5,17 +5,18 @@ const utils = require('../utils');
 
 /**
  * Run the prompts to get the details for the project
+ * @method promptProjectDetails
  * @param  {Object} defaults
  * @param  {String} defaults.projectName    The default name for the project
  * @param  {String} defaults.version        The default version for the project
  * @param  {String} defaults.license        The default license for the project
  * @param  {String} defaults.gitUserName    The git username setup for the project
  * @param  {String} defaults.gitUserEmail   The git username setup for the project
- * @param  {String} licenses                The list of options for licenses
- * @param  {String} testingPkgs             The list of options for testingPkgs
+ * @param  {Array} licenses                 The list of options for licenses
+ * @param  {Array} testingPkgs              The list of options for testingPkgs
  * @return {Promise}
  */
-async function getProjectDetails(defaults, licenses, testingPkgs) {
+async function promptProjectDetails(defaults, licenses, testingPkgs) {
   return inquirer.prompt([
     {
       type: 'input',
@@ -102,9 +103,10 @@ async function getProjectDetails(defaults, licenses, testingPkgs) {
 
 /**
  * Run the prompts to get the details for the remote git
+ * @method promptGitRemoteDetails
  * @return {Promise}
  */
-async function getGitRemoteDetails() {
+async function promptGitRemoteDetails() {
   return inquirer.prompt([
     {
       type: 'input',
@@ -122,10 +124,11 @@ async function getGitRemoteDetails() {
 
 /**
  * Run the prompts to geth the path for the auth file
+ * @method promptSettingsFile
  * @param  {String} settingsPath  The default path for the settings file
  * @return {Promise}
  */
-async function getAuthFile(settingsPath) {
+async function promptSettingsFile(settingsPath) {
   return inquirer.prompt([
     {
       type: 'input',
@@ -145,10 +148,11 @@ async function getAuthFile(settingsPath) {
 
 /**
  * Run the prompts to get the github user
+ * @method promptGithubUser
  * @param  {String} user The current user on the auth file
  * @return {Promise}
  */
-async function getGithubUser(user) {
+async function promptGithubUser(user) {
   return inquirer.prompt([
     {
       type: 'input',
@@ -161,11 +165,12 @@ async function getGithubUser(user) {
 
 /**
  * Run the prompts to get the github token
+ * @method promptAuthToken
  * @param  {String} user  The current github user on the auth file
  * @param  {String} token The current github user on the auth file
  * @return {Promise}
  */
-async function getAuthToken(user, token) {
+async function promptAuthToken(user, token) {
   return inquirer.prompt([
     {
       type: 'input',
@@ -178,23 +183,28 @@ async function getAuthToken(user, token) {
 
 /**
  * Run the prompt to confirm if the user wants to update the token
+ * @method promptUpdateToken
  * @return {Promise}
  */
-async function confirmUpdateToken() {
+async function promptUpdateToken() {
   return inquirer.prompt([
     {
       type: 'confirm',
       name: 'updateToken',
-      message: 'Do you want to update the create-nodejs-project.json file with this token?',
+      message: 'Do you want to update the settings file with this token?',
     },
   ]);
 }
 
+/**
+ * The questions for the questionnaire
+ * @module questions
+ */
 module.exports = {
-  getProjectDetails,
-  getGitRemoteDetails,
-  getAuthFile,
-  getAuthToken,
-  confirmUpdateToken,
-  getGithubUser,
+  promptProjectDetails,
+  promptGitRemoteDetails,
+  promptSettingsFile,
+  promptAuthToken,
+  promptUpdateToken,
+  promptGithubUser,
 };

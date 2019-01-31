@@ -2,11 +2,13 @@ const https = require('https');
 
 /**
  * HTTP post method with json body and json response
+ * @method postReq
  * @param  {Object} data            The object with all the data to send
  * @param  {String} url             The http options
  * @param  {Object} headers         The headers for the request
  * @param  {Boolean} jsonResponse   If the response will be a json
  * @return {Promise}
+ * @throws if the request is not https
  */
 function postReq(data, url, headers, jsonResponse = true) {
   const apiUrl = new URL(url);
@@ -60,12 +62,14 @@ function postReq(data, url, headers, jsonResponse = true) {
 }
 
 /**
-* HTTP delete method with json body and json response
-* @param  {Object} data            The object with all the data to send
-* @param  {String} url             The http options
-* @param  {Object} headers         The headers for the request
-* @param  {Boolean} jsonResponse   If the response will be a json
-* @return {Promise}
+ * HTTP delete method with json body and json response
+ * @method deleteReq
+ * @param  {Object} data            The object with all the data to send
+ * @param  {String} url             The http options
+ * @param  {Object} headers         The headers for the request
+ * @param  {Boolean} jsonResponse   If the response will be a json
+ * @return {Promise}
+ * @throws if the request is not https
  */
 function deleteReq(data, url, headers, jsonResponse = true) {
   const apiUrl = new URL(url);
@@ -118,6 +122,10 @@ function deleteReq(data, url, headers, jsonResponse = true) {
   });
 }
 
+/**
+ * Utilites for https requests
+ * @module utils.requests
+ */
 module.exports = {
   postReq,
   deleteReq,
