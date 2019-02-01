@@ -27,4 +27,6 @@
 
 ---
 
-Made with :heart: by [PROJECT_AUTHOR_NAME](PROJECT_AUTHOR_URL) using [node-project initializer](https://github.com/nmicht/create-node-project)
+Made with :heart: by [PROJECT_AUTHOR_NAME](PROJECT_AUTHOR_URL).
+
+This project was bootstrapped with [nodejs-project initializer](https://github.com/nmicht/create-nodejs-project)

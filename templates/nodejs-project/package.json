@@ -8,7 +8,7 @@
   "license": "PROJECT_LICENSE",
   "private": PROJECT_PRIVATE,
   "engines": {
-    "node": ">=10.9.0"
+    "node": ">=10.12.0"
   },
   "scripts": {
     "start": "node ./src/index.js"
