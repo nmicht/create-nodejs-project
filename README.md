@@ -2,7 +2,13 @@
 
 # Node.js Project Initializer
 
-[![License][license-image]][license-url] [![version][npm-image]][npm-url] [![coverage][coverage-image]][coverage-url] [![downloads][downloads-image]][downloads-url]
+[![License][license-image]][license-url]
+[![version][npm-image]][npm-url]
+[![downloads][downloads-image]][downloads-url]
+
+
+[![coverage][coverage-image]][coverage-url]
+[![build][build-image]][build-url]
 
 An [npm initializer][npm/init] to scaffold a node project and include basic tools like lint, testing, etc.
 
@@ -114,3 +120,6 @@ If you are planning to allow this script to create your Github repositories, is 
 
 [coverage-url]: https://coveralls.io/github/nmicht/create-nodejs-project?branch=master
 [coverage-image]: https://img.shields.io/coveralls/github/nmicht/create-nodejs-project.svg?style=for-the-badge
+
+[build-url]: https://travis-ci.org/nmicht/create-nodejs-project
+[build-image]: https://img.shields.io/travis/nmicht/create-nodejs-project.svg?logo=travis&style=for-the-badge
