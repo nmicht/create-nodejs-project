@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.1
+* Test coverage with coveralls, mocha and travis
+
 ## 1.0.0
 * Settings is a global object handle from an accessible json file.
 * Includes some unit tests
