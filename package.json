@@ -19,8 +19,9 @@
   "private": false,
   "scripts": {
     "postinstall": "node --no-warnings scripts/install.js",
-    "start": "node --no-warnings src/index.js",
+    "setup": "node --no-warnings scripts/setup.js",
     "cleanup": "node --no-warnings scripts/cleanup.js",
+    "start": "node --no-warnings src/index.js",
     "test": "mocha"
   },
   "engines": {

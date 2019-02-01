@@ -1,4 +1,5 @@
 const fs = require('fs').promises;
+const path = require('path');
 
 const questionnaire = require('../questionnaire');
 const gitHandler = require('../gitHandler');
@@ -40,6 +41,7 @@ class Project {
    * @param {String}  [path='']         The full path for the project folder
    * @param {String}  [year='']         The year to be used on the license
    * @param {Array}   [testPackages=[]] The list of the test packages selected
+   * @param {String}  [template='']     The list of the test packages selected
    */
   constructor({
     name = '',
@@ -66,9 +68,10 @@ class Project {
     },
     issueTracker = '',
     isPrivate = false,
-    path = '',
+    thePath = '',
     year = '',
     testPackages = [],
+    theTemplate = '',
   }) {
     this.name = name;
     this.description = description;
@@ -94,9 +97,10 @@ class Project {
     };
     this.issueTracker = issueTracker;
     this.isPrivate = isPrivate;
-    this.path = path;
+    this.path = thePath;
     this.year = year || (new Date()).getFullYear();
     this.testPackages = testPackages;
+    this.template = theTemplate;
   }
 
   /**
@@ -207,7 +211,10 @@ class Project {
    * @return {Promise}
    */
   async generateTemplateFiles() {
-    await template.copyTemplate(Project.settings.nodejsTemplatePath, this.path);
+    await template.copyTemplate(
+      path.join(Project.settings.templatesPath, this.template),
+      this.path
+    );
 
     return Promise.all([
       template.updateTemplateFiles(this.dictionary, this.path),

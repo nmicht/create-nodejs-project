@@ -1,32 +1,15 @@
-const questions = require('../src/questionnaire/questions');
+const fs = require('fs').promises;
+
 const settings = require('../src/settings');
 
 /**
- * Install function for the package, it set up the github auth details
- * TODO Consider the case for a previous auth file with different tokens
+ * Install function for the package, it set up all the settings details
  */
 (async () => {
-  let user;
-  await settings.load();
-
-  const authFileAnswers = await questions.promptSettingsFile(settings.settingsPath);
-  settings.settingsPath = authFileAnswers.settingsPath;
-
   try {
-    user = await settings.firstUser();
+    await fs.access(settings.settingsPath);
+    await settings.load();
   } catch (e) {
-    // console.log('fixme');
+    settings.update();
   }
-
-
-  const authUser = await questions.promptGithubUser(user.user || '');
-  const authToken = await questions.promptAuthToken(user.user || '', user.token || '');
-
-  settings.githubAuth = {
-    user: authUser.github.user,
-    token: authToken.github.token,
-  };
-
-  await settings.update();
-  console.log(`Your settings file was updated on ${settings.settingsPath}`);
 })();

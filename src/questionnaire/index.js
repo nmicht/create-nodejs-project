@@ -20,7 +20,12 @@ async function run(name, settings) {
   let currentAuthUser;
   let currentToken;
 
-  const resp = await questions.promptProjectDetails(name, settings.licenses, settings.testingPkgs);
+  const resp = await questions.promptProjectDetails(
+    name,
+    settings.licenses,
+    settings.testingPkgs,
+    settings.templates
+  );
 
   if (!resp.useGithub) {
     remoteAnswers = await questions.promptGitRemoteDetails();
