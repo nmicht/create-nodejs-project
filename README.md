@@ -2,7 +2,7 @@
 
 # Node.js Project Initializer
 
-[![License][license-image]][license-url] [![version][npm-image]][npm-url] [![downloads][downloads-image]][downloads-url]
+[![License][license-image]][license-url] [![version][npm-image]][npm-url] [![coverage][coverage-image]][coverage-url] [![downloads][downloads-image]][downloads-url]
 
 An [npm initializer][npm/init] to scaffold a node project and include basic tools like lint, testing, etc.
 
@@ -22,7 +22,11 @@ An [npm initializer][npm/init] to scaffold a node project and include basic tool
 npm install -g create-nodejs-project
 ```
 
-2. You will be prompted for your Github information  
+2. Run the setup configuration
+```
+npm setup
+```
+You will be prompted for your Github information  
 If you do not have the information at the moment, you can keep it empty.  
 In order to create projects with Github integration, you will need to add the authentication information later. See [Github Auth](#configure-Github-authentication)
 
@@ -107,3 +111,6 @@ If you are planning to allow this script to create your Github repositories, is 
 
 [downloads-url]: https://www.npmjs.com/package/create-nodejs-project
 [downloads-image]: https://img.shields.io/npm/dt/create-nodejs-project.svg?style=for-the-badge
+
+[coverage-url]: https://coveralls.io/github/nmicht/create-nodejs-project?branch=master
+[coverage-image]: https://img.shields.io/coveralls/github/nmicht/create-nodejs-project.svg?style=for-the-badge

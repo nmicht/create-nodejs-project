@@ -1,6 +1,6 @@
 {
   "name": "create-nodejs-project",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "An npm initializer to scaffold a node project and include basic tools like lint, testing, etc.",
   "main": "src/index.js",
   "bin": "src/index.js",
