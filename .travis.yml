@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- '10'
+- node
 deploy:
   provider: npm
   email: hola@michelletorres.mx
@@ -10,3 +10,5 @@ deploy:
     tags: true
     repo: nmicht/create-nodejs-project
     branch: master
+after_success:
+- npm run coveralls
