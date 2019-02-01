@@ -1,8 +1,13 @@
 const questions = require('./questions');
-const auth = require('../auth');
-const settings = require('../settings');
 
-async function run(name) {
+/**
+ * Runs the full questionnaire for the configuration of the project
+ * @method run
+ * @param  {String} name       The name for the project
+ * @param  {Settings} settings The settings object
+ * @return {Object}            An object with all the answers
+ */
+async function run(name, settings) {
   let remoteAnswers;
   let authFileAnswers;
   let userAnswers;
@@ -15,32 +20,39 @@ async function run(name) {
   let currentAuthUser;
   let currentToken;
 
-  const resp = await questions.getProjectDetails(name);
+  const resp = await questions.promptProjectDetails(
+    name,
+    settings.licenses,
+    settings.testingPkgs,
+    settings.templates
+  );
 
   if (!resp.useGithub) {
-    remoteAnswers = await questions.getGitRemoteDetails();
+    remoteAnswers = await questions.promptGitRemoteDetails();
     resp.hasRemote = !!remoteAnswers.git.url;
   } else {
-    authFileAnswers = await questions.getAuthFile();
+    authFileAnswers = await questions.promptSettingsFile(settings.settingsPath);
+    const { settingsPath } = authFileAnswers;
+    settings.update('settingsPath', settingsPath);
 
-    currentAuthUser = await auth.firstUser(authFileAnswers.authPath);
+    currentAuthUser = await settings.firstUser();
 
-    userAnswers = await questions.getGithubUser(currentAuthUser.user);
+    userAnswers = await questions.promptGithubUser(currentAuthUser.user);
 
-    currentToken = await auth.getToken(userAnswers.github.user, authFileAnswers.authPath);
+    currentToken = await settings.getToken(userAnswers.github.user);
 
-    tokenAnswers = await questions.getAuthToken(userAnswers.github.user, currentToken);
+    tokenAnswers = await questions.promptAuthToken(userAnswers.github.user, currentToken);
 
     github.user = userAnswers.github.user;
     github.token = tokenAnswers.github.token;
 
     if (github.user !== currentAuthUser.user
       || github.token !== currentToken) {
-      updateAnswers = await questions.confirmUpdateToken();
+      updateAnswers = await questions.promptUpdateToken();
     }
 
     if (updateAnswers.updateToken) {
-      auth.updateAuthFile(github.user, github.token, settings.authPath);
+      settings.updateToken(github.user, github.token, settings.settingsPath);
     }
 
     if (!currentToken) {
@@ -53,6 +65,10 @@ async function run(name) {
   return resp;
 }
 
+/**
+ * The questionnaire for the project
+ * @module questionnaire
+ */
 module.exports = {
   run,
 };

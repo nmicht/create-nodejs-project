@@ -1,16 +1,18 @@
 const utils = require('../utils');
-const auth = require('../auth');
 
 /**
  * Create a github repository
+ * @method create
  * @param  {String}  name               The name for the github project
- * @param  {Boolean} [isPrivate=false]  Defines is the project will be created as private
- * or public on github
+ * @param  {Boolean} [isPrivate=false]  Defines is the project will be created
+ * as private or public on github
  * @param  {String} [description='']    The description for the github project
  * @param  {String} [url='']            The url for the github project
- * @param  {String} [user='']           The github user
- * @return {json|Boolean}               In case of success will return the json from the
- * github api response, otherwise, return false.
+ * @param  {Object} [github]
+ * @param  {String} [github.user='']    The github user
+ * @param  {String} [github.token='']   The github token
+ * @return {String} data                The response from github or undefined in
+ * case of error
  * @throws If the token is not present
  */
 async function create({
@@ -56,14 +58,15 @@ async function create({
 
 /**
  * Delete a github repository
+ * @method deleteRepo
  * @param  {String} name    The name of the repository
  * @param  {String} user    The owner of the repository
- * @return {json|Boolean}   In case of success will return the json from the
- * github api response, otherwise, return false.
+ * @param  {String} token   The github token for the user
+ * @return {json|undefined} In case of success will return the response from
+ * github, in case of error will return undefined.
  * @throws If the token is not present
  */
-async function deleteRepo(name, user) {
-  const token = await auth.getToken(user);
+async function deleteRepo(name, user, token) {
   let data;
 
   const headers = {
@@ -91,6 +94,10 @@ async function deleteRepo(name, user) {
 
 // TODO include a method to handle the topics (will require to get the github user)
 
+/**
+ * A github api handler
+ * @module githubHandler
+ */
 module.exports = {
   create,
   deleteRepo,
