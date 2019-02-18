@@ -1,19 +1,24 @@
 const os = require('os');
 const path = require('path');
 const fs = require('fs').promises;
-const chai = require("chai");
-const chaiAsPromised = require("chai-as-promised");
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 
 chai.use(chaiAsPromised);
 const should = chai.should();
 
 const utils = require('../../../src/utils');
 
-describe('Utils for files', () => {
+describe.only('Utils for files', () => {
   const jsonPath = 'test/unit-tests/settings/test-settings.json';
   const otherFile = 'test/unit-tests/utils/file.txt';
+  const copyFolder = path.resolve('test/unit-tests');
   const tempFolder = path.resolve(path.join(os.homedir(), 'temp'));
   const testFolder = path.resolve(path.join(os.homedir(), 'temp', 'project'));
+
+  after('tear down', async () => {
+    await utils.files.deleteDirRecursive(tempFolder);
+  })
 
   it('resolve path works using tilde on any os different than win32', async () => {
     utils.files.resolvePath('~').should.equal(os.homedir());
@@ -29,14 +34,27 @@ describe('Utils for files', () => {
   });
 
   it('copy dir will create all the parent folders required', async () => {
-    await utils.files.copyDirRecursive('test/unit-tests', testFolder);
+    await utils.files.copyDirRecursive(copyFolder, testFolder);
     return fs.access(tempFolder).should.not.eventually.be.rejectedWith(Error);
   });
-
-  it('copy dir count should matches for dir and files');
 
   it('delete should remove the folder and its content', async () => {
     await utils.files.deleteDirRecursive(tempFolder);
     return fs.access(tempFolder).should.eventually.be.rejectedWith(Error);
+  });
+
+  it('copy dir count should matches for dir and files', async () => {
+    let finalCount = 0;
+    let originalCount = 0;
+
+    await utils.files.copyDirRecursive(copyFolder, testFolder);
+
+    const originalFiles = await fs.readdir(copyFolder);
+    originalCount = originalFiles.length;
+
+    const finalFiles = await fs.readdir(testFolder);
+    finalCount = finalFiles.length;
+
+    return finalCount.should.be.equal(originalCount);
   });
 });

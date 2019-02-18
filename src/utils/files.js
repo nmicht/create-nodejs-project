@@ -4,6 +4,8 @@ const os = require('os');
 
 /**
  * Resolve a path even if is using shell specific for home
+ * if no original path is received, return the current
+ * working directory
  * @method resolvePath
  * @param  {String} originalPath The path to resolve
  * @return {String}              The resolved path
