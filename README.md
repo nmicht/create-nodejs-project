@@ -1,8 +1,14 @@
 <img width="75px" height="75px" align="right" alt="Create NodeJS Project Logo" src="https://raw.githubusercontent.com/nmicht/create-nodejs-project/master/assets/create-nodejs-project.png" title="Create NodeJS Project"/>
 
-# Node Project Initializer
+# Node.js Project Initializer
 
-[![License][license-image]][license-url] [![version][npm-image]][npm-url]
+[![License][license-image]][license-url]
+[![version][npm-image]][npm-url]
+[![downloads][downloads-image]][downloads-url]
+
+
+[![coverage][coverage-image]][coverage-url]
+[![build][build-image]][build-url]
 
 An [npm initializer][npm/init] to scaffold a node project and include basic tools like lint, testing, etc.
 
@@ -22,7 +28,11 @@ An [npm initializer][npm/init] to scaffold a node project and include basic tool
 npm install -g create-nodejs-project
 ```
 
-2. You will be prompted for your Github information  
+2. Run the setup configuration
+```
+npm setup
+```
+You will be prompted for your Github information  
 If you do not have the information at the moment, you can keep it empty.  
 In order to create projects with Github integration, you will need to add the authentication information later. See [Github Auth](#configure-Github-authentication)
 
@@ -34,11 +44,10 @@ npm init nodejs-project path/to/new/project
 ## What it does
 
 1. Create the folder for the new project
-1. Guide you through a questionnarie to setup the project
+1. Guide you through a questionnaire to setup the project
 2. Initialize a git repository
 3. Copy the template files (src, eslintrc, gitignore, readme, etc)
-4. Can create a Github repository
-5. Handle the Github tokens for multiple accounts/users
+4. Create a Github repository
 5. Install eslint dependencies
 5. Install the selected testing dependencies
 6. Generate package.json with all the project details
@@ -47,22 +56,22 @@ npm init nodejs-project path/to/new/project
 
 ## About this package
 
-The motivation started as a **DRY** thing.
+Every time that I start a new project in Node.js, I hate to go to other project folder, copy files like eslintrc, editorconfig; install the same dependencies, create folder structure, etc.
 
-I'm not expert with NodeJS, but every time that I start a new project, I hate to go to other project, copy files like eslintrc, editorconfig, install the same dependencies, create folder structure, etc.   
+With this in mind, the motivation to build this package started as a **DRY** (Do not repeat yourself) thing.   
 
-So, the idea is to have an automated way to initialize new NodeJS projects and with this have a new folder with everything ready to work in what really matters.  
+This package is intended to automated the initialization of new Node.js projects and with this have a new folder with everything ready to work, basically an scaffolding tool.  
 
 
 ## Future features
 
 1. Unit testing
-7. Options to create the project with params instead of questionnaire
+7. Options to create the project with parameters instead of questionnaire
 10. A good error handler
 11. Color for the console messages
 12. Improve the template structure (the one that is generated in the new project) to include unit test
 18. Option to questionnaire with all the default values
-2. Logic to handle multiple auth files and multiple github accounts
+2. Logic to handle multiple authentication files and multiple Github accounts
 
 ## Configure Github Authentication
 
@@ -84,20 +93,16 @@ If you are planning to allow this script to create your Github repositories, is 
 5. Open Terminal and add the Github token.
 
 ```
-# nano ~/create-nodejs-project.json
+# nano /YOUR-NODE_MODULES-PATH/create-nodejs-project/create-nodejs-settings.json
 
-{
-   "github": [
-     {
-       "user": "YOUR_USER",
-       "token": "YOUR_TOKEN"
-     },
-     {
-       "user": "OTHER_USER",
-       "token": "OTHER_TOKEN"
-     }
-   ]
-}
+...
+...
+   "githubAuth": {
+     "user": "YOUR_USER",
+     "token": "YOUR_TOKEN"
+   }
+...
+...
 ```
 
 
@@ -109,3 +114,12 @@ If you are planning to allow this script to create your Github repositories, is 
 [npm-image]: https://img.shields.io/npm/v/create-nodejs-project.svg?style=for-the-badge&logo=npm
 
 [npm/init]: https://docs.npmjs.com/cli/init#description
+
+[downloads-url]: https://www.npmjs.com/package/create-nodejs-project
+[downloads-image]: https://img.shields.io/npm/dt/create-nodejs-project.svg?style=for-the-badge
+
+[coverage-url]: https://coveralls.io/github/nmicht/create-nodejs-project?branch=master
+[coverage-image]: https://img.shields.io/coveralls/github/nmicht/create-nodejs-project.svg?style=for-the-badge
+
+[build-url]: https://travis-ci.org/nmicht/create-nodejs-project
+[build-image]: https://img.shields.io/travis/nmicht/create-nodejs-project.svg?logo=travis&style=for-the-badge

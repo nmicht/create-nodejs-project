@@ -10,7 +10,7 @@ const should = chai.should();
 const utils = require('../../../src/utils');
 
 describe('Utils for files', () => {
-  const jsonPath = 'test/unit-tests/auth/test-auth.json';
+  const jsonPath = 'test/unit-tests/settings/test-settings.json';
   const otherFile = 'test/unit-tests/utils/file.txt';
   const tempFolder = path.resolve(path.join(os.homedir(), 'temp'));
   const testFolder = path.resolve(path.join(os.homedir(), 'temp', 'project'));

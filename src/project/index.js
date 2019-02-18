@@ -1,12 +1,11 @@
-const pathModule = require('path');
 const fs = require('fs').promises;
+const path = require('path');
 
+const questionnaire = require('../questionnaire');
 const gitHandler = require('../gitHandler');
 const githubHandler = require('../githubHandler');
-const settings = require('../settings');
-const utils = require('../utils');
 const template = require('../template');
-const questionnaire = require('../questionnaire');
+const utils = require('../utils');
 
 /**
  * Project handle all the information for the new node project
@@ -17,6 +16,7 @@ const questionnaire = require('../questionnaire');
 class Project {
   /**
    * The Project constructor
+   * @method constructor
    * @param {String}  [name='']         The name of the project
    * @param {String}  [description='']  The description of the project
    * @param {String}  [version='0.1.0'] The version for the project
@@ -28,6 +28,9 @@ class Project {
    * @param {String}  [author.email=''] The email of the author
    * @param {[type]}  [author.url='']   The url of the author
    * @param {Boolean} [useGithub=false] If the project will use the github integration
+   * @param {Object}  [github]
+   * @param {String}  [github.user='']  The github user
+   * @param {String}  [github.token=''] The github token
    * @param {Boolean} [hasRemote=false] If the project has a git url
    * @param {Object}  [git]
    * @param {String}  [git.name='']     The git project name
@@ -38,6 +41,7 @@ class Project {
    * @param {String}  [path='']         The full path for the project folder
    * @param {String}  [year='']         The year to be used on the license
    * @param {Array}   [testPackages=[]] The list of the test packages selected
+   * @param {String}  [template='']     The list of the test packages selected
    */
   constructor({
     name = '',
@@ -64,9 +68,10 @@ class Project {
     },
     issueTracker = '',
     isPrivate = false,
-    path = '',
+    thePath = '',
     year = '',
     testPackages = [],
+    theTemplate = '',
   }) {
     this.name = name;
     this.description = description;
@@ -92,9 +97,10 @@ class Project {
     };
     this.issueTracker = issueTracker;
     this.isPrivate = isPrivate;
-    this.path = path;
+    this.path = thePath;
     this.year = year || (new Date()).getFullYear();
     this.testPackages = testPackages;
+    this.template = theTemplate;
   }
 
   /**
@@ -149,6 +155,7 @@ class Project {
 
   /**
    * Set the github values into the object
+   * @method setGithubValues
    * @param {Object} data All the github data
    */
   setGithubValues(data) {
@@ -161,11 +168,12 @@ class Project {
 
   /**
    * Install the npm dev dependencies
+   * @method installDependencies
    * @return {Promise}
    */
   async installDependencies() {
     console.info('Installing dev dependencies ...');
-    const args = ['install', '-D', ...settings.lintPkgs, ...this.testPackages];
+    const args = ['install', '-D', ...Project.settings.lintPkgs, ...this.testPackages];
     await utils.process.spawnp(
       'npm',
       args,
@@ -175,6 +183,7 @@ class Project {
 
   /**
    * Do the initial commit for the project
+   * @method commit
    * @return {Promise}
    */
   async commit() {
@@ -185,6 +194,7 @@ class Project {
 
   /**
    * Push the project code to the remote
+   * @method push
    * @return {Promise}
    */
   async push() {
@@ -197,19 +207,29 @@ class Project {
   /**
    * Copy the template files to the project folder, update them and generate the
    * license.
+   * @method generateTemplateFiles
    * @return {Promise}
    */
   async generateTemplateFiles() {
-    await template.copyTemplate(this.path);
+    await template.copyTemplate(
+      path.join(Project.settings.templatesPath, this.template),
+      this.path
+    );
 
     return Promise.all([
       template.updateTemplateFiles(this.dictionary, this.path),
-      template.copyLicense(this.license, this.dictionary, this.path),
+      template.copyLicense(
+        this.license,
+        this.dictionary,
+        Project.settings.licensesPath,
+        this.path
+      ),
     ]);
   }
 
   /**
    * Create a github repository for the project
+   * @method createGithubRepository
    * @return {Promise}
    */
   async createGithubRepository() {
@@ -224,6 +244,7 @@ class Project {
 
   /**
    * Initialize a git repository on the project folder
+   * @method initializeGitRepository
    * @return {Promise}
    */
   async initializeGitRepository() {
@@ -234,6 +255,7 @@ class Project {
 
   /**
    * Create the project folder
+   * @method createFolder
    * @return {Promise}
    */
   async createFolder() {
@@ -243,6 +265,7 @@ class Project {
 
   /**
    * Obtain the project details
+   * @method getDetails
    * @param  {String}  destPath The project destination full path folder
    * @return {Promise}
    */
@@ -254,13 +277,13 @@ class Project {
           projectName: utils.string.normalizeName(destPath),
           gitUserName: name,
           gitUserEmail: email,
-          license: settings.default.license,
-          version: settings.default.version,
+          license: Project.settings.defaults.license,
+          version: Project.settings.defaults.version,
         };
       });
 
     // Questionnaire for the options
-    const answers = await questionnaire.run(defaults);
+    const answers = await questionnaire.run(defaults, Project.settings);
 
     // Add extra values to the answers
     Object.assign(answers, {
@@ -272,8 +295,10 @@ class Project {
 
   /**
    * Obtain the destination path for the project
+   * @method getDestPath
    * @param  {String}  arg The param used when the initializer runs
    * @return {Promise}
+   * @throws if the path is not valid
    */
   static async getDestPath(arg) {
     const destPath = utils.files.resolvePath(arg);
@@ -291,6 +316,19 @@ class Project {
         .catch(() => resolve(destPath));
     });
   }
+
+  /**
+   * Set the project dependencies
+   * @method setDependencies
+   * @param {Settings} settings Settings object to be injected as dependency
+   */
+  static setDependencies(settings) {
+    Project.settings = settings;
+  }
 }
 
+/**
+ * The project class
+ * @module project
+ */
 module.exports = Project;

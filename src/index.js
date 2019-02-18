@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 
+const settings = require('./settings');
 const Project = require('./project');
 
 (async () => {
   // TODO Work with args
+
+  await settings.load();
+  Project.setDependencies(settings);
 
   const destPath = await Project.getDestPath(process.argv[2]);
 

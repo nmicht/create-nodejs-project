@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.2
+* Test coverage with coveralls and nyc
+
+## 1.0.1
+* Travis setup to deploy npm package
+
+## 1.0.0
+* Settings is a global object handle from an accessible json file.
+* Includes some unit tests
+* Added CI with travis
+
 ## 0.2.0
 * Generate license file
 

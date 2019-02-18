@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+- node
+deploy:
+  provider: npm
+  email: hola@michelletorres.mx
+  api_key:
+    secure: va8EPUZTh80V280o69f57QqDa1YKT5KZS6YfaYFrZ6SkAiRVIHaPG/2rQmnHZu2Lf7TlAtYEusnh2zkfjMXIR8PJIgf1wVStNt57FZQL0XDMtzx+Djd9QIdk2guck0xMN5krh/vjZSkGbohKBx7e3kABy1t4QRqAyulEBw774tH24G02hrm6/x8EvyYcSjfySL40Hp9INeNUOx1zjzCOhb7tQrKefnoiMHaVDryQfwfUvUTvTCKtkpBltD5kpvqaTt0h1nXmOOlgkuh/wxq7we5eXmymJ8Cex++xhgarcAFzqXhgsdA5qlmViRxfpGdiK5gre4iW6wwRLMEIdIS3zhxmOH8qhlGwanLZszO4O/SqZV6X2eTVptG6iWPf3iFsdyovy9v2CHGkp3Xzib58/VFs3Ll0vFs/Ugu08wIFJGOw4hevTPoS1l/xa6m88tqx1vhOTzL47BEkKy0yT6JroNLFuILpjwKicguwSfUCNQs/eBS6rCj4p3raT7VP7zSsjGEI40twSyWvaysAKTBbFqqCqO30Q7/RwAR4vlaT28y3OjkwqP2Vc5IEJ8n0+RSGHmkMxICGPlrWsmDUM/48zbLdK0BbUYeXsHWu1oG9jnBOEezYP8pW/EjtSY6YIGr/kv+oF5GEFAF3NxdugT0TDYkMBzPN8qU0DcafqdCdXb4=
+  on:
+    branch: master
+after_success:
+- npm run coveralls
