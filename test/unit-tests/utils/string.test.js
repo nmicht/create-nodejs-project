@@ -14,6 +14,11 @@ describe('Utils for strings', () => {
     utils.string.normalizeName(testPath).should.equal('un-gran-proyecto');
   });
 
+  it('A project name with non standard characters get normalized removing them', async () => {
+    const testPath = path.resolve(path.join('temp', 'La niña corazón'));
+    utils.string.normalizeName(testPath).should.equal('la-nia-corazn');
+  });
+
   it('Replace a string using a dictionary', async () => {
     const dictionary = {
       FIRST: 'first element',

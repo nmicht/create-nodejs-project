@@ -24,7 +24,9 @@ function replaceByDictionary(original, dictionary) {
  * @return {String}          A name normalized without blank spaces all lowercase
  */
 function normalizeName(filepath) {
-  return path.basename(filepath).toLowerCase().replace(/(\s|_)/g, '-');
+  let normalized = path.basename(filepath).toLowerCase().replace(/(\s|_)/g, '-');
+  normalized = normalized.replace(/[^a-z0-9\-]+/g, '');
+  return normalized;
 }
 
 /**

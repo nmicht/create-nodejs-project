@@ -9,7 +9,7 @@ const should = chai.should();
 
 const utils = require('../../../src/utils');
 
-describe.only('Utils for files', () => {
+describe('Utils for files', () => {
   const jsonPath = 'test/unit-tests/settings/test-settings.json';
   const otherFile = 'test/unit-tests/utils/file.txt';
   const copyFolder = path.resolve('test/unit-tests');
