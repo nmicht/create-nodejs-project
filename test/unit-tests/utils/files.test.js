@@ -5,7 +5,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 
 chai.use(chaiAsPromised);
-const should = chai.should();
+chai.should();
 
 const utils = require('../../../src/utils');
 
@@ -18,7 +18,7 @@ describe('Utils for files', () => {
 
   after('tear down', async () => {
     await utils.files.deleteDirRecursive(tempFolder);
-  })
+  });
 
   it('resolve path works using tilde on any os different than win32', async () => {
     utils.files.resolvePath('~').should.equal(os.homedir());

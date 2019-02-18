@@ -1,7 +1,22 @@
 {
   "extends": ["airbnb-base", "plugin:node/recommended"],
-    "rules": {
-      "no-console": off,
-      "comma-dangle": [error, always-multiline, {functions: never}]
-  }
+  "plugins": [
+    "mocha"
+  ],
+  "rules": {
+    "no-console": off,
+    "comma-dangle": [error, always-multiline, {functions: never}]
+  },
+  "env": {
+    "mocha": true
+  },
+  overrides: [
+    {
+      files: "*.test.js",
+      rules: {
+        "node/no-unpublished-require": "off",
+        "mocha/no-exclusive-tests": "error"
+      }
+    }
+  ]
 }

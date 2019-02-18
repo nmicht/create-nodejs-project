@@ -3,12 +3,11 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 
 chai.use(chaiAsPromised);
-const should = chai.should();
+chai.should();
 
 const utils = require('../../../src/utils');
 
 describe('Utils for strings', () => {
-
   it('A project name with camelcase, whitespaces and underscore get normalized', async () => {
     const testPath = path.resolve(path.join('temp', 'un_Gran proyECTO'));
     utils.string.normalizeName(testPath).should.equal('un-gran-proyecto');
