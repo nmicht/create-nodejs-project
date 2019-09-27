@@ -30,7 +30,7 @@ npm install -g create-nodejs-project
 
 2. Run the setup configuration
 ```
-npm setup
+create-nodejs-project setup
 ```
 You will be prompted for your Github information  
 If you do not have the information at the moment, you can keep it empty.  
