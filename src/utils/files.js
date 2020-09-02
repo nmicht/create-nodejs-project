@@ -64,7 +64,7 @@ async function copyDirRecursive(currentPath = './', destPath = '../new') {
   // Read files in folder
   const files = await fs.readdir(current);
 
-  for(const file of files) {
+  for (const file of files) {
     const src = resolvePath(path.join(current, file));
     dest = resolvePath(path.join(destPath, file));
 

@@ -2,11 +2,39 @@ const should = require('chai').should();
 
 const settings = require('../../../src/settings');
 
-describe('Settings management', () => {
+describe.only('Settings management', () => {
   const filePath = 'test/unit-tests/settings/test-settings.json';
+  const licenses = [
+    'GNU AGPLv3',
+    'GNU GPLv3',
+    'GNU LGPLv3',
+    'Mozilla Public License 2.0',
+    'Apache License 2.0',
+    'MIT License',
+    'ISC License',
+  ];
 
   before('load settings data', async () => {
     await settings.load(filePath);
+  });
+
+  it('The settings have the licenses default', () => {
+    return settings.licenses.should.be.eql(licenses);
+    // settings.githubAuth = {
+    //   user: githubAuth.user,
+    //   token: githubAuth.token,
+    // };
+    // settings.lintPkgs = lintPkgs;
+    // settings.testingPkgs = testingPkgs;
+    // settings.defaults = {
+    //   license: defaults.license,
+    //   version: defaults.version,
+    //   template: defaults.template,
+    // };
+    // settings.templates = templates;
+    // settings.settingsPath = settingsPath;
+    // settings.templatesPath = templatesPath;
+    // settings.licensesPath = licensesPath;
   });
 
   it('The object settings should have githubAuth property', () => {
